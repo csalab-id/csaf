@@ -1,0 +1,279 @@
+version: '3.7'
+services:
+  attack:
+    hostname: attack.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'kalilinux:web'
+    restart: always
+    ports:
+      - 6080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=attack
+    volumes:
+      - /dev/null:/usr/share/novnc/index.html
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      attack:
+        ipv4_address: 10.0.0.100
+      defense:
+        ipv4_address: 10.0.1.100
+
+  phising:
+    hostname: phising.lab
+    image: 'phising:web'
+    build:
+      context: ./build/
+      dockerfile: phising.Dockerfile
+    restart: always
+    working_dir: /root
+    volumes:
+      - ./script/phising.index.html:/usr/share/novnc/index.html
+      - ./script/phising.startup.sh:/startup.sh
+    command: /bin/bash /startup.sh
+    networks:
+      attack:
+        ipv4_address: 10.0.0.200
+
+  defence:
+    hostname: defence.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'kalilinux:web'
+    restart: always
+    ports:
+      - 7080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=defence
+    volumes:
+      - /dev/null:/usr/share/novnc/index.html
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.101
+      public:
+        ipv4_address: 10.0.2.101
+
+  vscode:
+    hostname: vscode.lab
+    image: 'vscode:web'
+    build:
+      context: ./build/
+      dockerfile: vscode.Dockerfile
+    restart: always
+    working_dir: /root
+    volumes:
+      - ./config/vscode/config.yaml:/root/.config/code-server/config.yaml
+    command: /usr/bin/code-server
+    networks:
+      defense:
+        ipv4_address: 10.0.1.150
+      public:
+        ipv4_address: 10.0.2.150
+
+  dvwa:
+    image: 'vulnerables/web-dvwa'
+    hostname: dvwa.lab
+    restart: always
+    networks:
+      defense:
+        ipv4_address: 10.0.1.10
+      monitor:
+        ipv4_address: 10.1.0.10
+  
+  dvwa_modsecurity:
+    image: 'owasp/modsecurity-crs:apache'
+    hostname: dvwa-modsecurity.lab
+    restart: always
+    environment:
+      - BACKEND=http://10.1.0.12:80
+      - BACKEND_WS=ws://10.1.0.12:80
+    networks:
+      defense:
+        ipv4_address: 10.0.1.11
+      monitor:
+        ipv4_address: 10.1.0.11
+
+  dvwa_monitor:
+    image: 'vulnerables/web-dvwa'
+    hostname: dvwa-monitor.lab
+    restart: always
+    networks:
+      monitor:
+        ipv4_address: 10.1.0.12
+
+  dvwa_octopuswaf:
+    image: 'octopuswaf:web'
+    build:
+      context: ./build/
+      dockerfile: octopuswaf.Dockerfile
+    hostname: dvwa-octopuswaf.lab
+    restart: always
+    environment:
+      - BACKEND=10.1.0.12:80
+    volumes:
+      - ./script/octopuswaf.startup.sh:/startup.sh
+    command: /bin/sh /startup.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.13
+      monitor:
+        ipv4_address: 10.1.0.13
+
+  monitor:
+    hostname: monitor.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'kalilinux:web'
+    restart: always
+    ports:
+      - 8080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=monitor
+    volumes:
+      - /dev/null:/usr/share/novnc/index.html
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.102
+      public:
+        ipv4_address: 10.0.2.102
+
+  wazuh_manager:
+    image: 'wazuh/wazuh-manager:4.3.10'
+    hostname: wazuh-manager.lab
+    restart: always
+    environment:
+      - INDEXER_URL=https://wazuh-indexer.lab:9200
+      - INDEXER_USERNAME=admin
+      - INDEXER_PASSWORD=SecretPassword
+      - FILEBEAT_SSL_VERIFICATION_MODE=full
+      - SSL_CERTIFICATE_AUTHORITIES=/etc/ssl/root-ca.pem
+      - SSL_CERTIFICATE=/etc/ssl/filebeat.pem
+      - SSL_KEY=/etc/ssl/filebeat.key
+      - API_USERNAME=wazuh-wui
+      - API_PASSWORD=MyS3cr37P450r.*-
+    volumes:
+      - wazuh_api_configuration:/var/ossec/api/configuration
+      - wazuh_etc:/var/ossec/etc
+      - wazuh_logs:/var/ossec/logs
+      - wazuh_queue:/var/ossec/queue
+      - wazuh_var_multigroups:/var/ossec/var/multigroups
+      - wazuh_integrations:/var/ossec/integrations
+      - wazuh_active_response:/var/ossec/active-response/bin
+      - wazuh_agentless:/var/ossec/agentless
+      - wazuh_wodles:/var/ossec/wodles
+      - filebeat_etc:/etc/filebeat
+      - filebeat_var:/var/lib/filebeat
+      - ./config/wazuh_indexer_ssl_certs/root-ca-manager.pem:/etc/ssl/root-ca.pem
+      - ./config/wazuh_indexer_ssl_certs/wazuh-manager.lab.pem:/etc/ssl/filebeat.pem
+      - ./config/wazuh_indexer_ssl_certs/wazuh-manager.lab-key.pem:/etc/ssl/filebeat.key
+      - ./config/wazuh_cluster/wazuh_manager.conf:/wazuh-config-mount/etc/ossec.conf
+    networks:
+      monitor:
+        ipv4_address: 10.1.0.30
+
+  wazuh_indexer:
+    image: 'wazuh/wazuh-indexer:4.3.10'
+    hostname: wazuh-indexer.lab
+    restart: always
+    environment:
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - wazuh-indexer-data:/var/lib/wazuh-indexer
+      - ./config/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-indexer/config/certs/root-ca.pem
+      - ./config/wazuh_indexer_ssl_certs/wazuh-indexer.lab-key.pem:/usr/share/wazuh-indexer/config/certs/wazuh-indexer.lab.key
+      - ./config/wazuh_indexer_ssl_certs/wazuh-indexer.lab.pem:/usr/share/wazuh-indexer/config/certs/wazuh-indexer.lab.pem
+      - ./config/wazuh_indexer_ssl_certs/admin.pem:/usr/share/wazuh-indexer/config/certs/admin.pem
+      - ./config/wazuh_indexer_ssl_certs/admin-key.pem:/usr/share/wazuh-indexer/config/certs/admin-key.pem
+      - ./config/wazuh_indexer/wazuh.indexer.yml:/usr/share/wazuh-indexer/config/opensearch.yml
+      - ./config/wazuh_indexer/internal_users.yml:/usr/share/wazuh-indexer/plugins/opensearch-security/securityconfig/internal_users.yml
+    networks:
+      monitor:
+        ipv4_address: 10.1.0.31
+
+  wazuh_dashboard:
+    image: 'wazuh/wazuh-dashboard:4.3.10'
+    hostname: wazuh-dashboard.lab
+    restart: always
+    environment:
+      - INDEXER_USERNAME=admin
+      - INDEXER_PASSWORD=SecretPassword
+      - WAZUH_API_URL=https://wazuh-manager.lab
+      - API_USERNAME=wazuh-wui
+      - API_PASSWORD=MyS3cr37P450r.*-
+    volumes:
+      - ./config/wazuh_indexer_ssl_certs/wazuh-dashboard.lab.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem
+      - ./config/wazuh_indexer_ssl_certs/wazuh-dashboard.lab-key.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem
+      - ./config/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-dashboard/certs/root-ca.pem
+      - ./config/wazuh_dashboard/opensearch_dashboards.yml:/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml
+      - ./config/wazuh_dashboard/wazuh.yml:/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml
+    networks:
+      monitor:
+        ipv4_address: 10.1.0.32
+      public:
+        ipv4_address: 10.0.2.32
+
+networks:
+  attack:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+          gateway: 10.0.0.1
+  defense:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+          gateway: 10.0.1.1
+  monitor:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.1.0.0/24
+          gateway: 10.1.0.1
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+          gateway: 10.0.2.1
+
+volumes:
+  filebeat_etc: {}
+  filebeat_var: {}
+  wazuh_api_configuration: {}
+  wazuh_etc: {}
+  wazuh_logs: {}
+  wazuh_queue: {}
+  wazuh_var_multigroups: {}
+  wazuh_integrations: {}
+  wazuh_active_response: {}
+  wazuh_agentless: {}
+  wazuh_wodles: {}
+  wazuh-indexer-data: {}
