@@ -4,6 +4,8 @@ apt -y upgrade && \
 DEBIAN_FRONTEND=noninteractive apt -yq install \
   openbox \
   firefox-esr \
+  mitmproxy \
+  curl \
   novnc \
   net-tools \
   tigervnc-standalone-server \
