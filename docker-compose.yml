@@ -5,7 +5,7 @@ services:
     build:
       context: ./build/
       dockerfile: kalilinux.Dockerfile
-    image: 'kalilinux:web'
+    image: 'kalilinux:lab'
     restart: always
     ports:
       - 0.0.0.0:6080:8080
@@ -26,7 +26,7 @@ services:
 
   phising:
     hostname: phising.lab
-    image: 'phising:web'
+    image: 'phising:lab'
     build:
       context: ./build/
       dockerfile: phising.Dockerfile
@@ -66,19 +66,19 @@ services:
       attack:
         ipv4_address: 10.0.0.201
 
-  defence:
-    hostname: defence.lab
+  defense:
+    hostname: defense.lab
     build:
       context: ./build/
       dockerfile: kalilinux.Dockerfile
-    image: 'kalilinux:web'
+    image: 'kalilinux:lab'
     restart: always
     ports:
       - 0.0.0.0:7080:8080
     working_dir: /root
     environment:
       - SHELL=/bin/bash
-      - VNC_PASSWORD=defence
+      - VNC_PASSWORD=defense
     volumes:
       - /dev/null:/usr/share/novnc/index.html
       - ./script/kalilinux.startup.sh:/script/startup.sh
@@ -90,56 +90,55 @@ services:
       public:
         ipv4_address: 10.0.2.101
 
-  vscode:
-    hostname: vscode.lab
-    image: 'vscode:web'
+  dvwa:
+    image: 'dvwa:lab'
+    hostname: dvwa.lab
     build:
       context: ./build/
-      dockerfile: vscode.Dockerfile
+      dockerfile: dvwa.Dockerfile
     restart: always
-    working_dir: /root
     volumes:
-      - ./config/vscode/config.yaml:/root/.config/code-server/config.yaml
-    command: /usr/bin/code-server
-    networks:
-      defense:
-        ipv4_address: 10.0.1.150
-      public:
-        ipv4_address: 10.0.2.150
-
-  dvwa:
-    image: 'vulnerables/web-dvwa'
-    hostname: dvwa.lab
-    restart: always
+      - ./script/dvwa.startup.sh:/main.sh
     networks:
       defense:
         ipv4_address: 10.0.1.10
       monitor:
         ipv4_address: 10.1.0.10
-  
-  dvwa_modsecurity:
-    image: 'owasp/modsecurity-crs:apache'
-    hostname: dvwa-modsecurity.lab
+
+  dvwa_monitor:
+    image: 'dvwa:lab'
+    hostname: dvwa-monitor.lab
+    build:
+      context: ./build/
+      dockerfile: dvwa.Dockerfile
     restart: always
-    environment:
-      - BACKEND=http://10.1.0.12:80
-      - BACKEND_WS=ws://10.1.0.12:80
+    volumes:
+      - ./script/dvwa.startup.sh:/main.sh
     networks:
-      defense:
-        ipv4_address: 10.0.1.11
       monitor:
         ipv4_address: 10.1.0.11
 
-  dvwa_monitor:
-    image: 'vulnerables/web-dvwa'
-    hostname: dvwa-monitor.lab
+  dvwa_modsecurity:
+    image: 'modsecurity:lab'
+    hostname: dvwa-modsecurity.lab
+    build:
+      context: ./build/
+      dockerfile: modsecurity.Dockerfile
     restart: always
+    environment:
+      - BACKEND=http://10.1.0.11:80
+      - BACKEND_WS=ws://10.1.0.11:80
+    volumes:
+      - ./script/modsecurity.startup.sh:/startup.sh
+    command: /bin/bash /startup.sh
     networks:
+      defense:
+        ipv4_address: 10.0.1.12
       monitor:
         ipv4_address: 10.1.0.12
 
   dvwa_octopuswaf:
-    image: 'octopuswaf:web'
+    image: 'octopuswaf:lab'
     build:
       context: ./build/
       dockerfile: octopuswaf.Dockerfile
@@ -149,7 +148,8 @@ services:
       - BACKEND=10.1.0.12:80
     volumes:
       - ./script/octopuswaf.startup.sh:/startup.sh
-    command: /bin/sh /startup.sh
+    working_dir: /OctopusWAF
+    command: /bin/bash /startup.sh
     networks:
       defense:
         ipv4_address: 10.0.1.13
@@ -161,7 +161,7 @@ services:
     build:
       context: ./build/
       dockerfile: kalilinux.Dockerfile
-    image: 'kalilinux:web'
+    image: 'kalilinux:lab'
     restart: always
     ports:
       - 0.0.0.0:8080:8080
@@ -175,8 +175,8 @@ services:
       - ./script/kalilinux.tunell.py:/script/tunell.py
     command: /bin/bash /script/startup.sh
     networks:
-      defense:
-        ipv4_address: 10.0.1.102
+      monitor:
+        ipv4_address: 10.1.0.102
       public:
         ipv4_address: 10.0.2.102
 

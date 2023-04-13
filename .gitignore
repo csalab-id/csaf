@@ -1,2 +1,3 @@
 .DS_Store
 config/wazuh_indexer_ssl_certs/*
+develop.yml
