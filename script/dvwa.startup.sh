@@ -1,15 +1,16 @@
 #!/bin/bash
 
-chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
+echo '[+] Starting ssh...'
+service ssh start
+
+echo '[+] Starting apache'
+service apache2 start
 
 echo '[+] Starting wazuh-agent'
 service wazuh-agent start
 
-echo '[+] Starting mysql...'
-service mysql start
-
-echo '[+] Starting apache'
-service apache2 start
+echo '[+] Starting splunk agent'
+/opt/splunkforwarder/bin/splunk start
 
 while true
 do

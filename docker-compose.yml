@@ -66,6 +66,14 @@ services:
       attack:
         ipv4_address: 10.0.0.201
 
+  gophish:
+    image: 'gophish/gophish'
+    hostname: gophish.lab
+    restart: always
+    networks:
+      attack:
+        ipv4_address: 10.0.0.202
+
   defense:
     hostname: defense.lab
     build:
@@ -90,30 +98,53 @@ services:
       public:
         ipv4_address: 10.0.2.101
 
+  mariadb:
+    image: 'mariadb:10.7.8'
+    hostname: mariadb.lab
+    restart: always
+    environment:
+      - MARIADB_DATABASE=dvwa
+      - MARIADB_USER=dvwa
+      - MARIADB_PASSWORD=dvwa
+      - MARIADB_ROOT_PASSWORD=mariadbpassword
+    networks:
+      defense:
+        ipv4_address: 10.0.1.9
+      monitor:
+        ipv4_address: 10.1.0.9
+      public:
+        ipv4_address: 10.0.2.9
+
   dvwa:
     image: 'dvwa:lab'
     hostname: dvwa.lab
     build:
-      context: ./build/
-      dockerfile: dvwa.Dockerfile
+      context: ./
+      dockerfile: ./build/dvwa.Dockerfile
     restart: always
+    working_dir: /root
     volumes:
       - ./script/dvwa.startup.sh:/main.sh
+    command: /bin/bash /main.sh
     networks:
       defense:
         ipv4_address: 10.0.1.10
       monitor:
         ipv4_address: 10.1.0.10
+      # public:
+      #   ipv4_address: 10.0.2.10
 
   dvwa_monitor:
     image: 'dvwa:lab'
     hostname: dvwa-monitor.lab
     build:
-      context: ./build/
-      dockerfile: dvwa.Dockerfile
+      context: ./
+      dockerfile: ./build/dvwa.Dockerfile
     restart: always
+    working_dir: /root
     volumes:
       - ./script/dvwa.startup.sh:/main.sh
+    command: /bin/bash /main.sh
     networks:
       monitor:
         ipv4_address: 10.1.0.11
@@ -155,6 +186,18 @@ services:
         ipv4_address: 10.0.1.13
       monitor:
         ipv4_address: 10.1.0.13
+
+  gitea:
+    image: 'gitea/gitea:1.19.1'
+    hostname: gitea.lab
+    restart: always
+    volumes:
+      - ./data/gitea:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      defense:
+        ipv4_address: 10.0.1.20
 
   monitor:
     hostname: monitor.lab
@@ -262,6 +305,22 @@ services:
       public:
         ipv4_address: 10.0.2.32
 
+  splunk:
+    hostname: splunk.lab
+    image: 'splunk/splunk:9.0.4'
+    restart: always
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=splunkpassword
+    volumes:
+      - splunk_etc:/opt/splunk/etc
+      - splunk_var:/opt/splunk/var
+    networks:
+      monitor:
+        ipv4_address: 10.1.0.40
+      # public:
+      #   ipv4_address: 10.0.2.40
+
 networks:
   attack:
     driver: bridge
@@ -314,3 +373,5 @@ volumes:
   iredmail_clamav: {}
   iredmail_sa_rules: {}
   iredmail_postfix_queue: {}
+  splunk_etc: {}
+  splunk_var: {}
