@@ -108,12 +108,8 @@ services:
       - MARIADB_PASSWORD=dvwa
       - MARIADB_ROOT_PASSWORD=mariadbpassword
     networks:
-      defense:
-        ipv4_address: 10.0.1.9
       monitor:
         ipv4_address: 10.1.0.9
-      public:
-        ipv4_address: 10.0.2.9
 
   dvwa:
     image: 'dvwa:lab'
@@ -131,8 +127,6 @@ services:
         ipv4_address: 10.0.1.10
       monitor:
         ipv4_address: 10.1.0.10
-      # public:
-      #   ipv4_address: 10.0.2.10
 
   dvwa_monitor:
     image: 'dvwa:lab'
@@ -188,11 +182,14 @@ services:
         ipv4_address: 10.1.0.13
 
   gitea:
-    image: 'gitea/gitea:1.19.1'
+    image: 'gitea:lab'
+    build:
+      context: ./
+      dockerfile: build/gitea.Dockerfile
     hostname: gitea.lab
     restart: always
     volumes:
-      - ./data/gitea:/data
+      - gitea_data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -318,8 +315,6 @@ services:
     networks:
       monitor:
         ipv4_address: 10.1.0.40
-      # public:
-      #   ipv4_address: 10.0.2.40
 
 networks:
   attack:
@@ -375,3 +370,4 @@ volumes:
   iredmail_postfix_queue: {}
   splunk_etc: {}
   splunk_var: {}
+  gitea_data: {}

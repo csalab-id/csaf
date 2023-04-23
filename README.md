@@ -27,19 +27,28 @@ Start the container
 docker-compose up -d
 ```
 
+# Exposed Ports
+An exposed port can be accessed using a proxy http client, SSH client, or HTTP client. Choose one for the best experience.
+- Port 6080 (Access to attack network)
+- Port 7080 (Access to defense network)
+- Port 8080 (Access to monitor network)
+
 # Domain Access
 - http://attack.lab:6080/vnc.html (password: attack)
 - http://defense.lab:7080/vnc.html (password: defense)
 - http://monitor.lab:8080/vnc.html (password: monitor)
 - http://phising.lab/
 - http://phising.lab:8081/
+- https://gophish.lab:3333/
 - http://server.lab/ (username: postmaster@server.lab, passowrd: supersecretpassword)
-- http://mail.server.lab/
-- http://dvwa.lab/
-- http://dvwa-monitor.lab/
-- http://dvwa-modsecurity.lab/
-- http://dvwa-octopuswaf.lab/
-- http://wazuh-indexer.lab:9200/
+- http://server.lab/iredadmin/ (username: postmaster@server.lab, passowrd: supersecretpassword)
+- http://mail.server.lab/ (username: postmaster@server.lab, passowrd: supersecretpassword)
+- http://mail.server.lab/iredadmin/ (username: postmaster@server.lab, passowrd: supersecretpassword)
+- http://dvwa.lab/ (username: admin, passowrd: password)
+- http://dvwa-monitor.lab/ (username: admin, passowrd: password)
+- http://dvwa-modsecurity.lab/ (username: admin, passowrd: password)
+- http://dvwa-octopuswaf.lab/ (username: admin, passowrd: password)
+- https://wazuh-indexer.lab:9200/ (username: admin, passowrd: SecretPassword)
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (username: admin, passowrd: SecretPassword)
 
@@ -49,6 +58,7 @@ docker-compose up -d
 - 10.0.0.100 (attack.lab)
 - 10.0.0.200 (phising.lab)
 - 10.0.0.201 (server.lab / mail.server.lab)
+- 10.0.0.202 (gophish.lab)
 
 ## Defense
 - 10.0.1.100 (attack.lab)
