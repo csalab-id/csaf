@@ -38,12 +38,13 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - http://defense.lab:7080/vnc.html (password: defense)
 - http://monitor.lab:8080/vnc.html (password: monitor)
 - http://phising.lab/
-- http://phising.lab:8081/
+- http://10.0.0.200:8081/
 - https://gophish.lab:3333/
 - http://server.lab/ (username: postmaster@server.lab, passowrd: supersecretpassword)
 - http://server.lab/iredadmin/ (username: postmaster@server.lab, passowrd: supersecretpassword)
 - http://mail.server.lab/ (username: postmaster@server.lab, passowrd: supersecretpassword)
 - http://mail.server.lab/iredadmin/ (username: postmaster@server.lab, passowrd: supersecretpassword)
+- http://gitea.lab/ (username: csalab, password: giteapassword)
 - http://dvwa.lab/ (username: admin, passowrd: password)
 - http://dvwa-monitor.lab/ (username: admin, passowrd: password)
 - http://dvwa-modsecurity.lab/ (username: admin, passowrd: password)
@@ -51,6 +52,7 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - https://wazuh-indexer.lab:9200/ (username: admin, passowrd: SecretPassword)
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (username: admin, passowrd: SecretPassword)
+- http://splunk.lab:8000/ (username: admin, password: splunkpassword)
 
 # Network / IP Address
 
@@ -66,6 +68,7 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - 10.0.1.10 (dvwa.lab)
 - 10.0.1.12 (dvwa-modsecurity.lab)
 - 10.0.1.13 (dvwa-octopuswaf.lab)
+- 10.0.1.20 (gitea.lab)
 
 ## Monitor
 - 10.1.0.10 (dvwa.lab)
@@ -76,6 +79,7 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - 10.1.0.30 (wazuh-manager.lab)
 - 10.1.0.31 (wazuh-indexer.lab)
 - 10.1.0.32 (wazuh-dashboard.lab)
+- 10.1.0.40 (splunk.lab)
 
 ## Public
 - 10.0.2.101 (defense.lab)
