@@ -1,5 +1,6 @@
 FROM kalilinux/kali-rolling:amd64
-RUN apt update && \
+RUN sed -i "s/http.kali.org/mirrors.ocf.berkeley.edu/g" /etc/apt/sources.list && \
+apt update && \
 apt -y upgrade && \
 DEBIAN_FRONTEND=noninteractive apt -yq install \
   dialog \
@@ -17,6 +18,6 @@ DEBIAN_FRONTEND=noninteractive apt -yq install \
   xfce4-goodies \
   kali-linux-large \
   kali-desktop-xfce && \
-apt -y dist-upgrade && \
+apt -y full-upgrade && \
 apt -y autoremove && \
 apt clean all

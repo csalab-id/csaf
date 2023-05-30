@@ -11,6 +11,6 @@ DEBIAN_FRONTEND=noninteractive apt -yq install \
   tigervnc-standalone-server \
   tigervnc-xorg-extension \
   tigervnc-viewer && \
-apt -y dist-upgrade && \
+apt -y full-upgrade && \
 apt -y autoremove && \
 apt clean all
