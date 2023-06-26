@@ -14,6 +14,7 @@ DEBIAN_FRONTEND=noninteractive apt -yq install \
   tigervnc-viewer \
   novnc && \
 DEBIAN_FRONTEND=noninteractive apt -yq install \
+  dbus-x11 \
   xfce4-session \
   xfce4-goodies \
   kali-linux-large \

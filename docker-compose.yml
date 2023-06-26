@@ -66,14 +66,6 @@ services:
       attack:
         ipv4_address: 10.0.0.201
 
-  gophish:
-    image: 'gophish/gophish'
-    hostname: gophish.lab
-    restart: always
-    networks:
-      attack:
-        ipv4_address: 10.0.0.202
-
   defense:
     hostname: defense.lab
     build:

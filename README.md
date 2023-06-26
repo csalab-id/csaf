@@ -39,7 +39,6 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - http://monitor.lab:8080/vnc.html (password: monitor)
 - http://phising.lab/
 - http://10.0.0.200:8081/
-- https://gophish.lab:3333/
 - http://server.lab/ (username: postmaster@server.lab, passowrd: supersecretpassword)
 - http://server.lab/iredadmin/ (username: postmaster@server.lab, passowrd: supersecretpassword)
 - http://mail.server.lab/ (username: postmaster@server.lab, passowrd: supersecretpassword)
@@ -60,7 +59,6 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - 10.0.0.100 (attack.lab)
 - 10.0.0.200 (phising.lab)
 - 10.0.0.201 (server.lab / mail.server.lab)
-- 10.0.0.202 (gophish.lab)
 
 ## Defense
 - 10.0.1.100 (attack.lab)
