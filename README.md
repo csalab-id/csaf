@@ -69,15 +69,15 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - 10.0.1.20 (gitea.lab)
 
 ## Monitor
-- 10.1.0.10 (dvwa.lab)
-- 10.1.0.11 (dvwa-monitor.lab)
-- 10.1.0.12 (dvwa-modsecurity.lab)
-- 10.1.0.13 (dvwa-octopuswaf.lab)
-- 10.1.0.102 (monitor.lab)
-- 10.1.0.30 (wazuh-manager.lab)
-- 10.1.0.31 (wazuh-indexer.lab)
-- 10.1.0.32 (wazuh-dashboard.lab)
-- 10.1.0.40 (splunk.lab)
+- 10.0.3.10 (dvwa.lab)
+- 10.0.3.11 (dvwa-monitor.lab)
+- 10.0.3.12 (dvwa-modsecurity.lab)
+- 10.0.3.13 (dvwa-octopuswaf.lab)
+- 10.0.3.102 (monitor.lab)
+- 10.0.3.30 (wazuh-manager.lab)
+- 10.0.3.31 (wazuh-indexer.lab)
+- 10.0.3.32 (wazuh-dashboard.lab)
+- 10.0.3.40 (splunk.lab)
 
 ## Public
 - 10.0.2.101 (defense.lab)
