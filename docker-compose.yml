@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 services:
   attack:
     hostname: attack.lab
@@ -286,7 +286,7 @@ services:
 
   splunk:
     hostname: splunk.lab
-    image: 'splunk/splunk:9.1.0.2'
+    image: 'splunk/splunk:9.1.0.1'
     restart: always
     environment:
       - SPLUNK_START_ARGS=--accept-license

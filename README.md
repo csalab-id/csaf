@@ -14,9 +14,9 @@ Navigate to the project directory
 ```
 cd csalab-docker
 ```
-Build the Docker image
+Pull the Docker images
 ```
-docker-compose build
+docker-compose pull
 ```
 Generate wazuh ssl certificate
 ```
