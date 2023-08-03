@@ -4,8 +4,8 @@ RUN apt update && \
 apt -y upgrade && \
 DEBIAN_FRONTEND=noninteractive apt -yq install git lsb-release curl openssh-server apache2 libapache2-mod-php dialog php php-gd php-mysql && \
 (echo "sshpassword"; echo "sshpassword") | passwd && \
-curl -so wazuh-agent-4.4.5.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.4.5-1_amd64.deb && \
-WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.4.5.deb && \
+curl -so wazuh-agent-4.3.11.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.11-1_amd64.deb && \
+WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent-4.3.11.deb && \
 update-rc.d wazuh-agent defaults 95 10 && \
 curl -so splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb "https://download.splunk.com/products/universalforwarder/releases/9.1.0.1/linux/splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb" && \
 dpkg -i splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb && \
@@ -17,4 +17,4 @@ sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/ssh
 cd /var/www/html/ && \
 tar -xf git.tar.gz && \
 chmod 777 config/ hackable/uploads/ && \
-rm -rf /wazuh-agent-4.4.5.deb /splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb /var/www/html/index.html /var/www/html/git.tar.gz
+rm -rf /wazuh-agent-4.3.11.deb /splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb /var/www/html/index.html /var/www/html/git.tar.gz

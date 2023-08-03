@@ -203,7 +203,7 @@ services:
         ipv4_address: 10.0.2.102
 
   wazuh_manager:
-    image: 'wazuh/wazuh-manager:4.4.5'
+    image: 'wazuh/wazuh-manager:4.3.11'
     hostname: wazuh-manager.lab
     restart: always
     environment:
@@ -237,7 +237,7 @@ services:
         ipv4_address: 10.0.3.30
 
   wazuh_indexer:
-    image: 'wazuh/wazuh-indexer:4.4.5'
+    image: 'wazuh/wazuh-indexer:4.3.11'
     hostname: wazuh-indexer.lab
     restart: always
     environment:
@@ -263,7 +263,7 @@ services:
         ipv4_address: 10.0.3.31
 
   wazuh_dashboard:
-    image: 'wazuh/wazuh-dashboard:4.4.5'
+    image: 'wazuh/wazuh-dashboard:4.3.11'
     hostname: wazuh-dashboard.lab
     restart: always
     environment:
