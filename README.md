@@ -47,7 +47,6 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - http://dvwa.lab/ (username: admin, passowrd: password)
 - http://dvwa-monitor.lab/ (username: admin, passowrd: password)
 - http://dvwa-modsecurity.lab/ (username: admin, passowrd: password)
-- http://dvwa-octopuswaf.lab/ (username: admin, passowrd: password)
 - https://wazuh-indexer.lab:9200/ (username: admin, passowrd: SecretPassword)
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (username: admin, passowrd: SecretPassword)
@@ -65,14 +64,12 @@ An exposed port can be accessed using a proxy http client, SSH client, or HTTP c
 - 10.0.1.101 (defense.lab)
 - 10.0.1.10 (dvwa.lab)
 - 10.0.1.12 (dvwa-modsecurity.lab)
-- 10.0.1.13 (dvwa-octopuswaf.lab)
 - 10.0.1.20 (gitea.lab)
 
 ## Monitor
 - 10.0.3.10 (dvwa.lab)
 - 10.0.3.11 (dvwa-monitor.lab)
 - 10.0.3.12 (dvwa-modsecurity.lab)
-- 10.0.3.13 (dvwa-octopuswaf.lab)
 - 10.0.3.102 (monitor.lab)
 - 10.0.3.30 (wazuh-manager.lab)
 - 10.0.3.31 (wazuh-indexer.lab)

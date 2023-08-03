@@ -1,4 +1,0 @@
-bind-addr: 0.0.0.0:80
-auth: password
-password: csalab
-cert: false
