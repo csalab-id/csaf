@@ -21,8 +21,8 @@ services:
     networks:
       attack:
         ipv4_address: 10.0.0.100
-      defense:
-        ipv4_address: 10.0.1.100
+      internal:
+        ipv4_address: 10.0.5.100
 
   phising:
     hostname: phising.lab
@@ -49,7 +49,7 @@ services:
     environment:
       - HOSTNAME=mail.server.lab
       - FIRST_MAIL_DOMAIN=server.lab
-      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=supersecretpassword
+      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=${MAIL_PASS:-supersecretpassword}
       - MLMMJADMIN_API_TOKEN=CCmMymMpFH35K8Q0H3FQAsSRQzkSjCeazm+t1X27cdE=
       - ROUNDCUBE_DES_KEY=s9lVEEaiA+MmvYZvfi1k0WQNFiFmGOYI
     volumes:
@@ -114,8 +114,8 @@ services:
     volumes:
       - dvwa_mariadb:/var/lib/mysql
     networks:
-      monitor:
-        ipv4_address: 10.0.3.9
+      defense:
+        ipv4_address: 10.0.1.9
 
   dvwa:
     image: 'csalab/csaf-dvwa:latest'
@@ -130,6 +130,8 @@ services:
       - ./script/dvwa.startup.sh:/main.sh
     command: /bin/bash /main.sh
     networks:
+      internal:
+        ipv4_address: 10.0.5.10
       defense:
         ipv4_address: 10.0.1.10
       monitor:
@@ -147,6 +149,8 @@ services:
       - ./script/dvwa.startup.sh:/main.sh
     command: /bin/bash /main.sh
     networks:
+      defense:
+        ipv4_address: 10.0.1.11
       monitor:
         ipv4_address: 10.0.3.11
 
@@ -158,6 +162,8 @@ services:
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
     networks:
+      internal:
+        ipv4_address: 10.0.5.12
       defense:
         ipv4_address: 10.0.1.12
       monitor:
@@ -199,8 +205,8 @@ services:
     networks:
       monitor:
         ipv4_address: 10.0.3.102
-      public:
-        ipv4_address: 10.0.2.102
+      internet:
+        ipv4_address: 10.0.4.102
 
   wazuh_manager:
     image: 'wazuh/wazuh-manager:4.3.11'
@@ -281,8 +287,8 @@ services:
     networks:
       monitor:
         ipv4_address: 10.0.3.32
-      public:
-        ipv4_address: 10.0.2.32
+      internet:
+        ipv4_address: 10.0.4.32
 
   splunk:
     hostname: splunk.lab
@@ -297,6 +303,8 @@ services:
     networks:
       monitor:
         ipv4_address: 10.0.3.40
+      internet:
+        ipv4_address: 10.0.4.40
 
 networks:
   attack:
@@ -328,6 +336,21 @@ networks:
       config:
         - subnet: 10.0.3.0/24
           gateway: 10.0.3.1
+
+  internet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.4.0/24
+          gateway: 10.0.4.1
+
+  internal:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.5.0/24
+          gateway: 10.0.5.1
 
 volumes:
   filebeat_etc: {}
