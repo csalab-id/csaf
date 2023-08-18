@@ -121,8 +121,8 @@ services:
     image: 'csalab/csaf-dvwa:latest'
     hostname: dvwa.lab
     build:
-      context: ./
-      dockerfile: ./build/dvwa.Dockerfile
+      context: ./build/
+      dockerfile: dvwa.Dockerfile
     restart: always
     working_dir: /root
     volumes:
@@ -141,8 +141,8 @@ services:
     image: 'csalab/csaf-dvwa:latest'
     hostname: dvwa-monitor.lab
     build:
-      context: ./
-      dockerfile: ./build/dvwa.Dockerfile
+      context: ./build/
+      dockerfile: dvwa.Dockerfile
     restart: always
     working_dir: /root
     volumes:
@@ -172,8 +172,8 @@ services:
   gitea:
     image: 'csalab/csaf-gitea:latest'
     build:
-      context: ./
-      dockerfile: build/gitea.Dockerfile
+      context: ./build/
+      dockerfile: gitea.Dockerfile
     hostname: gitea.lab
     restart: always
     volumes:

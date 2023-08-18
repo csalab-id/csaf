@@ -1,4 +1,4 @@
-# Cyber Security Awareness Lab (Docker)
+# Cyber Security Awareness Framework (Docker)
 A brief description of the project.
 
 # Requirements
