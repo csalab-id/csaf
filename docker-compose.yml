@@ -5,7 +5,7 @@ services:
     build:
       context: ./build/
       dockerfile: kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:6080:8080
@@ -26,7 +26,7 @@ services:
 
   phising:
     hostname: phising.lab
-    image: 'csalab/csaf-phising:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-phising:latest'
     build:
       context: ./build/
       dockerfile: phising.Dockerfile
@@ -83,7 +83,7 @@ services:
     build:
       context: ./build/
       dockerfile: kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:7080:8080
@@ -118,7 +118,7 @@ services:
         ipv4_address: 10.0.3.9
 
   dvwa:
-    image: 'csalab/csaf-dvwa:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-dvwa:latest'
     hostname: dvwa.lab
     build:
       context: ./
@@ -136,7 +136,7 @@ services:
         ipv4_address: 10.0.3.10
 
   dvwa_monitor:
-    image: 'csalab/csaf-dvwa:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-dvwa:latest'
     hostname: dvwa-monitor.lab
     build:
       context: ./
@@ -164,7 +164,7 @@ services:
         ipv4_address: 10.0.3.12
 
   gitea:
-    image: 'csalab/csaf-gitea:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-gitea:latest'
     build:
       context: ./
       dockerfile: build/gitea.Dockerfile
@@ -183,7 +183,7 @@ services:
     build:
       context: ./build/
       dockerfile: kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:latest'
+    image: 'swr.ap-southeast-3.myhuaweicloud.com/csalabid/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:8080:8080
