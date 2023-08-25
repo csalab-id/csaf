@@ -14,7 +14,6 @@ services:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${ATTACK_PASS:-attack}
     volumes:
-      - /dev/null:/usr/share/novnc/index.html
       - ./script/kalilinux.startup.sh:/script/startup.sh
       - ./script/kalilinux.tunell.py:/script/tunell.py
     command: /bin/bash /script/startup.sh
@@ -92,7 +91,6 @@ services:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${DEFENSE_PASS:-defense}
     volumes:
-      - /dev/null:/usr/share/novnc/index.html
       - ./script/kalilinux.startup.sh:/script/startup.sh
       - ./script/kalilinux.tunell.py:/script/tunell.py
     command: /bin/bash /script/startup.sh
@@ -114,8 +112,8 @@ services:
     volumes:
       - dvwa_mariadb:/var/lib/mysql
     networks:
-      defense:
-        ipv4_address: 10.0.1.9
+      monitor:
+        ipv4_address: 10.0.3.9
 
   dvwa:
     image: 'csalab/csaf-dvwa:latest'
@@ -130,8 +128,6 @@ services:
       - ./script/dvwa.startup.sh:/main.sh
     command: /bin/bash /main.sh
     networks:
-      internal:
-        ipv4_address: 10.0.5.10
       defense:
         ipv4_address: 10.0.1.10
       monitor:
@@ -149,8 +145,6 @@ services:
       - ./script/dvwa.startup.sh:/main.sh
     command: /bin/bash /main.sh
     networks:
-      defense:
-        ipv4_address: 10.0.1.11
       monitor:
         ipv4_address: 10.0.3.11
 
@@ -164,10 +158,33 @@ services:
     networks:
       internal:
         ipv4_address: 10.0.5.12
-      defense:
-        ipv4_address: 10.0.1.12
       monitor:
         ipv4_address: 10.0.3.12
+
+  wackopicko:
+    image: 'adamdoupe/wackopicko:latest'
+    hostname: wackopicko.lab
+    restart: always
+    volumes:
+      - ./script/wackopicko.startup.sh:/run.sh
+      - wackopicko_mysql:/var/lib/mysql
+      - wackopicko_etc:/etc/mysql
+    command: /bin/bash /run.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.13
+      internal:
+        ipv4_address: 10.0.5.13
+      public:
+        ipv4_address: 10.0.2.13
+
+  juiceshop:
+    image: 'bkimminich/juice-shop:latest'
+    hostname: juiceshop.lab
+    restart: always
+    networks:
+      defense:
+        ipv4_address: 10.0.1.14
 
   gitea:
     image: 'csalab/csaf-gitea:latest'
@@ -198,7 +215,6 @@ services:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${MONITOR_PASS:-monitor}
     volumes:
-      - /dev/null:/usr/share/novnc/index.html
       - ./script/kalilinux.startup.sh:/script/startup.sh
       - ./script/kalilinux.tunell.py:/script/tunell.py
     command: /bin/bash /script/startup.sh
@@ -381,3 +397,5 @@ volumes:
   gitea_data: {}
   dvwa_data: {}
   dvwa_mariadb: {}
+  wackopicko_mysql: {}
+  wackopicko_etc: {}

@@ -73,6 +73,8 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://dvwa.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
+- http://wackopicko.lab/
+- http://juiceshop.lab:3000/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (default username: admin, default passowrd: SecretPassword)
@@ -86,22 +88,21 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.0.201 server.lab
 - 10.0.0.201 mail.server.lab
 - 10.0.0.202 gophish.lab
-- 10.0.0.10 dvwa.lab
-- 10.0.0.12 dvwa-modsecurity.lab
 
 ## Defense
 - 10.0.1.101 defense.lab
-- 10.0.1.9 mariadb.lab
 - 10.0.1.10 dvwa.lab
-- 10.0.1.11 dvwa-monitor.lab
-- 10.0.1.12 dvwa-modsecurity.lab
+- 10.0.1.13 wackopicko.lab
+- 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
 
 ## Public
 - 10.0.2.101 defense.lab
+- 10.0.2.13 wackopicko.lab
 
 ## Monitor
 - 10.0.3.102 monitor.lab
+- 10.0.3.9 mariadb.lab
 - 10.0.3.10 dvwa.lab
 - 10.0.3.11 dvwa-monitor.lab
 - 10.0.3.12 dvwa-modsecurity.lab
@@ -117,8 +118,8 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 
 ## Internal
 - 10.0.5.100 attack.lab
-- 10.0.5.10 dvwa.lab
 - 10.0.5.12 dvwa-modsecurity.lab
+- 10.0.5.13 wackopicko.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.
