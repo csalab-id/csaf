@@ -93,7 +93,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.101 defense.lab
 - 10.0.1.10 dvwa.lab
 - 10.0.1.13 wackopicko.lab
-- 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
 
 ## Public
@@ -120,6 +119,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.5.100 attack.lab
 - 10.0.5.12 dvwa-modsecurity.lab
 - 10.0.5.13 wackopicko.lab
+- 10.0.5.14 juiceshop.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.

@@ -130,8 +130,8 @@ services:
     hostname: juiceshop.lab
     restart: always
     networks:
-      defense:
-        ipv4_address: 10.0.1.14
+      internal:
+        ipv4_address: 10.0.5.14
 
   gitea:
     image: 'csalab/csaf-gitea:latest'
