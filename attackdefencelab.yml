@@ -1,0 +1,196 @@
+version: '3.8'
+services:
+  attack:
+    hostname: attack.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'csalab/csaf-kali:latest'
+    restart: always
+    ports:
+      - 0.0.0.0:6080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=${ATTACK_PASS:-attack}
+    volumes:
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      attack:
+        ipv4_address: 10.0.0.100
+      internal:
+        ipv4_address: 10.0.5.100
+
+  defense:
+    hostname: defense.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'csalab/csaf-kali:latest'
+    restart: always
+    ports:
+      - 0.0.0.0:7080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=${DEFENSE_PASS:-defense}
+    volumes:
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.101
+      public:
+        ipv4_address: 10.0.2.101
+
+  mariadb:
+    image: 'mariadb:11.0.2'
+    hostname: mariadb.lab
+    restart: always
+    environment:
+      - MARIADB_DATABASE=dvwa
+      - MARIADB_USER=dvwa
+      - MARIADB_PASSWORD=dvwa
+      - MARIADB_ROOT_PASSWORD=mariadbpassword
+    volumes:
+      - dvwa_mariadb:/var/lib/mysql
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.9
+
+  dvwa:
+    image: 'csalab/csaf-dvwa:latest'
+    hostname: dvwa.lab
+    build:
+      context: ./build/
+      dockerfile: dvwa.Dockerfile
+    restart: always
+    working_dir: /root
+    volumes:
+      - dvwa_data:/var/www/html
+      - ./script/dvwa.startup.sh:/main.sh
+    command: /bin/bash /main.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.10
+      monitor:
+        ipv4_address: 10.0.3.10
+
+  dvwa_monitor:
+    image: 'csalab/csaf-dvwa:latest'
+    hostname: dvwa-monitor.lab
+    build:
+      context: ./build/
+      dockerfile: dvwa.Dockerfile
+    restart: always
+    working_dir: /root
+    volumes:
+      - dvwa_monitor_data:/var/www/html
+      - ./script/dvwa.startup.sh:/main.sh
+    command: /bin/bash /main.sh
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.11
+
+  dvwa_modsecurity:
+    image: 'owasp/modsecurity-crs:apache'
+    hostname: dvwa-modsecurity.lab
+    restart: always
+    environment:
+      - BACKEND=http://10.0.3.11:80
+      - BACKEND_WS=ws://10.0.3.11:80
+    networks:
+      internal:
+        ipv4_address: 10.0.5.12
+      monitor:
+        ipv4_address: 10.0.3.12
+
+  wackopicko:
+    image: 'adamdoupe/wackopicko:latest'
+    hostname: wackopicko.lab
+    restart: always
+    volumes:
+      - ./script/wackopicko.startup.sh:/run.sh
+      - wackopicko_mysql:/var/lib/mysql
+      - wackopicko_etc:/etc/mysql
+    command: /bin/bash /run.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.13
+      internal:
+        ipv4_address: 10.0.5.13
+      public:
+        ipv4_address: 10.0.2.13
+
+  juiceshop:
+    image: 'bkimminich/juice-shop:latest'
+    hostname: juiceshop.lab
+    restart: always
+    networks:
+      defense:
+        ipv4_address: 10.0.1.14
+
+  gitea:
+    image: 'csalab/csaf-gitea:latest'
+    build:
+      context: ./build/
+      dockerfile: gitea.Dockerfile
+    hostname: gitea.lab
+    restart: always
+    volumes:
+      - gitea_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      defense:
+        ipv4_address: 10.0.1.20
+
+networks:
+  attack:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+          gateway: 10.0.0.1
+
+  defense:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+          gateway: 10.0.1.1
+
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+          gateway: 10.0.2.1
+
+  monitor:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
+          gateway: 10.0.3.1
+
+  internal:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.5.0/24
+          gateway: 10.0.5.1
+
+volumes:
+  gitea_data: {}
+  dvwa_data: {}
+  dvwa_monitor_data: {}
+  dvwa_mariadb: {}
+  wackopicko_mysql: {}
+  wackopicko_etc: {}
