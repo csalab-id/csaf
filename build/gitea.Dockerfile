@@ -1,2 +1,2 @@
-FROM gitea/gitea:1.19.1
+FROM gitea/gitea:1.20.3
 COPY ./data/gitea /data
