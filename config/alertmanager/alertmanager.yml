@@ -1,0 +1,43 @@
+route:
+  receiver: 'email'
+
+receivers:
+  - name: 'email'
+    email_configs:
+      - to: 'postmaster@server.lab'
+        from: 'postmaster@server.lab'
+        smarthost: mail.server.lab:587
+        auth_username: 'postmaster@server.lab'
+        auth_identity: 'postmaster@server.lab'
+        auth_password: 'supersecretpassword'
+        send_resolved: true
+
+  - name: 'slack'
+    slack_configs:
+      - send_resolved: true
+        icon_url: https://avatars3.githubusercontent.com/u/3380462
+        title: |-
+          [{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }} for {{ .CommonLabels.job }}
+          {{- if gt (len .CommonLabels) (len .GroupLabels) -}}
+            {{" "}}(
+            {{- with .CommonLabels.Remove .GroupLabels.Names }}
+              {{- range $index, $label := .SortedPairs -}}
+                {{ if $index }}, {{ end }}
+                {{- $label.Name }}="{{ $label.Value -}}"
+              {{- end }}
+            {{- end -}}
+            )
+          {{- end }}
+        text: >-
+          {{ range .Alerts -}}
+          *Alert:* {{ .Annotations.title }}{{ if .Labels.severity }} - `{{ .Labels.severity }}`{{ end }}
+
+          *Description:* {{ .Annotations.description }}
+          
+          *Details:*
+            {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+            {{ end }}
+          {{ end }}
+        username: 'Prometheus'
+        channel: '#alertmanager'
+        api_url: 'https://hooks.slack.com/services/XXXXXXXXXXX/XXXXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX'

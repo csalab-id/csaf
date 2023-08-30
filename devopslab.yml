@@ -1,0 +1,334 @@
+version: '3.8'
+services:
+  attack:
+    hostname: attack.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'csalab/csaf-kali:latest'
+    restart: always
+    ports:
+      - 0.0.0.0:6080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=${ATTACK_PASS:-attack}
+    volumes:
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      attack:
+        ipv4_address: 10.0.0.100
+      internal:
+        ipv4_address: 10.0.5.100
+
+  server.lab:
+    hostname: mail.server.lab
+    image: 'iredmail/mariadb:stable'
+    restart: always
+    environment:
+      - HOSTNAME=mail.server.lab
+      - FIRST_MAIL_DOMAIN=server.lab
+      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=${MAIL_PASS:-supersecretpassword}
+      - MLMMJADMIN_API_TOKEN=CCmMymMpFH35K8Q0H3FQAsSRQzkSjCeazm+t1X27cdE=
+      - ROUNDCUBE_DES_KEY=s9lVEEaiA+MmvYZvfi1k0WQNFiFmGOYI
+    volumes:
+      - iredmail_backup-mysql:/var/vmail/backup/mysql
+      - iredmail_mailboxes:/var/vmail/vmail1
+      - iredmail_mlmmj:/var/vmail/mlmmj
+      - iredmail_mlmmj_archive:/var/vmail/mlmmj-archive
+      - iredmail_imapsieve_copy:/var/vmail/imapsieve_copy
+      - iredmail_custom:/opt/iredmail/custom
+      - iredmail_ssl:/opt/iredmail/ssl
+      - iredmail_mysql:/var/lib/mysql
+      - iredmail_clamav:/var/lib/clamav
+      - iredmail_sa_rules:/var/lib/spamassassin
+      - iredmail_postfix_queue:/var/spool/postfix
+    networks:
+      attack:
+        ipv4_address: 10.0.0.201
+
+  defense:
+    hostname: defense.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'csalab/csaf-kali:latest'
+    restart: always
+    ports:
+      - 0.0.0.0:7080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=${DEFENSE_PASS:-defense}
+    volumes:
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.101
+      public:
+        ipv4_address: 10.0.2.101
+
+  mariadb:
+    image: 'mariadb:11.0.2'
+    hostname: mariadb.lab
+    restart: always
+    environment:
+      - MARIADB_DATABASE=dvwa
+      - MARIADB_USER=dvwa
+      - MARIADB_PASSWORD=dvwa
+      - MARIADB_ROOT_PASSWORD=mariadbpassword
+    volumes:
+      - dvwa_mariadb:/var/lib/mysql
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.9
+
+  dvwa:
+    image: 'csalab/csaf-dvwa:latest'
+    hostname: dvwa.lab
+    build:
+      context: ./
+      dockerfile: build/dvwa.Dockerfile
+    restart: always
+    working_dir: /root
+    volumes:
+      - dvwa_data:/var/www/html
+      - ./script/dvwa.startup.sh:/main.sh
+    command: /bin/bash /main.sh
+    networks:
+      defense:
+        ipv4_address: 10.0.1.10
+      monitor:
+        ipv4_address: 10.0.3.10
+
+  gitea:
+    image: 'csalab/csaf-gitea:latest'
+    build:
+      context: ./
+      dockerfile: build/gitea.Dockerfile
+    hostname: gitea.lab
+    restart: always
+    volumes:
+      - gitea_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      defense:
+        ipv4_address: 10.0.1.20
+
+  runner:
+    image: 'gitea/act_runner:0.2.5'
+    hostname: runner.lab
+    restart: always
+    privileged: true
+    environment:
+      - GITEA_INSTANCE_URL=http://gitea.lab
+      - GITEA_RUNNER_REGISTRATION_TOKEN=9cVFhZ4ZcCY2tFLaNHUgGsEAJ7gXurVAaQQ07TlX
+      - DOCKER_HOST=tcp://dind.lab:2376
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/client
+    volumes:
+      - runner_certs:/certs
+      - runner_share:/home/rootless/.local/share/docker
+      - runner_lib:/var/lib/docker
+      - dind_socks:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.21
+      public:
+        ipv4_address: 10.0.2.21
+
+  dind:
+    hostname: dind.lab
+    image: 'docker:dind'
+    restart: always
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - runner_certs:/certs
+      - runner_lib:/var/lib/docker
+      - dind_socks:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.22
+      public:
+        ipv4_address: 10.0.2.22
+
+  monitor:
+    hostname: monitor.lab
+    build:
+      context: ./build/
+      dockerfile: kalilinux.Dockerfile
+    image: 'csalab/csaf-kali:latest'
+    restart: always
+    ports:
+      - 0.0.0.0:8080:8080
+    working_dir: /root
+    environment:
+      - SHELL=/bin/bash
+      - VNC_PASSWORD=${MONITOR_PASS:-monitor}
+    volumes:
+      - ./script/kalilinux.startup.sh:/script/startup.sh
+      - ./script/kalilinux.tunell.py:/script/tunell.py
+    command: /bin/bash /script/startup.sh
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.102
+      internet:
+        ipv4_address: 10.0.4.102
+
+  grafana:
+    hostname: grafana.lab
+    image: 'grafana/grafana:10.0.3'
+    restart: always
+    volumes:
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-csalab}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASS:-Grafana123@}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    labels:
+      org.label-schema.group: "monitoring"
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.50
+
+  prometheus:
+    hostname: prometheus.lab
+    image: 'prom/prometheus:v2.46.0'
+    restart: always
+    volumes:
+      - prometheus_data:/prometheus
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/prometheus/alert.yml:/etc/prometheus/alert.yml
+    labels:
+      org.label-schema.group: "monitoring"
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.51
+
+  node-exporter:
+    hostname: node-exporter.lab
+    image: 'prom/node-exporter:v1.6.1'
+    restart: always
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    labels:
+      org.label-schema.group: "monitoring"
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.52
+
+  alertmanager:
+    hostname: alertmanager.lab
+    image: 'prom/alertmanager:v0.25.0'
+    volumes:
+      - alertmanager_data:/alertmanager
+      - ./config/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    restart: always
+    labels:
+      org.label-schema.group: "monitoring"
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.53
+      attack:
+        ipv4_address: 10.0.0.53
+
+  cadvisor:
+    hostname: cadvisor.lab
+    image: 'gcr.io/cadvisor/cadvisor:v0.47.2'
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    restart: always
+    labels:
+      org.label-schema.group: "monitoring"
+    networks:
+      monitor:
+        ipv4_address: 10.0.3.54
+
+networks:
+  attack:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+          gateway: 10.0.0.1
+
+  defense:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+          gateway: 10.0.1.1
+
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+          gateway: 10.0.2.1
+
+  monitor:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
+          gateway: 10.0.3.1
+
+  internet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.4.0/24
+          gateway: 10.0.4.1
+
+  internal:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.5.0/24
+          gateway: 10.0.5.1
+
+volumes:
+  iredmail_backup-mysql: {}
+  iredmail_mailboxes: {}
+  iredmail_mlmmj: {}
+  iredmail_mlmmj_archive: {}
+  iredmail_imapsieve_copy: {}
+  iredmail_custom: {}
+  iredmail_ssl: {}
+  iredmail_mysql: {}
+  iredmail_clamav: {}
+  iredmail_sa_rules: {}
+  iredmail_postfix_queue: {}
+  dvwa_data: {}
+  dvwa_mariadb: {}
+  gitea_data: {}
+  runner_certs: {}
+  runner_share: {}
+  runner_lib: {}
+  dind_socks: {}
+  prometheus_data: {}
+  alertmanager_data: {}
