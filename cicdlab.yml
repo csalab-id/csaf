@@ -1,0 +1,192 @@
+version: '3.8'
+services:
+  gitea:
+    image: 'csalab/csaf-gitea:latest'
+    build:
+      context: ./
+      dockerfile: build/gitea.Dockerfile
+    hostname: gitea.lab
+    restart: always
+    volumes:
+      - gitea_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      defense:
+        ipv4_address: 10.0.1.20
+
+  runner:
+    image: 'gitea/act_runner:0.2.5'
+    hostname: runner.lab
+    restart: always
+    environment:
+      - GITEA_INSTANCE_URL=http://gitea.lab
+      - GITEA_RUNNER_REGISTRATION_TOKEN=tByigX9COUzBqwqMHsO2Z9z1vlVOtkjNzCf46uuU
+    volumes:
+      - gitea_data:/data
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.21
+
+  dind:
+    hostname: dind.lab
+    image: 'docker:dind'
+    restart: always
+    privileged: true
+    volumes:
+      - gitea_data:/data
+      - dind_lib:/var/lib/docker
+      - dind_run:/var/run
+      - jenkins_home:/var/jenkins_home
+    networks:
+      defense:
+        ipv4_address: 10.0.1.22
+      public:
+        ipv4_address: 10.0.2.22
+
+  portainer-agent:
+    hostname: portainer-agent.lab
+    image: 'portainer/agent:2.18.4'
+    restart: always
+    volumes:
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.23
+
+  jenkins:
+    hostname: jenkins.lab
+    build:
+      context: ./build/
+      dockerfile: jenkins.Dockerfile
+    image: 'jenkins-blueocean:2.421-jdk11'
+    restart: always
+    user: root
+    environment:
+      - JAVA_OPTS="-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - dind_run:/var/run
+      - ./home:/home
+    networks:
+      defense:
+        ipv4_address: 10.0.1.24
+
+  drone-ci:
+    hostname: drone.lab
+    image: 'drone/drone:2.20.0'
+    restart: always
+    environment:
+      - DRONE_GITEA_SERVER=http://gitea.lab
+      - DRONE_GITEA_CLIENT_ID=78a39f75-3056-4f70-bbbc-1293f2394e0b
+      - DRONE_GITEA_CLIENT_SECRET=gto_i47imxsy4piqkwxvsjbl5mcvtyrfpd4o3srj6wa3a3bmmfmsx5va
+      - DRONE_RPC_SECRET=super-duper-secret
+      - DRONE_SERVER_HOST=drone.lab
+      - DRONE_SERVER_PROTO=http
+    volumes:
+      - drone_data:/data
+    networks:
+      defense:
+        ipv4_address: 10.0.1.25
+
+  drone-runner:
+    hostname: runner.drone.lab
+    image: 'drone/drone-runner-docker:1.8.3'
+    restart: always
+    environment:
+      - DRONE_RPC_PROTO=http
+      - DRONE_RPC_HOST=drone.lab
+      - DRONE_RPC_SECRET=super-duper-secret
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=gitea-runner
+    volumes:
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.26
+
+  gocd-server:
+    hostname: gocd.lab
+    image: 'gocd/gocd-server:v23.3.0'
+    restart: always
+    volumes:
+      - gocd_data:/godata
+      - gocd_home:/home/go
+    networks:
+      defense:
+        ipv4_address: 10.0.1.27
+
+  gocd-agent:
+    hostname: agent.gocd.lab
+    image: 'gocd/gocd-agent-docker-dind:v23.3.0'
+    restart: always
+    environment:
+      - GO_SERVER_URL=http://gocd.lab:8153/go
+    volumes:
+      - dind_lib:/var/lib/docker
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.28
+
+  gitlab:
+    hostname: gitlab.lab
+    image: 'gitlab/gitlab-ce:16.3.1-ce.0'
+    restart: always
+    environment:
+      - GITLAB_ROOT_EMAIL="postmaster@server.lab"
+      - GITLAB_ROOT_PASSWORD="gitlabpassword"
+      - EXTERNAL_URL="http://gitlab.lab"
+    volumes:
+      - gitlab_log:/var/log/gitlab
+      - gitlab_opt:/var/opt/gitlab
+      - gitlab_etc:/etc/gitlab
+    shm_size: '256m'
+    networks:
+      defense:
+        ipv4_address: 10.0.1.29
+
+  gitlab-runner:
+    hostname: runner.gitlab.lab
+    image: 'gitlab/gitlab-runner:v16.3.0'
+    restart: always
+    volumes:
+      - ./config/gitlab/runner/config.toml:/etc/gitlab-runner/config.toml
+      - gitlab_runner_etc:/etc/gitlab-runner
+      - gitlab_runner_home:/home/gitlab-runner
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.60
+
+networks:
+  defense:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+          gateway: 10.0.1.1
+
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+          gateway: 10.0.2.1
+
+volumes:
+  gitea_data: {}
+  dind_lib: {}
+  dind_run: {}
+  jenkins_home: {}
+  drone_data: {}
+  gocd_data: {}
+  gocd_home: {}
+  gitlab_log: {}
+  gitlab_opt: {}
+  gitlab_etc: {}
+  gitlab_runner_etc: {}
+  gitlab_runner_home: {}
+  gitlab_remote_projects: {}

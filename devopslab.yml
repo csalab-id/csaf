@@ -124,35 +124,23 @@ services:
     image: 'gitea/act_runner:0.2.5'
     hostname: runner.lab
     restart: always
-    privileged: true
     environment:
       - GITEA_INSTANCE_URL=http://gitea.lab
-      - GITEA_RUNNER_REGISTRATION_TOKEN=9cVFhZ4ZcCY2tFLaNHUgGsEAJ7gXurVAaQQ07TlX
-      - DOCKER_HOST=tcp://dind.lab:2376
-      - DOCKER_TLS_VERIFY=1
-      - DOCKER_CERT_PATH=/certs/client
+      - GITEA_RUNNER_REGISTRATION_TOKEN=tByigX9COUzBqwqMHsO2Z9z1vlVOtkjNzCf46uuU
     volumes:
-      - runner_certs:/certs
-      - runner_share:/home/rootless/.local/share/docker
-      - runner_lib:/var/lib/docker
-      - dind_socks:/var/run
+      - dind_run:/var/run
     networks:
       defense:
         ipv4_address: 10.0.1.21
-      public:
-        ipv4_address: 10.0.2.21
 
   dind:
     hostname: dind.lab
     image: 'docker:dind'
     restart: always
     privileged: true
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
     volumes:
-      - runner_certs:/certs
-      - runner_lib:/var/lib/docker
-      - dind_socks:/var/run
+      - dind_lib:/var/lib/docker
+      - dind_run:/var/run
     networks:
       defense:
         ipv4_address: 10.0.1.22
@@ -326,9 +314,7 @@ volumes:
   dvwa_data: {}
   dvwa_mariadb: {}
   gitea_data: {}
-  runner_certs: {}
-  runner_share: {}
-  runner_lib: {}
-  dind_socks: {}
+  dind_lib: {}
+  dind_run: {}
   prometheus_data: {}
   alertmanager_data: {}
