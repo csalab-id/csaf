@@ -1,0 +1,214 @@
+version: '3.8'
+services:
+  gitea:
+    image: 'csalab/csaf-gitea:latest'
+    build:
+      context: ./
+      dockerfile: build/gitea.Dockerfile
+    hostname: gitea.lab
+    restart: always
+    volumes:
+      - gitea_data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      defense:
+        ipv4_address: 10.0.1.20
+      
+  runner:
+    image: 'gitea/act_runner:0.2.5'
+    hostname: runner.lab
+    restart: always
+    environment:
+      - GITEA_INSTANCE_URL=http://gitea.lab
+      - GITEA_RUNNER_REGISTRATION_TOKEN=${GITEA_RUNNER_TOKEN:-tByigX9COUzBqwqMHsO2Z9z1vlVOtkjNzCf46uuU}
+    volumes:
+      - gitea_data:/data
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.21
+      public:
+        ipv4_address: 10.0.2.21
+
+  dind:
+    hostname: dind.lab
+    image: 'docker:dind'
+    restart: always
+    privileged: true
+    volumes:
+      - gitea_data:/data
+      - dind_lib:/var/lib/docker
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.22
+      public:
+        ipv4_address: 10.0.2.22
+
+  portainer-agent:
+    hostname: portainer-agent.lab
+    image: 'portainer/agent:2.18.4'
+    restart: always
+    volumes:
+      - dind_run:/var/run
+    networks:
+      defense:
+        ipv4_address: 10.0.1.23
+
+  sonarqube:
+    hostname: sonarqube.lab
+    image: 'sonarqube:9.9.1-community'
+    restart: always
+    volumes:
+      - sonarqube_data:/opt/sonarqube
+    networks:
+      defense:
+        ipv4_address: 10.0.1.70
+
+  nginx:
+    hostname: nginx.defectdojo.lab
+    image: "defectdojo/defectdojo-nginx:latest"
+    restart: always
+    depends_on:
+      - uwsgi
+    environment:
+      NGINX_METRICS_ENABLED: "${NGINX_METRICS_ENABLED:-false}"
+    volumes:
+      - defectdojo_media:/usr/share/nginx/html/media
+    networks:
+      defense:
+        ipv4_address: 10.0.1.80
+
+  uwsgi:
+    hostname: uwsgi.defectdojo.lab
+    image: "defectdojo/defectdojo-django:latest"
+    restart: always
+    depends_on:
+      - postgres
+    entrypoint: ['/wait-for-it.sh', 'postgres:5432', '-t', '30', '--', '/entrypoint-uwsgi.sh']
+    environment:
+      DD_DEBUG: 'False'
+      DD_DJANGO_METRICS_ENABLED: "${DD_DJANGO_METRICS_ENABLED:-False}"
+      DD_ALLOWED_HOSTS: "${DD_ALLOWED_HOSTS:-*}"
+      DD_DATABASE_URL: postgresql://defectdojo:defectdojo@postgres:5432/defectdojo
+      DD_CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+      DD_SECRET_KEY: "${DD_SECRET_KEY:-hhZCp@D28z!n@NED*yB!ROMt+WzsY*iq}"
+      DD_CREDENTIAL_AES_256_KEY: "${DD_CREDENTIAL_AES_256_KEY:-&91a*agLqesc*0DJ+2*bAbsUZfR*4nLw}"
+    volumes:
+      - defectdojo_settings:/app/docker/extra_settings
+      - defectdojo_media:/app/media
+    networks:
+      defense:
+        ipv4_address: 10.0.1.81
+
+  celerybeat:
+    hostname: celerybeat.defectdojo.lab
+    image: "defectdojo/defectdojo-django:latest"
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    entrypoint: ['/wait-for-it.sh', 'postgres:5432', '-t', '30', '--', '/entrypoint-celery-beat.sh']
+    environment:
+      DD_DATABASE_URL: postgresql://defectdojo:defectdojo@postgres:5432/defectdojo
+      DD_CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+      DD_SECRET_KEY: "${DD_SECRET_KEY:-hhZCp@D28z!n@NED*yB!ROMt+WzsY*iq}"
+      DD_CREDENTIAL_AES_256_KEY: "${DD_CREDENTIAL_AES_256_KEY:-&91a*agLqesc*0DJ+2*bAbsUZfR*4nLw}"
+    volumes:
+      - defectdojo_settings:/app/docker/extra_settings
+    networks:
+      defense:
+        ipv4_address: 10.0.1.82
+
+  celeryworker:
+    hostname: celeryworker.defectdojo.lab
+    image: "defectdojo/defectdojo-django:latest"
+    restart: always
+    depends_on:
+      - postgres
+      - rabbitmq
+    entrypoint: ['/wait-for-it.sh', 'postgres:5432', '-t', '30', '--', '/entrypoint-celery-worker.sh']
+    environment:
+      DD_DATABASE_URL: postgresql://defectdojo:defectdojo@postgres:5432/defectdojo
+      DD_CELERY_BROKER_URL: amqp://guest:guest@rabbitmq:5672//
+      DD_SECRET_KEY: "${DD_SECRET_KEY:-hhZCp@D28z!n@NED*yB!ROMt+WzsY*iq}"
+      DD_CREDENTIAL_AES_256_KEY: "${DD_CREDENTIAL_AES_256_KEY:-&91a*agLqesc*0DJ+2*bAbsUZfR*4nLw}"
+    volumes:
+      - defectdojo_settings:/app/docker/extra_settings
+      - defectdojo_media:/app/media
+    networks:
+      defense:
+        ipv4_address: 10.0.1.83
+
+  initializer:
+    hostname: initializer.defectdojo.lab
+    image: "defectdojo/defectdojo-django:latest"
+    restart: always
+    depends_on:
+      - postgres
+    entrypoint: ['/wait-for-it.sh', 'postgres:5432', '--', '/entrypoint-initializer.sh']
+    environment:
+      DD_DATABASE_URL: postgresql://defectdojo:defectdojo@postgres:5432/defectdojo
+      DD_ADMIN_USER: "${DD_ADMIN_USER:-admin}"
+      DD_ADMIN_MAIL: "${DD_ADMIN_USER:-admin@defectdojo.local}"
+      DD_ADMIN_FIRST_NAME: "${DD_ADMIN_FIRST_NAME:-Admin}"
+      DD_ADMIN_LAST_NAME: "${DD_ADMIN_LAST_NAME:-User}"
+      DD_INITIALIZE: "${DD_INITIALIZE:-true}"
+      DD_SECRET_KEY: "${DD_SECRET_KEY:-hhZCp@D28z!n@NED*yB!ROMt+WzsY*iq}"
+      DD_CREDENTIAL_AES_256_KEY: "${DD_CREDENTIAL_AES_256_KEY:-&91a*agLqesc*0DJ+2*bAbsUZfR*4nLw}"
+    volumes:
+      - defectdojo_settings:/app/docker/extra_settings
+    networks:
+      defense:
+        ipv4_address: 10.0.1.84
+
+  postgres:
+    hostname: postgres.defectdojo.lab
+    image: postgres:15.3-alpine@sha256:48d8422c6ae570a5bda52f07548b8e65dd055ac0b661f25b44b20e8cff2f75f0
+    restart: always
+    environment:
+      POSTGRES_DB: defectdojo
+      POSTGRES_USER: defectdojo
+      POSTGRES_PASSWORD: defectdojo
+    volumes:
+      - defectdojo_postgres:/var/lib/postgresql/data
+    networks:
+      defense:
+        ipv4_address: 10.0.1.85
+
+  rabbitmq:
+    hostname: rabbitmq.defectdojo.lab
+    image: rabbitmq:3.12.2-alpine@sha256:e6ed332cd6598a62d119b5e37e5a665ddb082586e3de5eef626a68a392d924ab
+    restart: always
+    volumes:
+      - defectdojo_rabbitmq:/var/lib/rabbitmq
+    networks:
+      defense:
+        ipv4_address: 10.0.1.86
+
+networks:
+  defense:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+          gateway: 10.0.1.1
+
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.2.0/24
+          gateway: 10.0.2.1
+
+volumes:
+  gitea_data: {}
+  dind_lib: {}
+  dind_run: {}
+  sonarqube_data: {}
+  defectdojo_settings: {}
+  defectdojo_postgres: {}
+  defectdojo_media: {}
+  defectdojo_rabbitmq: {}
