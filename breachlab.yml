@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  infectionmonkey:
+    image: 'csalab/infectionmonkey:latest'
+    build:
+      context: ./
+      dockerfile: build/infectionmonkey.Dockerfile
+    hostname: infectionmonkey.lab
+    restart: always
+    volumes:
+      - infectionmonkey:/opt/infectionmonkey
+    networks:
+      attack:
+        ipv4_address: 10.0.0.110
+
+  mongodb:
+    image: 'mongo:latest'
+    hostname: mongodb.lab
+    restart: always
+    volumes:
+      - mongodb_db:/data/db
+      - mongodb_configdb:/data/configdb
+    networks:
+      attack:
+        ipv4_address: 10.0.0.111
+
+  purpleops:
+    image: 'csalab/purpleops:latest'
+    hostname: purpleops.lab
+    restart: always
+    command: gunicorn --bind 0.0.0.0:80 purpleops:app
+    environment:
+      - MONGO_DB=purpleops
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - FLASK_DEBUG=True
+      - FLASK_MFA=False
+      - HOST=0.0.0.0
+      - PORT=80
+      - NAME=csaf
+    depends_on:
+      - mongodb
+    volumes:
+      - purpleops:/usr/src/app/
+    networks:
+      attack:
+        ipv4_address: 10.0.0.112
+
+networks:
+  attack:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/24
+          gateway: 10.0.0.1
+
+volumes:
+  infectionmonkey: {}
+  purpleops: {}
+  mongodb_db: {}
+  mongodb_configdb: {}
