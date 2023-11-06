@@ -26,6 +26,9 @@ services:
 
   purpleops:
     image: 'csalab/purpleops:latest'
+    build:
+      context: ./
+      dockerfile: build/purpleops.Dockerfile
     hostname: purpleops.lab
     restart: always
     command: gunicorn --bind 0.0.0.0:80 purpleops:app
@@ -46,6 +49,16 @@ services:
       attack:
         ipv4_address: 10.0.0.112
 
+  caldera:
+    image: ghcr.io/mitre/caldera:master
+    hostname: caldera.lab
+    restart: always
+    volumes:
+      - caldera:/usr/src/app/
+    networks:
+      attack:
+        ipv4_address: 10.0.0.113
+
 networks:
   attack:
     driver: bridge
@@ -59,3 +72,4 @@ volumes:
   purpleops: {}
   mongodb_db: {}
   mongodb_configdb: {}
+  caldera: {}
