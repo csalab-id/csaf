@@ -8,11 +8,11 @@ A brief description of the project.
 # Installation
 Clone the repository
 ```
-git clone https://github.com/csalab-id/csalab-docker.git
+git clone https://github.com/csalab-id/csaf-docker.git
 ```
 Navigate to the project directory
 ```
-cd csalab-docker
+cd csaf-docker
 ```
 Pull the Docker images
 ```
@@ -30,7 +30,7 @@ export MONITOR_PASS=ChangeMePlease
 export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
-export WEBSITE=https://changeme.website/
+export PHISING_WEB=https://changeme.website/
 ```
 Start the container
 ```

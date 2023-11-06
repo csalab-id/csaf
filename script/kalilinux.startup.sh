@@ -13,6 +13,6 @@ yes | ssh-keygen -f /root/.ssh/id_rsa -P ""
 cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
 /etc/init.d/ssh start
 ssh -o "StrictHostKeyChecking no" root@localhost -D 3128 -N -f
-(python2.7 /script/tunell.py) &
+(python2.7 /src/tunell.py) &
 sed -i "s/off/remote/g" /usr/share/novnc/app/ui.js
 /usr/share/novnc/utils/novnc_proxy --listen 80 --vnc 127.0.0.1:5901

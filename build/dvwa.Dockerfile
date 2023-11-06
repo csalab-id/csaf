@@ -1,5 +1,6 @@
 FROM debian:11
-COPY ./data/dvwa/ /var/www/html/
+LABEL maintainer="admin@csalab.id"
+WORKDIR /var/www/html
 RUN apt update && \
 apt -y upgrade && \
 DEBIAN_FRONTEND=noninteractive apt -yq install git lsb-release curl openssh-server apache2 libapache2-mod-php dialog php php-gd php-mysql && \
@@ -19,3 +20,6 @@ cd /var/www/html/ && \
 tar -xf git.tar.gz && \
 chmod 777 config/ hackable/uploads/ && \
 rm -rf /wazuh-agent-4.3.11.deb /splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb /var/www/html/index.html /var/www/html/git.tar.gz
+COPY ./data/dvwa/ /var/www/html/
+COPY script/dvwa.startup.sh /startup.sh
+ENTRYPOINT [ "/bin/bash", "/startup.sh" ]

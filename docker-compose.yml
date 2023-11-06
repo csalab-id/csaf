@@ -3,20 +3,15 @@ services:
   attack:
     hostname: attack.lab
     build:
-      context: ./build/
-      dockerfile: kalilinux.Dockerfile
+      context: .
+      dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:6080:8080
-    working_dir: /root
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${ATTACK_PASS:-attack}
-    volumes:
-      - ./script/kalilinux.startup.sh:/script/startup.sh
-      - ./script/kalilinux.tunell.py:/script/tunell.py
-    command: /bin/bash /script/startup.sh
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -27,16 +22,11 @@ services:
     hostname: phising.lab
     image: 'csalab/csaf-phising:latest'
     build:
-      context: ./build/
-      dockerfile: phising.Dockerfile
+      context: .
+      dockerfile: build/phising.Dockerfile
     restart: always
-    working_dir: /root
     environment:
-      - WEBSITE=${WEBSITE:-https://gmail.com/}
-    volumes:
-      - ./script/phising.index.html:/usr/share/novnc/index.html
-      - ./script/phising.startup.sh:/startup.sh
-    command: /bin/bash /startup.sh
+      - WEBSITE=${PHISING_WEB:-https://gmail.com/}
     networks:
       attack:
         ipv4_address: 10.0.0.200
@@ -80,20 +70,15 @@ services:
   defense:
     hostname: defense.lab
     build:
-      context: ./build/
-      dockerfile: kalilinux.Dockerfile
+      context: .
+      dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:7080:8080
-    working_dir: /root
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${DEFENSE_PASS:-defense}
-    volumes:
-      - ./script/kalilinux.startup.sh:/script/startup.sh
-      - ./script/kalilinux.tunell.py:/script/tunell.py
-    command: /bin/bash /script/startup.sh
     networks:
       defense:
         ipv4_address: 10.0.1.101
@@ -119,14 +104,13 @@ services:
     image: 'csalab/csaf-dvwa:latest'
     hostname: dvwa.lab
     build:
-      context: ./
+      context: .
       dockerfile: build/dvwa.Dockerfile
     restart: always
-    working_dir: /root
     volumes:
       - dvwa_data:/var/www/html
-      - ./script/dvwa.startup.sh:/main.sh
-    command: /bin/bash /main.sh
+    depends_on:
+      - mariadb
     networks:
       defense:
         ipv4_address: 10.0.1.10
@@ -137,14 +121,13 @@ services:
     image: 'csalab/csaf-dvwa:latest'
     hostname: dvwa-monitor.lab
     build:
-      context: ./
+      context: .
       dockerfile: build/dvwa.Dockerfile
     restart: always
-    working_dir: /root
     volumes:
-      - dvwa_monitor_data:/var/www/html
-      - ./script/dvwa.startup.sh:/main.sh
-    command: /bin/bash /main.sh
+      - dvwa_data:/var/www/html
+    depends_on:
+      - mariadb
     networks:
       monitor:
         ipv4_address: 10.0.3.11
@@ -156,6 +139,8 @@ services:
     environment:
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
+    depends_on:
+      - dvwa_monitor
     networks:
       internal:
         ipv4_address: 10.0.5.12
@@ -167,10 +152,10 @@ services:
     hostname: wackopicko.lab
     restart: always
     volumes:
-      - ./script/wackopicko.startup.sh:/run.sh
+      - ./script/wackopicko.startup.sh:/startup.sh
       - wackopicko_mysql:/var/lib/mysql
       - wackopicko_etc:/etc/mysql
-    command: /bin/bash /run.sh
+    entrypoint: ["/bin/bash", "/startup.sh"]
     networks:
       defense:
         ipv4_address: 10.0.1.13
@@ -190,7 +175,7 @@ services:
   gitea:
     image: 'csalab/csaf-gitea:latest'
     build:
-      context: ./
+      context: .
       dockerfile: build/gitea.Dockerfile
     hostname: gitea.lab
     restart: always
@@ -205,20 +190,15 @@ services:
   monitor:
     hostname: monitor.lab
     build:
-      context: ./build/
-      dockerfile: kalilinux.Dockerfile
+      context: .
+      dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:8080:8080
-    working_dir: /root
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${MONITOR_PASS:-monitor}
-    volumes:
-      - ./script/kalilinux.startup.sh:/script/startup.sh
-      - ./script/kalilinux.tunell.py:/script/tunell.py
-    command: /bin/bash /script/startup.sh
     networks:
       monitor:
         ipv4_address: 10.0.3.102

@@ -1,4 +1,6 @@
 FROM debian:bullseye-slim
+LABEL maintainer="admin@csalab.id"
+WORKDIR /root
 RUN apt update && \
 apt -y upgrade && \
 DEBIAN_FRONTEND=noninteractive apt -yq install \
@@ -14,3 +16,6 @@ DEBIAN_FRONTEND=noninteractive apt -yq install \
 apt -y full-upgrade && \
 apt -y autoremove && \
 apt clean all
+COPY script/phising.index.html /usr/share/novnc/index.html
+COPY script/phising.startup.sh /startup.sh
+ENTRYPOINT [ "/bin/bash", "/startup.sh" ]
