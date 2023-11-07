@@ -16,7 +16,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   tigervnc-standalone-server \
   tigervnc-xorg-extension \
   tigervnc-viewer \
-  novnc \
+  novnc
+RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   dbus-x11 \
   xfce4-session \
   xfce4-goodies \

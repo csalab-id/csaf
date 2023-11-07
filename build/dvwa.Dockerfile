@@ -2,7 +2,6 @@ FROM debian:11
 LABEL maintainer="admin@csalab.id"
 COPY ./data/dvwa/ /var/www/html/
 WORKDIR /var/www/html/
-SHELL ["/bin/bash", "-eo", "pipefail"]
 RUN apt-get update && \
 apt-get -y upgrade && \
 DEBIAN_FRONTEND=noninteractive apt-get -yq install git lsb-release curl openssh-server apache2 libapache2-mod-php dialog php php-gd php-mysql && \
