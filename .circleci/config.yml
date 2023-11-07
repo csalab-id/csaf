@@ -13,22 +13,22 @@ jobs:
       - setup_remote_docker
       - run:
           name: Checking dvwa docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/dvwa.Dockerfile | true
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/dvwa.Dockerfile || true
       - run:
           name: Checking gitea docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gitea.Dockerfile | true
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gitea.Dockerfile || true
       - run:
           name: Checking infectionmonkey docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile | true
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile || true
       - run:
           name: Checking phising docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile | true
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile || true
       - run:
           name: Checking purpleops docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/purpleops.Dockerfile | true
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/purpleops.Dockerfile || true
       - run:
           name: Checking wackopicko docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile | true
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile || true
 
   build-dvwa:
     executor: docker
