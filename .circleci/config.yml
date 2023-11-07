@@ -6,6 +6,30 @@ executors:
       - image: docker:stable
 
 jobs:
+  hadolint:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Checking dvwa docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/dvwa.Dockerfile
+      - run:
+          name: Checking gitea docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gitea.Dockerfile
+      - run:
+          name: Checking infectionmonkey docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile
+      - run:
+          name: Checking phising docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile
+      - run:
+          name: Checking purpleops docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/purpleops.Dockerfile
+      - run:
+          name: Checking wackopicko docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile
+
   build-dvwa:
     executor: docker
     steps:
@@ -18,8 +42,86 @@ jobs:
             docker build -t $DVWA_IMAGE_NAME:$IMAGE_VERSION . -f build/dvwa.Dockerfile
             docker push $DVWA_IMAGE_NAME:$IMAGE_VERSION
 
+  build-gitea:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build gitea image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $GITEA_IMAGE_NAME:$IMAGE_VERSION . -f build/gitea.Dockerfile
+            docker push $GITEA_IMAGE_NAME:$IMAGE_VERSION
+
+  build-infectionmonkey:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build infection monkey image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $IMONKEY_IMAGE_NAME:$IMAGE_VERSION . -f build/infectionmonkey.Dockerfile
+            docker push $IMONKEY_IMAGE_NAME:$IMAGE_VERSION
+
+  build-phising:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build phising image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $PHISING_IMAGE_NAME:$IMAGE_VERSION . -f build/phising.Dockerfile
+            docker push $PHISING_IMAGE_NAME:$IMAGE_VERSION
+
+  build-purpleops:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build purpleops image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $PURPLEOPS_IMAGE_NAME:$IMAGE_VERSION . -f build/purpleops.Dockerfile
+            docker push $PURPLEOPS_IMAGE_NAME:$IMAGE_VERSION
+
+  build-wackopicko:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build wackopicko image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $WACKOPICKO_IMAGE_NAME:$IMAGE_VERSION . -f build/wackopicko.Dockerfile
+            docker push $WACKOPICKO_IMAGE_NAME:$IMAGE_VERSION
+
 workflows:
   version: 2
   csaf:
     jobs:
-      - build-dvwa
+      - hadolint
+      - build-dvwa:
+          requires:
+            - hadolint
+      - build-gitea:
+          requires:
+            - hadolint
+      - build-infectionmonkey:
+          requires:
+            - hadolint
+      - build-phising:
+          requires:
+            - hadolint
+      - build-purpleops:
+          requires:
+            - hadolint
+      - build-wackopicko:
+          requires:
+            - hadolint
