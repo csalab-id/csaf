@@ -3,7 +3,7 @@ LABEL maintainer="admin@csalab.id"
 WORKDIR /root
 RUN apt-get update && \
 apt-get -y upgrade && \
-DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
+DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   openbox \
   firefox-esr \
   mitmproxy \

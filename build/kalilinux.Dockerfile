@@ -6,7 +6,7 @@ apt-get update && \
 apt-get -y upgrade && \
 apt-get clean all && \
 rm -rf /var/lib/apt/lists/*
-RUN DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   dialog \
   firefox-esr \
   inetutils-ping \
