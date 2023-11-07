@@ -1,7 +1,7 @@
 FROM debian:11
 LABEL maintainer="admin@csalab.id"
-RUN apt update && \
-apt -y install wget && \
+RUN apt-get update && \
+apt-get -y install wget && \
 useradd -m -c "Infection Monkey" -s /bin/bash -d /home/monkey monkey && \
 wget https://github.com/guardicore/monkey/releases/download/v2.3.0/InfectionMonkey-v2.3.0.AppImage -O /opt/InfectionMonkey-v2.3.0.AppImage && \
 cd /opt/ && \

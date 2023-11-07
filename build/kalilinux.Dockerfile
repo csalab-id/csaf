@@ -2,9 +2,9 @@ FROM kalilinux/kali-rolling:amd64
 LABEL maintainer="admin@csalab.id"
 WORKDIR /root                                       
 RUN sed -i "s/http.kali.org/mirrors.ocf.berkeley.edu/g" /etc/apt/sources.list && \
-apt update && \
-apt -y upgrade
-RUN DEBIAN_FRONTEND=noninteractive apt -yq install \
+apt-get update && \
+apt-get -y upgrade
+RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   dialog \
   firefox-esr \
   inetutils-ping \
@@ -15,15 +15,15 @@ RUN DEBIAN_FRONTEND=noninteractive apt -yq install \
   tigervnc-xorg-extension \
   tigervnc-viewer \
   novnc
-RUN DEBIAN_FRONTEND=noninteractive apt -yq install \
+RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   dbus-x11 \
   xfce4-session \
   xfce4-goodies \
   kali-linux-large \
   kali-desktop-xfce
-RUN apt -y full-upgrade && \
-apt -y autoremove && \
-apt clean all
+RUN apt-get -y full-upgrade && \
+apt-get -y autoremove && \
+apt-get clean all
 COPY script/kalilinux.startup.sh /src/startup.sh
 COPY script/kalilinux.tunell.py /src/tunell.py
 ENV PASSWORD=attack

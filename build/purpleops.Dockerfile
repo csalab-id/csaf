@@ -1,4 +1,5 @@
 FROM python:3.11.3-slim-buster
+LABEL maintainer="admin@csalab.id"
 WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

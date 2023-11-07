@@ -1,0 +1,25 @@
+version: 2.1
+
+executors:
+  docker:
+    docker:
+      - image: docker:stable
+
+jobs:
+  build-dvwa:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build dvwa image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DVWA_IMAGE_NAME:$IMAGE_VERSION . -f build/dvwa.Dockerfile
+            docker push $DVWA_IMAGE_NAME:$IMAGE_VERSION
+
+workflows:
+  version: 2
+  csaf:
+    jobs:
+      - build-dvwa

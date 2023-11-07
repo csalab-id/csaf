@@ -148,14 +148,13 @@ services:
         ipv4_address: 10.0.3.12
 
   wackopicko:
-    image: 'adamdoupe/wackopicko:latest'
+    image: 'csalab/csaf-wackopicko:latest'
     hostname: wackopicko.lab
     restart: always
     volumes:
-      - ./script/wackopicko.startup.sh:/startup.sh
+      - wackopicko_web:/var/www/html
       - wackopicko_mysql:/var/lib/mysql
       - wackopicko_etc:/etc/mysql
-    entrypoint: ["/bin/bash", "/startup.sh"]
     networks:
       defense:
         ipv4_address: 10.0.1.13
@@ -379,5 +378,6 @@ volumes:
   dvwa_data: {}
   dvwa_monitor_data: {}
   dvwa_mariadb: {}
+  wackopicko_web: {}
   wackopicko_mysql: {}
   wackopicko_etc: {}
