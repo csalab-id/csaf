@@ -2,9 +2,10 @@ FROM debian:11
 LABEL maintainer="admin@csalab.id"
 COPY ./data/dvwa/ /var/www/html/
 WORKDIR /var/www/html/
+SHELL ["/bin/bash", "-eo", "pipefail"]
 RUN apt-get update && \
 apt-get -y upgrade && \
-DEBIAN_FRONTEND=noninteractive apt-get -yq install git lsb-release curl openssh-server apache2 libapache2-mod-php dialog php php-gd php-mysql && \
+DEBIAN_FRONTEND=noninteractive apt-get -yq --no-install-recommends install git lsb-release curl openssh-server apache2 libapache2-mod-php dialog php php-gd php-mysql && \
 (echo "sshpassword"; echo "sshpassword") | passwd && \
 curl -so wazuh-agent-4.3.11.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.11-1_amd64.deb && \
 WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i wazuh-agent-4.3.11.deb && \

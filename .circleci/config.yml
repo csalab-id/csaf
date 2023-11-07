@@ -1,5 +1,12 @@
 version: 2.1
 
+parameters:
+  workflow:
+    type: enum
+    default: auto
+    description: The workflow to trigger.
+    enum: [auto, manual, all]
+
 executors:
   docker:
     docker:
@@ -12,24 +19,26 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Checking dvwa docker file code quality
+          name: Checking csaf-dvwa docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/dvwa.Dockerfile || true
       - run:
-          name: Checking gitea docker file code quality
+          name: Checking csaf-gitea docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gitea.Dockerfile || true
       - run:
-          name: Checking infectionmonkey docker file code quality
+          name: Checking csaf-infectionmonkey docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile || true
       - run:
-          name: Checking phising docker file code quality
+          name: Checking csaf-phising docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile || true
       - run:
-          name: Checking purpleops docker file code quality
+          name: Checking csaf-purpleops docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/purpleops.Dockerfile || true
       - run:
-          name: Checking wackopicko docker file code quality
+          name: Checking csaf-wackopicko docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile || true
-
+      - run:
+          name: Checking csaf-kali docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux.Dockerfile || true
   build-dvwa:
     executor: docker
     steps:
@@ -39,9 +48,8 @@ jobs:
           name: Build dvwa image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DVWA_IMAGE_NAME:$IMAGE_VERSION . -f build/dvwa.Dockerfile
-            docker push $DVWA_IMAGE_NAME:$IMAGE_VERSION
-
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:$IMAGE_VERSION . -f build/dvwa.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:$IMAGE_VERSION
   build-gitea:
     executor: docker
     steps:
@@ -51,9 +59,8 @@ jobs:
           name: Build gitea image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $GITEA_IMAGE_NAME:$IMAGE_VERSION . -f build/gitea.Dockerfile
-            docker push $GITEA_IMAGE_NAME:$IMAGE_VERSION
-
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-gitea:$IMAGE_VERSION . -f build/gitea.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-gitea:$IMAGE_VERSION
   build-infectionmonkey:
     executor: docker
     steps:
@@ -63,9 +70,8 @@ jobs:
           name: Build infection monkey image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $IMONKEY_IMAGE_NAME:$IMAGE_VERSION . -f build/infectionmonkey.Dockerfile
-            docker push $IMONKEY_IMAGE_NAME:$IMAGE_VERSION
-
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-infectionmonkey:$IMAGE_VERSION . -f build/infectionmonkey.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-infectionmonkey:$IMAGE_VERSION
   build-phising:
     executor: docker
     steps:
@@ -75,9 +81,8 @@ jobs:
           name: Build phising image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $PHISING_IMAGE_NAME:$IMAGE_VERSION . -f build/phising.Dockerfile
-            docker push $PHISING_IMAGE_NAME:$IMAGE_VERSION
-
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-phising:$IMAGE_VERSION . -f build/phising.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-phising:$IMAGE_VERSION
   build-purpleops:
     executor: docker
     steps:
@@ -87,9 +92,8 @@ jobs:
           name: Build purpleops image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $PURPLEOPS_IMAGE_NAME:$IMAGE_VERSION . -f build/purpleops.Dockerfile
-            docker push $PURPLEOPS_IMAGE_NAME:$IMAGE_VERSION
-
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-purpleops:$IMAGE_VERSION . -f build/purpleops.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-purpleops:$IMAGE_VERSION
   build-wackopicko:
     executor: docker
     steps:
@@ -99,12 +103,53 @@ jobs:
           name: Build wackopicko image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $WACKOPICKO_IMAGE_NAME:$IMAGE_VERSION . -f build/wackopicko.Dockerfile
-            docker push $WACKOPICKO_IMAGE_NAME:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-wackopicko:$IMAGE_VERSION . -f build/wackopicko.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-wackopicko:$IMAGE_VERSION
+  build-kali:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build kali image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION . -f build/kalilinux.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION
 
 workflows:
   version: 2
-  csaf:
+  build-image-auto:
+    when: { equal: [ auto, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-dvwa:
+          requires:
+            - hadolint
+      - build-infectionmonkey:
+          requires:
+            - hadolint
+      - build-phising:
+          requires:
+            - hadolint
+      - build-purpleops:
+          requires:
+            - hadolint
+  build-image-manual:
+    when: { equal: [ manual, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-gitea:
+          requires:
+            - hadolint
+      - build-wackopicko:
+          requires:
+            - hadolint
+      - build-kali:
+          requires:
+            - hadolint
+  build-image-all:
+    when: { equal: [ all, << pipeline.parameters.workflow >> ] }
     jobs:
       - hadolint
       - build-dvwa:
@@ -123,5 +168,8 @@ workflows:
           requires:
             - hadolint
       - build-wackopicko:
+          requires:
+            - hadolint
+      - build-kali:
           requires:
             - hadolint
