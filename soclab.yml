@@ -3,20 +3,15 @@ services:
   attack:
     hostname: attack.lab
     build:
-      context: ./build/
-      dockerfile: kalilinux.Dockerfile
+      context: .
+      dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:6080:8080
-    working_dir: /root
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${ATTACK_PASS:-attack}
-    volumes:
-      - ./script/kalilinux.startup.sh:/script/startup.sh
-      - ./script/kalilinux.tunell.py:/script/tunell.py
-    command: /bin/bash /script/startup.sh
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -42,14 +37,13 @@ services:
     image: 'csalab/csaf-dvwa:latest'
     hostname: dvwa.lab
     build:
-      context: ./build/
-      dockerfile: dvwa.Dockerfile
+      context: .
+      dockerfile: build/dvwa.Dockerfile
     restart: always
-    working_dir: /root
     volumes:
       - dvwa_data:/var/www/html
-      - ./script/dvwa.startup.sh:/main.sh
-    command: /bin/bash /main.sh
+    depends_on:
+      - mariadb
     networks:
       defense:
         ipv4_address: 10.0.1.10
@@ -60,14 +54,13 @@ services:
     image: 'csalab/csaf-dvwa:latest'
     hostname: dvwa-monitor.lab
     build:
-      context: ./build/
-      dockerfile: dvwa.Dockerfile
+      context: .
+      dockerfile: build/dvwa.Dockerfile
     restart: always
-    working_dir: /root
     volumes:
       - dvwa_monitor_data:/var/www/html
-      - ./script/dvwa.startup.sh:/main.sh
-    command: /bin/bash /main.sh
+    depends_on:
+      - mariadb
     networks:
       monitor:
         ipv4_address: 10.0.3.11
@@ -79,6 +72,8 @@ services:
     environment:
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
+    depends_on:
+      - dvwa_monitor
     networks:
       internal:
         ipv4_address: 10.0.5.12
@@ -86,14 +81,13 @@ services:
         ipv4_address: 10.0.3.12
 
   wackopicko:
-    image: 'adamdoupe/wackopicko:latest'
+    image: 'csalab/csaf-wackopicko:latest'
     hostname: wackopicko.lab
     restart: always
     volumes:
-      - ./script/wackopicko.startup.sh:/run.sh
+      - wackopicko_web:/var/www/html
       - wackopicko_mysql:/var/lib/mysql
       - wackopicko_etc:/etc/mysql
-    command: /bin/bash /run.sh
     networks:
       defense:
         ipv4_address: 10.0.1.13
@@ -105,20 +99,15 @@ services:
   monitor:
     hostname: monitor.lab
     build:
-      context: ./build/
-      dockerfile: kalilinux.Dockerfile
+      context: .
+      dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:8080:8080
-    working_dir: /root
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${MONITOR_PASS:-monitor}
-    volumes:
-      - ./script/kalilinux.startup.sh:/script/startup.sh
-      - ./script/kalilinux.tunell.py:/script/tunell.py
-    command: /bin/bash /script/startup.sh
     networks:
       monitor:
         ipv4_address: 10.0.3.102
@@ -287,5 +276,6 @@ volumes:
   dvwa_data: {}
   dvwa_monitor_data: {}
   dvwa_mariadb: {}
+  wackopicko_web: {}
   wackopicko_mysql: {}
   wackopicko_etc: {}

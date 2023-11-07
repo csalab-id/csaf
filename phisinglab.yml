@@ -3,20 +3,15 @@ services:
   attack:
     hostname: attack.lab
     build:
-      context: ./build/
-      dockerfile: kalilinux.Dockerfile
+      context: .
+      dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf-kali:latest'
     restart: always
     ports:
       - 0.0.0.0:6080:8080
-    working_dir: /root
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${ATTACK_PASS:-attack}
-    volumes:
-      - ./script/kalilinux.startup.sh:/script/startup.sh
-      - ./script/kalilinux.tunell.py:/script/tunell.py
-    command: /bin/bash /script/startup.sh
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -27,16 +22,11 @@ services:
     hostname: phising.lab
     image: 'csalab/csaf-phising:latest'
     build:
-      context: ./build/
-      dockerfile: phising.Dockerfile
+      context: .
+      dockerfile: build/phising.Dockerfile
     restart: always
-    working_dir: /root
     environment:
-      - WEBSITE=${WEBSITE:-https://gmail.com/}
-    volumes:
-      - ./script/phising.index.html:/usr/share/novnc/index.html
-      - ./script/phising.startup.sh:/startup.sh
-    command: /bin/bash /startup.sh
+      - WEBSITE=${PHISING_WEB:-https://gmail.com/}
     networks:
       attack:
         ipv4_address: 10.0.0.200

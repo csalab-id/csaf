@@ -125,7 +125,7 @@ services:
       dockerfile: build/dvwa.Dockerfile
     restart: always
     volumes:
-      - dvwa_data:/var/www/html
+      - dvwa_monitor_data:/var/www/html
     depends_on:
       - mariadb
     networks:

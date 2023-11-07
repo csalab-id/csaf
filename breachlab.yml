@@ -1,11 +1,11 @@
 version: '3.8'
 services:
   infectionmonkey:
-    image: 'csalab/infectionmonkey:latest'
-    build:
-      context: ./
-      dockerfile: build/infectionmonkey.Dockerfile
     hostname: infectionmonkey.lab
+    build:
+      context: .
+      dockerfile: build/infectionmonkey.Dockerfile
+    image: 'csalab/csaf-infectionmonkey:latest'
     restart: always
     volumes:
       - infectionmonkey:/opt/infectionmonkey
@@ -25,11 +25,11 @@ services:
         ipv4_address: 10.0.0.111
 
   purpleops:
-    image: 'csalab/purpleops:latest'
-    build:
-      context: ./
-      dockerfile: build/purpleops.Dockerfile
     hostname: purpleops.lab
+    build:
+      context: .
+      dockerfile: build/purpleops.Dockerfile
+    image: 'csalab/csaf-purpleops:latest'
     restart: always
     command: gunicorn --bind 0.0.0.0:80 purpleops:app
     environment:
