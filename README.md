@@ -8,11 +8,11 @@ A brief description of the project.
 # Installation
 Clone the repository
 ```
-git clone https://github.com/csalab-id/csaf-docker.git
+git clone https://github.com/csalab-id/csaf.git
 ```
 Navigate to the project directory
 ```
-cd csaf-docker
+cd csaf
 ```
 Pull the Docker images
 ```
@@ -30,7 +30,6 @@ export MONITOR_PASS=ChangeMePlease
 export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
-export PHISING_WEB=https://changeme.website/
 ```
 Start the container
 ```
@@ -49,9 +48,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - curl --proxy socks5://ipaddress:8080 http://10.0.3.102/vnc.html
 
 # Example to remote ssh with ssh client
-- ssh root@ipaddress -p 6080 (default password: attack)
-- ssh root@ipaddress -p 7080 (default password: defense)
-- ssh root@ipaddress -p 8080 (default password: monitor)
+- ssh root@ipaddress -p 6080 (default password: attackpassword)
+- ssh root@ipaddress -p 7080 (default password: defensepassword)
+- ssh root@ipaddress -p 8080 (default password: monitorpassword)
 
 # Example to access kali linux desktop with curl / browser
 - curl http://ipaddress:6080/vnc.html
@@ -59,14 +58,14 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - curl http://ipaddress:8080/vnc.html
 
 # Domain Access
-- http://attack.lab:6080/vnc.html (default password: attack)
-- http://defense.lab:7080/vnc.html (default password: defense)
-- http://monitor.lab:8080/vnc.html (default password: monitor)
+- http://attack.lab:6080/vnc.html (default password: attackpassword)
+- http://defense.lab:7080/vnc.html (default password: defensepassword)
+- http://monitor.lab:8080/vnc.html (default password: monitorpassword)
 - https://gophish.lab:3333/ (default username: admin, default password: gophishpassword)
-- https://server.lab/ (default username: postmaster@server.lab, default passowrd: supersecretpassword)
-- https://server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: supersecretpassword)
-- https://mail.server.lab/ (default username: postmaster@server.lab, default passowrd: supersecretpassword)
-- https://mail.server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: supersecretpassword)
+- https://server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)
+- https://server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: mailpassword)
+- https://mail.server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)
+- https://mail.server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: mailpassword)
 - http://phising.lab/
 - http://10.0.0.200:8081/
 - http://gitea.lab/ (default username: csalab, default password: giteapassword)
@@ -79,6 +78,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (default username: admin, default passowrd: SecretPassword)
 - http://splunk.lab:8000/ (default username: admin, default password: splunkpassword)
+- https://infectionmonkey.lab:5000/
+- http://purpleops.lab/
+- http://caldera.lab:8888/
 
 # Network / IP Address
 
@@ -88,6 +90,10 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.0.201 server.lab
 - 10.0.0.201 mail.server.lab
 - 10.0.0.202 gophish.lab
+- 10.0.0.110 infectionmonkey.lab
+- 10.0.0.111 mongodb.lab
+- 10.0.0.112 purpleops.lab
+- 10.0.0.113 caldera.lab
 
 ## Defense
 - 10.0.1.101 defense.lab

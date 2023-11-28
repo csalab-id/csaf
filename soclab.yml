@@ -11,7 +11,7 @@ services:
       - 0.0.0.0:6080:8080
     environment:
       - SHELL=/bin/bash
-      - VNC_PASSWORD=${ATTACK_PASS:-attack}
+      - VNC_PASSWORD=${ATTACK_PASS:-attackpassword}
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -83,6 +83,9 @@ services:
   wackopicko:
     image: 'csalab/csaf-wackopicko:latest'
     hostname: wackopicko.lab
+    build:
+      context: .
+      dockerfile: build/wackopicko.Dockerfile
     restart: always
     volumes:
       - wackopicko_web:/var/www/html
@@ -96,6 +99,14 @@ services:
       public:
         ipv4_address: 10.0.2.13
 
+  juiceshop:
+    image: 'bkimminich/juice-shop:latest'
+    hostname: juiceshop.lab
+    restart: always
+    networks:
+      internal:
+        ipv4_address: 10.0.5.14
+
   monitor:
     hostname: monitor.lab
     build:
@@ -107,7 +118,7 @@ services:
       - 0.0.0.0:8080:8080
     environment:
       - SHELL=/bin/bash
-      - VNC_PASSWORD=${MONITOR_PASS:-monitor}
+      - VNC_PASSWORD=${MONITOR_PASS:-monitorpassword}
     networks:
       monitor:
         ipv4_address: 10.0.3.102

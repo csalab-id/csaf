@@ -11,7 +11,7 @@ services:
       - 0.0.0.0:6080:8080
     environment:
       - SHELL=/bin/bash
-      - VNC_PASSWORD=${ATTACK_PASS:-attack}
+      - VNC_PASSWORD=${ATTACK_PASS:-attackpassword}
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -38,7 +38,7 @@ services:
     environment:
       - HOSTNAME=mail.server.lab
       - FIRST_MAIL_DOMAIN=server.lab
-      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=${MAIL_PASS:-supersecretpassword}
+      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=${MAIL_PASS:-mailpassword}
       - MLMMJADMIN_API_TOKEN=CCmMymMpFH35K8Q0H3FQAsSRQzkSjCeazm+t1X27cdE=
       - ROUNDCUBE_DES_KEY=s9lVEEaiA+MmvYZvfi1k0WQNFiFmGOYI
     volumes:
