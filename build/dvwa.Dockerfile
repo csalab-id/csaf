@@ -9,8 +9,8 @@ DEBIAN_FRONTEND=noninteractive apt-get -yq install git lsb-release curl openssh-
 curl -so wazuh-agent-4.3.11.deb https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.3.11-1_amd64.deb && \
 WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i wazuh-agent-4.3.11.deb && \
 update-rc.d wazuh-agent defaults 95 10 && \
-curl -so splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb "https://download.splunk.com/products/universalforwarder/releases/9.1.0.1/linux/splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb" && \
-dpkg -i splunkforwarder-9.1.0.1-77f73c9edb85-linux-2.6-amd64.deb && \
+curl -so splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb "https://download.splunk.com/products/universalforwarder/releases/9.1.2/linux/splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb" && \
+dpkg -i splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb && \
 /opt/splunkforwarder/bin/splunk add user admin -role Admin -password splunkpassword --no-prompt --accept-license --answer-yes && \
 sed -i "s/allow_url_include = Off/allow_url_include = On/g" /etc/php/*/apache2/php.ini && \
 sed -i "s/PYTHONHTTPSVERIFY=0/PYTHONHTTPSVERIFY=1/g" /opt/splunkforwarder/etc/splunk-launch.conf && \
