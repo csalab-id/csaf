@@ -1,4 +1,4 @@
-FROM kalilinux/kali-rolling:amd64
+FROM kalilinux/kali-rolling:latest
 LABEL maintainer="admin@csalab.id"
 WORKDIR /root                                       
 RUN sed -i "s/http.kali.org/mirrors.ocf.berkeley.edu/g" /etc/apt/sources.list && \

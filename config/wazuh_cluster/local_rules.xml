@@ -1,0 +1,47 @@
+<!-- Local rules -->
+
+<!-- Modify it at your will. -->
+<!-- Copyright (C) 2015, Wazuh Inc. -->
+
+<!-- Example -->
+<group name="local,syslog,sshd,">
+
+  <!--
+  Dec 10 01:02:02 host sshd[1234]: Failed none for root from 1.1.1.1 port 1066 ssh2
+  -->
+  <rule id="100001" level="5">
+    <if_sid>5716</if_sid>
+    <srcip>1.1.1.1</srcip>
+    <description>sshd: authentication failed from IP 1.1.1.1.</description>
+    <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5,</group>
+  </rule>
+
+</group>
+
+<group name="syscheck,pci_dss_11.5,nist_800_53_SI.7,">
+    <!-- Rules for Linux systems -->
+    <rule id="100200" level="7">
+        <if_sid>550</if_sid>
+        <field name="file">/var/www/html</field>
+        <description>File modified in /var/www/html directory.</description>
+    </rule>
+    <rule id="100201" level="7">
+        <if_sid>554</if_sid>
+        <field name="file">/var/www/html</field>
+        <description>File added to /var/www/html directory.</description>
+    </rule>
+</group>
+
+<group name="virustotal,">
+  <rule id="100092" level="12">
+    <if_sid>657</if_sid>
+    <match>Successfully removed threat</match>
+    <description>$(parameters.program) removed threat located at $(parameters.alert.data.virustotal.source.file)</description>
+  </rule>
+
+  <rule id="100093" level="12">
+    <if_sid>657</if_sid>
+    <match>Error removing threat</match>
+    <description>Error removing threat located at $(parameters.alert.data.virustotal.source.file)</description>
+  </rule>
+</group>
