@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: The workflow to trigger.
-    enum: [auto, manual, all]
+    enum: [auto, manual, all, caldera]
 
 executors:
   docker:
@@ -116,6 +116,17 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION . -f build/kalilinux.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION
+  clone-caldera:
+    executor: docker
+    steps:
+      - setup_remote_docker
+      - run:
+          name: Clone caldera to docker hub
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker pull ghcr.io/mitre/caldera:master
+            docker tag ghcr.io/mitre/caldera:master $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION
 
 workflows:
   version: 2
@@ -173,3 +184,7 @@ workflows:
       - build-kali:
           requires:
             - hadolint
+  clone-caldera:
+    when: { equal: [ caldera, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - clone-caldera
