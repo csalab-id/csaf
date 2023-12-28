@@ -39,6 +39,9 @@ jobs:
       - run:
           name: Checking csaf-kali docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux.Dockerfile || true
+      - run:
+          name: Checking csaf-caldera docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/caldera.Dockerfile || true
   build-dvwa:
     executor: docker
     steps:
@@ -125,7 +128,18 @@ jobs:
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker pull ghcr.io/mitre/caldera:master
-            docker tag ghcr.io/mitre/caldera:master $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION
+            docker tag ghcr.io/mitre/caldera:master $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:master
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:master
+  build-caldera:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build caldera image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION . -f build/caldera.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION
 
 workflows:
@@ -159,6 +173,9 @@ workflows:
       - build-kali:
           requires:
             - hadolint
+      - build-caldera:
+          requires:
+            - hadolint
   build-image-all:
     when: { equal: [ all, << pipeline.parameters.workflow >> ] }
     jobs:
@@ -184,7 +201,14 @@ workflows:
       - build-kali:
           requires:
             - hadolint
+      - build-caldera:
+          requires:
+            - hadolint
   clone-caldera:
     when: { equal: [ caldera, << pipeline.parameters.workflow >> ] }
     jobs:
+      - hadolint
       - clone-caldera
+      - build-caldera:
+          requires:
+            - hadolint
