@@ -61,6 +61,7 @@ services:
     image: csalab/csaf-caldera:latest
     restart: always
     volumes:
+      - ./config/caldera/local.yml:/usr/src/app/conf/local.yml
       - caldera:/usr/src/app
     networks:
       attack:

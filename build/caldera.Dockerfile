@@ -3,9 +3,7 @@ LABEL maintainer="admin@csalab.id"
 RUN apt-get update && \
     apt-get -yq install mingw-w64 upx && \
     source /opt/venv/caldera/bin/activate && \
-    pip install docker myst && \
-    sed -i "s/- access/- access\n- atomic/g" /usr/src/app/conf/local.yml && \
-    sed -i "s/- debrief/- debrief\n- emu/g" /usr/src/app/conf/local.yml
+    pip install docker myst
 WORKDIR /usr/src/app/plugins/emu
 RUN sed -i "s/unzip payloads\/AdFind.zip/unzip -P NotMalware payloads\/AdFind.zip/g" download_payloads.sh && \
     sed -i "s/curl -o/curl -Lo/g" download_payloads.sh && \
