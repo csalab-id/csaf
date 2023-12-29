@@ -218,6 +218,7 @@ services:
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_PASSWORD=${SPLUNK_PASS:-splunkpassword}
     volumes:
+      - ./config/splunk/web.conf:/opt/splunk/etc/system/local/web.conf
       - splunk_etc:/opt/splunk/etc
       - splunk_var:/opt/splunk/var
     networks:

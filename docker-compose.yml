@@ -302,6 +302,7 @@ services:
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_PASSWORD=${SPLUNK_PASS:-splunkpassword}
     volumes:
+      - ./config/splunk/web.conf:/opt/splunk/etc/system/local/web.conf
       - splunk_etc:/opt/splunk/etc
       - splunk_var:/opt/splunk/var
     networks:
@@ -322,6 +323,8 @@ services:
     networks:
       attack:
         ipv4_address: 10.0.0.110
+      defense:
+        ipv4_address: 10.0.1.110
 
   mongodb:
     image: 'mongo:7.0.4-rc0'
@@ -358,6 +361,8 @@ services:
     networks:
       attack:
         ipv4_address: 10.0.0.112
+      defense:
+        ipv4_address: 10.0.1.112
 
   caldera:
     hostname: caldera.lab

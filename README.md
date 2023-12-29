@@ -1,11 +1,34 @@
-# Cyber Security Awareness Framework (Docker)
+# Cyber Security Awareness Framework
+
 A brief description of the project.
 
 # Requirements
+
+## Software
 - Docker
 - Docker-compose
 
+## Hardware
+
+### Minimum
+- 4 Core CPU
+- 10GB RAM
+- 60GB Disk free
+
+### Recommendation
+- 8 Core CPU or above
+- 16GB RAM or above
+- 100GB Disk free or above
+
 # Installation
+
+## Automatic Installation on Ubuntu 22.04 (Fresh Install)
+
+```
+curl -Lso- https://raw.githubusercontent.com/csalab-id/csaf-iac/main/startup.sh | bash
+```
+
+## Manual Installation
 Clone the repository
 ```
 git clone https://github.com/csalab-id/csaf.git
@@ -77,10 +100,10 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (default username: admin, default passowrd: SecretPassword)
-- http://splunk.lab:8000/ (default username: admin, default password: splunkpassword)
+- http://splunk.lab/ (default username: admin, default password: splunkpassword)
 - https://infectionmonkey.lab:5000/
 - http://purpleops.lab/ (default username: admin@purpleops.lab, default password: purpleopspassword)
-- http://caldera.lab:8888/ (default username: red/blue, default password: calderapassword)
+- http://caldera.lab/ (default username: red/blue, default password: calderapassword)
 
 # Network / IP Address
 
@@ -100,6 +123,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.10 dvwa.lab
 - 10.0.1.13 wackopicko.lab
 - 10.0.1.20 gitea.lab
+- 10.0.0.110 infectionmonkey.lab
+- 10.0.0.112 purpleops.lab
+- 10.0.0.113 caldera.lab
 
 ## Public
 - 10.0.2.101 defense.lab
