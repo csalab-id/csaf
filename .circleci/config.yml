@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: The workflow to trigger.
-    enum: [auto, manual, all, caldera]
+    enum: [auto, all, dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, caldera]
 
 executors:
   docker:
@@ -119,17 +119,6 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION . -f build/kalilinux.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION
-  clone-caldera:
-    executor: docker
-    steps:
-      - setup_remote_docker
-      - run:
-          name: Clone caldera to docker hub
-          command: |
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker pull ghcr.io/mitre/caldera:master
-            docker tag ghcr.io/mitre/caldera:master $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:master
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:master
   build-caldera:
     executor: docker
     steps:
@@ -148,34 +137,6 @@ workflows:
     when: { equal: [ auto, << pipeline.parameters.workflow >> ] }
     jobs:
       - hadolint
-      - build-dvwa:
-          requires:
-            - hadolint
-      - build-infectionmonkey:
-          requires:
-            - hadolint
-      - build-phising:
-          requires:
-            - hadolint
-      - build-purpleops:
-          requires:
-            - hadolint
-  build-image-manual:
-    when: { equal: [ manual, << pipeline.parameters.workflow >> ] }
-    jobs:
-      - hadolint
-      - build-gitea:
-          requires:
-            - hadolint
-      - build-wackopicko:
-          requires:
-            - hadolint
-      - build-kali:
-          requires:
-            - hadolint
-      - build-caldera:
-          requires:
-            - hadolint
   build-image-all:
     when: { equal: [ all, << pipeline.parameters.workflow >> ] }
     jobs:
@@ -204,11 +165,59 @@ workflows:
       - build-caldera:
           requires:
             - hadolint
-  clone-caldera:
+  build-dvwa:
+    when: { equal: [ dvwa, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-dvwa:
+          requires:
+            - hadolint
+  build-gitea:
+    when: { equal: [ gitea, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-gitea:
+          requires:
+            - hadolint
+  build-infectionmonkey:
+    when: { equal: [ infectionmonkey, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-infectionmonkey:
+          requires:
+            - hadolint
+  build-phising:
+    when: { equal: [ phising, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-phising:
+          requires:
+            - hadolint
+  build-purpleops:
+    when: { equal: [ purpleops, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-purpleops:
+          requires:
+            - hadolint
+  build-wackopicko:
+    when: { equal: [ wackopicko, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-wackopicko:
+          requires:
+            - hadolint
+  build-kali:
+    when: { equal: [ kali, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-kali:
+          requires:
+            - hadolint
+  build-caldera:
     when: { equal: [ caldera, << pipeline.parameters.workflow >> ] }
     jobs:
       - hadolint
-      - clone-caldera
       - build-caldera:
           requires:
             - hadolint
