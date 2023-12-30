@@ -96,7 +96,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
 - http://wackopicko.lab/
-- http://juiceshop.lab:3000/
+- http://juiceshop.lab/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab:5601/ (default username: admin, default passowrd: SecretPassword)
@@ -122,28 +122,32 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.101 defense.lab
 - 10.0.1.10 dvwa.lab
 - 10.0.1.13 wackopicko.lab
+- 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
 - 10.0.0.110 infectionmonkey.lab
 - 10.0.0.112 purpleops.lab
 - 10.0.0.113 caldera.lab
 
-## Public
-- 10.0.2.101 defense.lab
-- 10.0.2.13 wackopicko.lab
-
 ## Monitor
-- 10.0.3.102 monitor.lab
+- 10.0.3.201 server.lab
+- 10.0.3.201 mail.server.lab
 - 10.0.3.9 mariadb.lab
 - 10.0.3.10 dvwa.lab
 - 10.0.3.11 dvwa-monitor.lab
 - 10.0.3.12 dvwa-modsecurity.lab
+- 10.0.3.102 monitor.lab
 - 10.0.3.30 wazuh-manager.lab
 - 10.0.3.31 wazuh-indexer.lab
 - 10.0.3.32 wazuh-dashboard.lab
 - 10.0.3.40 splunk.lab
 
+## Public
+- 10.0.2.101 defense.lab
+- 10.0.2.13 wackopicko.lab
+
 ## Internet
 - 10.0.4.102 monitor.lab
+- 10.0.4.30 wazuh-manager.lab
 - 10.0.4.32 wazuh-dashboard.lab
 - 10.0.4.40 splunk.lab
 
@@ -151,7 +155,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.5.100 attack.lab
 - 10.0.5.12 dvwa-modsecurity.lab
 - 10.0.5.13 wackopicko.lab
-- 10.0.5.14 juiceshop.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.

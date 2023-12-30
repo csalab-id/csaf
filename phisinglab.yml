@@ -56,6 +56,8 @@ services:
     networks:
       attack:
         ipv4_address: 10.0.0.201
+      defense:
+        ipv4_address: 10.0.1.201
       monitor:
         ipv4_address: 10.0.3.201
 
@@ -76,6 +78,14 @@ networks:
       config:
         - subnet: 10.0.0.0/24
           gateway: 10.0.0.1
+
+  defense:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.0.1.0/24
+          gateway: 10.0.1.1
 
   internal:
     driver: bridge

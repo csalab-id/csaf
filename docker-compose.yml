@@ -56,6 +56,8 @@ services:
     networks:
       attack:
         ipv4_address: 10.0.0.201
+      defense:
+        ipv4_address: 10.0.1.201
       monitor:
         ipv4_address: 10.0.3.201
 
@@ -172,9 +174,11 @@ services:
     image: 'bkimminich/juice-shop:latest'
     hostname: juiceshop.lab
     restart: always
+    environment:
+      - PORT=80
     networks:
-      internal:
-        ipv4_address: 10.0.5.14
+      defense:
+        ipv4_address: 10.0.1.14
 
   gitea:
     image: 'csalab/csaf-gitea:latest'
@@ -372,6 +376,7 @@ services:
     image: csalab/csaf-caldera:latest
     restart: always
     volumes:
+      - ./config/caldera/local.yml:/usr/src/app/conf/local.yml
       - caldera:/usr/src/app
     networks:
       attack:
