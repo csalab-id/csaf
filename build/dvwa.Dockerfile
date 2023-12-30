@@ -5,6 +5,7 @@ WORKDIR /var/www/html/
 RUN apt-get update && \
     apt-get -y upgrade && \
     DEBIAN_FRONTEND=noninteractive apt-get -yq install \
+        inetutils-ping \
         git \
         lsb-release \
         curl \

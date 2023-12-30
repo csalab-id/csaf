@@ -33,7 +33,7 @@ services:
     
   server.lab:
     hostname: mail.server.lab
-    image: 'iredmail/mariadb:stable'
+    image: 'csalab/iredmail:latest'
     restart: always
     environment:
       - HOSTNAME=mail.server.lab

@@ -22,13 +22,6 @@ A brief description of the project.
 
 # Installation
 
-## Automatic Installation on Ubuntu 22.04 (Fresh Install)
-
-```
-curl -Lso- https://raw.githubusercontent.com/csalab-id/csaf-iac/main/startup.sh | bash
-```
-
-## Manual Installation
 Clone the repository
 ```
 git clone https://github.com/csalab-id/csaf.git
