@@ -373,7 +373,7 @@ services:
     build:
       context: .
       dockerfile: build/caldera.Dockerfile
-    image: csalab/csaf-caldera:latest
+    image: 'csalab/csaf-caldera:latest'
     restart: always
     volumes:
       - ./config/caldera/local.yml:/usr/src/app/conf/local.yml

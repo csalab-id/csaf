@@ -8,7 +8,6 @@ RUN apt-get update && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
 RUN git clone https://github.com/CyberCX-STA/PurpleOps.git /usr/src/app && \
-    sed -i "s/admin@purpleops.com/admin@purpleops.lab/g" /usr/src/app/seeder.py && \
     sed -i "s/str(uuid.uuid4())/'purpleopspassword'/g" /usr/src/app/seeder.py && \
     python3 -m pip install --no-cache-dir --upgrade pip~=23.3 && \
     python3 -m pip install --no-cache-dir --requirement requirements.txt
