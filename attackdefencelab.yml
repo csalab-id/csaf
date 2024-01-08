@@ -23,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:latest'
+    image: 'csalab/csaf-kali:slim'
     restart: always
     ports:
       - 0.0.0.0:7080:8080
