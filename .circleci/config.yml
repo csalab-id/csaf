@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: The workflow to trigger.
-    enum: [auto, all, dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, caldera]
+    enum: [auto, all, dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera]
 
 executors:
   docker:
@@ -119,6 +119,20 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION . -f build/kalilinux.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION
+  build-kali-slim:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build kali slim image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            cp build/kalilinux.Dockerfile build/kalilinux-slim.Dockerfile
+            sed -i "s/kali-linux-large/# kali-linux-large/g" build/kalilinux-slim.Dockerfile
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:slim . -f build/kalilinux-slim.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:slim
+            rm -rf build/kalilinux-slim.Dockerfile
   build-caldera:
     executor: docker
     steps:
@@ -160,6 +174,9 @@ workflows:
           requires:
             - hadolint
       - build-kali:
+          requires:
+            - hadolint
+      - build-kali-slim:
           requires:
             - hadolint
       - build-caldera:
@@ -212,6 +229,13 @@ workflows:
     jobs:
       - hadolint
       - build-kali:
+          requires:
+            - hadolint
+  build-kali-slim:
+    when: { equal: [ kali-slim, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-kali-slim:
           requires:
             - hadolint
   build-caldera:
