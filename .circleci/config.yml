@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: The workflow to trigger.
-    enum: [auto, all, dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera]
 
 executors:
   docker:
@@ -19,28 +19,31 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Checking csaf-dvwa docker file code quality
+          name: Checking dvwa docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/dvwa.Dockerfile || true
       - run:
-          name: Checking csaf-gitea docker file code quality
+          name: Checking secure-dvwa docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/secure-dvwa.Dockerfile || true
+      - run:
+          name: Checking gitea docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gitea.Dockerfile || true
       - run:
-          name: Checking csaf-infectionmonkey docker file code quality
+          name: Checking infectionmonkey docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile || true
       - run:
-          name: Checking csaf-phising docker file code quality
+          name: Checking phising docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile || true
       - run:
-          name: Checking csaf-purpleops docker file code quality
+          name: Checking purpleops docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/purpleops.Dockerfile || true
       - run:
-          name: Checking csaf-wackopicko docker file code quality
+          name: Checking wackopicko docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile || true
       - run:
-          name: Checking csaf-kali docker file code quality
+          name: Checking kalilinux docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux.Dockerfile || true
       - run:
-          name: Checking csaf-caldera docker file code quality
+          name: Checking caldera docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/caldera.Dockerfile || true
   build-dvwa:
     executor: docker
@@ -53,6 +56,17 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:$IMAGE_VERSION . -f build/dvwa.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:$IMAGE_VERSION
+  build-secure-dvwa:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build secure-dvwa image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:secure . -f build/secure-dvwa.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:secure
   build-gitea:
     executor: docker
     steps:
@@ -158,6 +172,9 @@ workflows:
       - build-dvwa:
           requires:
             - hadolint
+      - build-secure-dvwa:
+          requires:
+            - hadolint
       - build-gitea:
           requires:
             - hadolint
@@ -187,6 +204,13 @@ workflows:
     jobs:
       - hadolint
       - build-dvwa:
+          requires:
+            - hadolint
+  build-secure-dvwa:
+    when: { equal: [ dvwa, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-secure-dvwa:
           requires:
             - hadolint
   build-gitea:

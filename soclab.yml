@@ -51,12 +51,16 @@ services:
         ipv4_address: 10.0.3.10
 
   dvwa_monitor:
-    image: 'csalab/csaf-dvwa:latest'
+    image: 'csalab/csaf-dvwa:secure'
     hostname: dvwa-monitor.lab
     build:
       context: .
       dockerfile: build/dvwa.Dockerfile
     restart: always
+    tmpfs:
+      - /tmp:noexec,nosuid,nodev
+      - /var/tmp:noexec,nosuid,nodev
+      - /var/log/audit:noexec,nosuid,nodev
     volumes:
       - dvwa_monitor_data:/var/www/html
     depends_on:

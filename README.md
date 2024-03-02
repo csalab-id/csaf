@@ -52,6 +52,23 @@ Start the container
 docker-compose up -d
 ```
 
+# Proof
+![Caldera](.github/images/caldera.png)
+![Secure DVWA](.github/images/dvwa_modsecurity.png)
+![Gitea](.github/images/gitea.png)
+![Gophish](.github/images/gophish.png)
+![Infectionmonkey](.github/images/infectionmonkey.png)
+![Iredmail](.github/images/iredmail.png)
+![Juice Shop](.github/images/juiceshop.png)
+![Mitmproxy](.github/images/mitmproxy.png)
+![Phising](.github/images/phising.png)
+![PurpleOps](.github/images/purpleops.png)
+![Roundcube](.github/images/roundcube.png)
+![Splunk](.github/images/splunk.png)
+![Wackopicko](.github/images/wackopicko.png)
+![Wazuh](.github/images/wazuh.png)
+
+
 # Exposed Ports
 An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP client. Choose one for the best experience.
 - Port 6080 (Access to attack network)
@@ -74,9 +91,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - curl http://ipaddress:8080/vnc.html
 
 # Domain Access
-- http://attack.lab:6080/vnc.html (default password: attackpassword)
-- http://defense.lab:7080/vnc.html (default password: defensepassword)
-- http://monitor.lab:8080/vnc.html (default password: monitorpassword)
+- http://attack.lab/vnc.html (default password: attackpassword)
+- http://defense.lab/vnc.html (default password: defensepassword)
+- http://monitor.lab/vnc.html (default password: monitorpassword)
 - https://gophish.lab:3333/ (default username: admin, default password: gophishpassword)
 - https://server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)
 - https://server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: mailpassword)
