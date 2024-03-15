@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: The workflow to trigger.
-    enum: [auto, all, dvwa, secure-dvwa, secure-dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera]
 
 executors:
   docker:
@@ -207,7 +207,7 @@ workflows:
           requires:
             - hadolint
   build-secure-dvwa:
-    when: { equal: [ dvwa, << pipeline.parameters.workflow >> ] }
+    when: { equal: [ secure-dvwa, << pipeline.parameters.workflow >> ] }
     jobs:
       - hadolint
       - build-secure-dvwa:
