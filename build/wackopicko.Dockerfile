@@ -4,6 +4,6 @@ WORKDIR /var/www/html
 # Privilege escalation scenario
 RUN chmod +s /usr/bin/mawk
 RUN apt-get update && \
-    apt-get install -y wget curl \
+    apt-get install -y wget curl && \
     sed -i 's/volume of MySQL"/volume of MySQL"; \/create_mysql_admin_user.sh/g' /create_mysql_admin_user.sh && \
     sed -i "s/current.sql/\/current.sql/g" /create_mysql_admin_user.sh

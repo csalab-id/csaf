@@ -74,6 +74,10 @@ RUN useradd -f 30 -m -c "Dev User" -s /bin/bash -d /home/devel devel && \
     touch /etc/cron.allow && \
     touch /etc/at.allow && \
     touch /boot/grub/grub.cfg && \
+    chown root:root /etc/shadow && \
+    chown root:root /etc/shadow- && \
+    chown root:root /etc/gshadow && \
+    chown root:root /etc/gshadow- && \
     chgrp adm /var/log/audit/ && \
     chmod u-wx,go-rwx /boot/grub/grub.cfg && \
     chmod og-rwx /etc/cron.d/ && \

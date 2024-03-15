@@ -4,6 +4,7 @@ mkdir -p ~/.vnc/
 rm -rf ~/.vnc/*.pid ~/.vnc/*.log /tmp/.X1*
 touch ~/.Xauthority
 vncpasswd -f <<< $VNC_PASSWORD > ~/.vnc/passwd
+(echo "$VNC_PASSWORD";echo "$VNC_PASSWORD") | sudo passwd kali
 vncserver -PasswordFile ~/.vnc/passwd
 sudo dbus-daemon --config-file=/usr/share/dbus-1/system.conf
 yes | ssh-keygen -f ~/.ssh/id_rsa -P ""

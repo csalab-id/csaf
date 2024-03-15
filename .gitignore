@@ -1,4 +1,5 @@
 .DS_Store
+.env
 build/*-dev.Dockerfile
 config/wazuh_indexer_ssl_certs/*
 develop.yml
