@@ -134,9 +134,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.13 wackopicko.lab
 - 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
-- 10.0.0.110 infectionmonkey.lab
-- 10.0.0.112 purpleops.lab
-- 10.0.0.113 caldera.lab
+- 10.0.1.110 infectionmonkey.lab
+- 10.0.1.112 purpleops.lab
+- 10.0.1.113 caldera.lab
 
 ## Monitor
 - 10.0.3.201 server.lab
