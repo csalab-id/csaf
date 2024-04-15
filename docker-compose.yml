@@ -7,6 +7,11 @@ services:
       dockerfile: build/kalilinux.Dockerfile
     image: 'csalab/csaf:kalilinux'
     restart: always
+    profiles:
+      - attackdefenselab
+      - phisinglab
+      - breachlab
+      - soclab
     ports:
       - 0.0.0.0:6080:8080
     environment:
@@ -25,6 +30,8 @@ services:
       context: .
       dockerfile: build/phising.Dockerfile
     restart: always
+    profiles:
+      - phisinglab
     environment:
       - WEBSITE=${PHISING_WEB:-https://gmail.com/}
     networks:
@@ -35,6 +42,8 @@ services:
     hostname: mail.server.lab
     image: 'csalab/iredmail:latest'
     restart: always
+    profiles:
+      - phisinglab
     environment:
       - HOSTNAME=mail.server.lab
       - FIRST_MAIL_DOMAIN=server.lab
@@ -65,6 +74,8 @@ services:
     image: 'gophish/gophish:latest'
     hostname: gophish.lab
     restart: always
+    profiles:
+      - phisinglab
     environment:
       - GOPHISH_INITIAL_ADMIN_PASSWORD=${GOPHISH_PASS:-gophishpassword}
     networks:
@@ -78,6 +89,9 @@ services:
       dockerfile: build/kalilinux-slim.Dockerfile
     image: 'csalab/csaf:kalilinux-slim'
     restart: always
+    profiles:
+      - attackdefenselab
+      - breachlab
     ports:
       - 0.0.0.0:7080:8080
     environment:
@@ -93,6 +107,9 @@ services:
     image: 'mariadb:11.3.2'
     hostname: mariadb.lab
     restart: always
+    profiles:
+      - attackdefenselab
+      - soclab
     environment:
       - MARIADB_DATABASE=dvwa
       - MARIADB_USER=dvwa
@@ -111,6 +128,10 @@ services:
       context: .
       dockerfile: build/dvwa.Dockerfile
     restart: always
+    profiles:
+      - attackdefenselab
+      - breachlab
+      - soclab
     volumes:
       - dvwa_data:/var/www/html
     depends_on:
@@ -128,6 +149,9 @@ services:
       context: .
       dockerfile: build/secure-dvwa.Dockerfile
     restart: always
+    profiles:
+      - attackdefenselab
+      - soclab
     tmpfs:
       - /tmp:noexec,nosuid,nodev
       - /var/tmp:noexec,nosuid,nodev
@@ -144,6 +168,9 @@ services:
     image: 'owasp/modsecurity-crs:apache'
     hostname: dvwa-modsecurity.lab
     restart: always
+    profiles:
+      - attackdefenselab
+      - soclab
     environment:
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
@@ -162,6 +189,10 @@ services:
       context: .
       dockerfile: build/wackopicko.Dockerfile
     restart: always
+    profiles:
+      - attackdefenselab
+      - breachlab
+      - soclab
     volumes:
       - wackopicko_web:/var/www/html
       - wackopicko_mysql:/var/lib/mysql
@@ -178,6 +209,9 @@ services:
     image: 'bkimminich/juice-shop:latest'
     hostname: juiceshop.lab
     restart: always
+    profiles:
+      - attackdefenselab
+      - soclab
     environment:
       - PORT=80
     networks:
@@ -191,6 +225,8 @@ services:
       dockerfile: build/gitea.Dockerfile
     hostname: gitea.lab
     restart: always
+    profiles:
+      - attackdefenselab
     volumes:
       - gitea_data:/data
       - /etc/timezone:/etc/timezone:ro
@@ -206,6 +242,8 @@ services:
       dockerfile: build/kalilinux-slim.Dockerfile
     image: 'csalab/csaf:kalilinux-slim'
     restart: always
+    profiles:
+      - soclab
     ports:
       - 0.0.0.0:8080:8080
     environment:
@@ -221,6 +259,8 @@ services:
     image: 'wazuh/wazuh-manager:4.7.0'
     hostname: wazuh-manager.lab
     restart: always
+    profiles:
+      - soclab
     environment:
       - INDEXER_URL=https://wazuh-indexer.lab:9200
       - INDEXER_USERNAME=admin
@@ -258,6 +298,8 @@ services:
     image: 'wazuh/wazuh-indexer:4.7.0'
     hostname: wazuh-indexer.lab
     restart: always
+    profiles:
+      - soclab
     environment:
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -284,6 +326,8 @@ services:
     image: 'wazuh/wazuh-dashboard:4.7.0'
     hostname: wazuh-dashboard.lab
     restart: always
+    profiles:
+      - soclab
     environment:
       - INDEXER_USERNAME=admin
       - INDEXER_PASSWORD=SecretPassword
@@ -306,6 +350,8 @@ services:
     hostname: splunk.lab
     image: 'splunk/splunk:9.1.2'
     restart: always
+    profiles:
+      - soclab
     environment:
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_PASSWORD=${SPLUNK_PASS:-splunkpassword}
@@ -326,6 +372,8 @@ services:
       dockerfile: build/infectionmonkey.Dockerfile
     image: 'csalab/csaf:infectionmonkey'
     restart: always
+    profiles:
+      - breachlab
     volumes:
       - infectionmonkey:/opt/infectionmonkey
     networks:
@@ -338,6 +386,8 @@ services:
     image: 'mongo:7.0.8'
     hostname: mongodb.lab
     restart: always
+    profiles:
+      - breachlab
     volumes:
       - mongodb_db:/data/db
       - mongodb_configdb:/data/configdb
@@ -352,6 +402,8 @@ services:
       dockerfile: build/purpleops.Dockerfile
     image: 'csalab/csaf:purpleops'
     restart: always
+    profiles:
+      - breachlab
     command: gunicorn --bind 0.0.0.0:80 purpleops:app
     environment:
       - MONGO_DB=purpleops
@@ -379,6 +431,8 @@ services:
       dockerfile: build/caldera.Dockerfile
     image: 'csalab/csaf:caldera'
     restart: always
+    profiles:
+      - breachlab
     volumes:
       - ./config/caldera/local.yml:/usr/src/app/conf/local.yml
       - caldera:/usr/src/app

@@ -49,9 +49,20 @@ export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
 ```
-Start the container
+Start all the containers
 ```
 docker-compose up -d
+```
+
+You can run specific profiles for running specific labs with the following profiles
+- attackdefenselab
+- phisinglab
+- breachlab
+- soclab
+
+For example
+```
+docker-compose --profile attackdefenselab up -d 
 ```
 
 # Proof
@@ -83,9 +94,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - curl --proxy socks5://ipaddress:8080 http://10.0.3.102/vnc.html
 
 # Example to remote ssh with ssh client
-- ssh root@ipaddress -p 6080 (default password: attackpassword)
-- ssh root@ipaddress -p 7080 (default password: defensepassword)
-- ssh root@ipaddress -p 8080 (default password: monitorpassword)
+- ssh kali@ipaddress -p 6080 (default password: attackpassword)
+- ssh kali@ipaddress -p 7080 (default password: defensepassword)
+- ssh kali@ipaddress -p 8080 (default password: monitorpassword)
 
 # Example to access kali linux desktop with curl / browser
 - curl http://ipaddress:6080/vnc.html
