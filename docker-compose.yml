@@ -8,6 +8,7 @@ services:
     image: 'csalab/csaf:kalilinux'
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - phisinglab
       - breachlab
@@ -31,18 +32,20 @@ services:
       dockerfile: build/phising.Dockerfile
     restart: always
     profiles:
+      - all
       - phisinglab
     environment:
       - WEBSITE=${PHISING_WEB:-https://gmail.com/}
     networks:
       attack:
         ipv4_address: 10.0.0.200
-    
+
   server.lab:
     hostname: mail.server.lab
     image: 'csalab/iredmail:latest'
     restart: always
     profiles:
+      - all
       - phisinglab
     environment:
       - HOSTNAME=mail.server.lab
@@ -75,6 +78,7 @@ services:
     hostname: gophish.lab
     restart: always
     profiles:
+      - all
       - phisinglab
     environment:
       - GOPHISH_INITIAL_ADMIN_PASSWORD=${GOPHISH_PASS:-gophishpassword}
@@ -90,6 +94,7 @@ services:
     image: 'csalab/csaf:kalilinux-slim'
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - breachlab
     ports:
@@ -108,6 +113,7 @@ services:
     hostname: mariadb.lab
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - soclab
     environment:
@@ -129,6 +135,7 @@ services:
       dockerfile: build/dvwa.Dockerfile
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - breachlab
       - soclab
@@ -150,6 +157,7 @@ services:
       dockerfile: build/secure-dvwa.Dockerfile
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - soclab
     tmpfs:
@@ -169,6 +177,7 @@ services:
     hostname: dvwa-modsecurity.lab
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - soclab
     environment:
@@ -190,6 +199,7 @@ services:
       dockerfile: build/wackopicko.Dockerfile
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - breachlab
       - soclab
@@ -210,6 +220,7 @@ services:
     hostname: juiceshop.lab
     restart: always
     profiles:
+      - all
       - attackdefenselab
       - soclab
     environment:
@@ -226,6 +237,7 @@ services:
     hostname: gitea.lab
     restart: always
     profiles:
+      - all
       - attackdefenselab
     volumes:
       - gitea_data:/data
@@ -243,6 +255,7 @@ services:
     image: 'csalab/csaf:kalilinux-slim'
     restart: always
     profiles:
+      - all
       - soclab
     ports:
       - 0.0.0.0:8080:8080
@@ -260,6 +273,7 @@ services:
     hostname: wazuh-manager.lab
     restart: always
     profiles:
+      - all
       - soclab
     environment:
       - INDEXER_URL=https://wazuh-indexer.lab:9200
@@ -299,6 +313,7 @@ services:
     hostname: wazuh-indexer.lab
     restart: always
     profiles:
+      - all
       - soclab
     environment:
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -327,6 +342,7 @@ services:
     hostname: wazuh-dashboard.lab
     restart: always
     profiles:
+      - all
       - soclab
     environment:
       - INDEXER_USERNAME=admin
@@ -351,6 +367,7 @@ services:
     image: 'splunk/splunk:9.1.2'
     restart: always
     profiles:
+      - all
       - soclab
     environment:
       - SPLUNK_START_ARGS=--accept-license
@@ -373,6 +390,7 @@ services:
     image: 'csalab/csaf:infectionmonkey'
     restart: always
     profiles:
+      - all
       - breachlab
     volumes:
       - infectionmonkey:/opt/infectionmonkey
@@ -387,6 +405,7 @@ services:
     hostname: mongodb.lab
     restart: always
     profiles:
+      - all
       - breachlab
     volumes:
       - mongodb_db:/data/db
@@ -403,6 +422,7 @@ services:
     image: 'csalab/csaf:purpleops'
     restart: always
     profiles:
+      - all
       - breachlab
     command: gunicorn --bind 0.0.0.0:80 purpleops:app
     environment:
@@ -432,6 +452,7 @@ services:
     image: 'csalab/csaf:caldera'
     restart: always
     profiles:
+      - all
       - breachlab
     volumes:
       - ./config/caldera/local.yml:/usr/src/app/conf/local.yml

@@ -51,10 +51,11 @@ export MAIL_PASS=ChangeMePlease
 ```
 Start all the containers
 ```
-docker-compose up -d
+docker-compose --profile=all up -d
 ```
 
 You can run specific profiles for running specific labs with the following profiles
+- all
 - attackdefenselab
 - phisinglab
 - breachlab
@@ -62,7 +63,7 @@ You can run specific profiles for running specific labs with the following profi
 
 For example
 ```
-docker-compose --profile attackdefenselab up -d 
+docker-compose --profile=attackdefenselab up -d
 ```
 
 # Proof
@@ -80,7 +81,6 @@ docker-compose --profile attackdefenselab up -d
 ![Splunk](.github/images/splunk.png)
 ![Wackopicko](.github/images/wackopicko.png)
 ![Wazuh](.github/images/wazuh.png)
-
 
 # Exposed Ports
 An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP client. Choose one for the best experience.
