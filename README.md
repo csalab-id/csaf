@@ -1,6 +1,8 @@
 # Cyber Security Awareness Framework
 
-A brief description of the project.
+![CSAF](.github/images/csaf.png)
+
+The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at enhancing cybersecurity awareness and understanding among individuals, organizations, and communities. It provides guidance for the development of effective cybersecurity awareness programs, covering key areas such as assessing awareness needs, creating educational materials, conducting training and simulations, implementing communication campaigns, and measuring awareness levels. By adopting this framework, organizations can foster a robust security culture, enhance their ability to detect and respond to cyber threats, and mitigate the risks associated with attacks and security breaches.
 
 # Requirements
 
@@ -47,9 +49,21 @@ export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
 ```
-Start the container
+Start all the containers
 ```
-docker-compose up -d
+docker-compose --profile=all up -d
+```
+
+You can run specific profiles for running specific labs with the following profiles
+- all
+- attackdefenselab
+- phisinglab
+- breachlab
+- soclab
+
+For example
+```
+docker-compose --profile=attackdefenselab up -d
 ```
 
 # Proof
@@ -68,7 +82,6 @@ docker-compose up -d
 ![Wackopicko](.github/images/wackopicko.png)
 ![Wazuh](.github/images/wazuh.png)
 
-
 # Exposed Ports
 An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP client. Choose one for the best experience.
 - Port 6080 (Access to attack network)
@@ -81,9 +94,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - curl --proxy socks5://ipaddress:8080 http://10.0.3.102/vnc.html
 
 # Example to remote ssh with ssh client
-- ssh root@ipaddress -p 6080 (default password: attackpassword)
-- ssh root@ipaddress -p 7080 (default password: defensepassword)
-- ssh root@ipaddress -p 8080 (default password: monitorpassword)
+- ssh kali@ipaddress -p 6080 (default password: attackpassword)
+- ssh kali@ipaddress -p 7080 (default password: defensepassword)
+- ssh kali@ipaddress -p 8080 (default password: monitorpassword)
 
 # Example to access kali linux desktop with curl / browser
 - curl http://ipaddress:6080/vnc.html

@@ -5,8 +5,14 @@ services:
     build:
       context: .
       dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:latest'
+    image: 'csalab/csaf:kalilinux'
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - phisinglab
+      - breachlab
+      - soclab
     ports:
       - 0.0.0.0:6080:8080
     environment:
@@ -20,21 +26,27 @@ services:
 
   phising:
     hostname: phising.lab
-    image: 'csalab/csaf-phising:latest'
+    image: 'csalab/csaf:phising'
     build:
       context: .
       dockerfile: build/phising.Dockerfile
     restart: always
+    profiles:
+      - all
+      - phisinglab
     environment:
       - WEBSITE=${PHISING_WEB:-https://gmail.com/}
     networks:
       attack:
         ipv4_address: 10.0.0.200
-    
+
   server.lab:
     hostname: mail.server.lab
     image: 'csalab/iredmail:latest'
     restart: always
+    profiles:
+      - all
+      - phisinglab
     environment:
       - HOSTNAME=mail.server.lab
       - FIRST_MAIL_DOMAIN=server.lab
@@ -65,6 +77,9 @@ services:
     image: 'gophish/gophish:latest'
     hostname: gophish.lab
     restart: always
+    profiles:
+      - all
+      - phisinglab
     environment:
       - GOPHISH_INITIAL_ADMIN_PASSWORD=${GOPHISH_PASS:-gophishpassword}
     networks:
@@ -75,9 +90,13 @@ services:
     hostname: defense.lab
     build:
       context: .
-      dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:slim'
+      dockerfile: build/kalilinux-slim.Dockerfile
+    image: 'csalab/csaf:kalilinux-slim'
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - breachlab
     ports:
       - 0.0.0.0:7080:8080
     environment:
@@ -90,9 +109,13 @@ services:
         ipv4_address: 10.0.2.101
 
   mariadb:
-    image: 'mariadb:11.0.2'
+    image: 'mariadb:11.3.2'
     hostname: mariadb.lab
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
     environment:
       - MARIADB_DATABASE=dvwa
       - MARIADB_USER=dvwa
@@ -105,12 +128,17 @@ services:
         ipv4_address: 10.0.3.9
 
   dvwa:
-    image: 'csalab/csaf-dvwa:latest'
+    image: 'csalab/csaf:dvwa'
     hostname: dvwa.lab
     build:
       context: .
       dockerfile: build/dvwa.Dockerfile
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - breachlab
+      - soclab
     volumes:
       - dvwa_data:/var/www/html
     depends_on:
@@ -122,12 +150,16 @@ services:
         ipv4_address: 10.0.3.10
 
   dvwa_monitor:
-    image: 'csalab/csaf-dvwa:secure'
+    image: 'csalab/csaf:dvwa-secure'
     hostname: dvwa-monitor.lab
     build:
       context: .
-      dockerfile: build/dvwa.Dockerfile
+      dockerfile: build/secure-dvwa.Dockerfile
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
     tmpfs:
       - /tmp:noexec,nosuid,nodev
       - /var/tmp:noexec,nosuid,nodev
@@ -144,6 +176,10 @@ services:
     image: 'owasp/modsecurity-crs:apache'
     hostname: dvwa-modsecurity.lab
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
     environment:
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
@@ -156,12 +192,17 @@ services:
         ipv4_address: 10.0.3.12
 
   wackopicko:
-    image: 'csalab/csaf-wackopicko:latest'
+    image: 'csalab/csaf:wackopicko'
     hostname: wackopicko.lab
     build:
       context: .
       dockerfile: build/wackopicko.Dockerfile
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - breachlab
+      - soclab
     volumes:
       - wackopicko_web:/var/www/html
       - wackopicko_mysql:/var/lib/mysql
@@ -178,6 +219,10 @@ services:
     image: 'bkimminich/juice-shop:latest'
     hostname: juiceshop.lab
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
     environment:
       - PORT=80
     networks:
@@ -185,12 +230,15 @@ services:
         ipv4_address: 10.0.1.14
 
   gitea:
-    image: 'csalab/csaf-gitea:latest'
+    image: 'csalab/csaf:gitea'
     build:
       context: .
       dockerfile: build/gitea.Dockerfile
     hostname: gitea.lab
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
     volumes:
       - gitea_data:/data
       - /etc/timezone:/etc/timezone:ro
@@ -203,9 +251,12 @@ services:
     hostname: monitor.lab
     build:
       context: .
-      dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:slim'
+      dockerfile: build/kalilinux-slim.Dockerfile
+    image: 'csalab/csaf:kalilinux-slim'
     restart: always
+    profiles:
+      - all
+      - soclab
     ports:
       - 0.0.0.0:8080:8080
     environment:
@@ -221,6 +272,9 @@ services:
     image: 'wazuh/wazuh-manager:4.7.0'
     hostname: wazuh-manager.lab
     restart: always
+    profiles:
+      - all
+      - soclab
     environment:
       - INDEXER_URL=https://wazuh-indexer.lab:9200
       - INDEXER_USERNAME=admin
@@ -258,6 +312,9 @@ services:
     image: 'wazuh/wazuh-indexer:4.7.0'
     hostname: wazuh-indexer.lab
     restart: always
+    profiles:
+      - all
+      - soclab
     environment:
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -284,6 +341,9 @@ services:
     image: 'wazuh/wazuh-dashboard:4.7.0'
     hostname: wazuh-dashboard.lab
     restart: always
+    profiles:
+      - all
+      - soclab
     environment:
       - INDEXER_USERNAME=admin
       - INDEXER_PASSWORD=SecretPassword
@@ -306,6 +366,9 @@ services:
     hostname: splunk.lab
     image: 'splunk/splunk:9.1.2'
     restart: always
+    profiles:
+      - all
+      - soclab
     environment:
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_PASSWORD=${SPLUNK_PASS:-splunkpassword}
@@ -324,8 +387,11 @@ services:
     build:
       context: .
       dockerfile: build/infectionmonkey.Dockerfile
-    image: 'csalab/csaf-infectionmonkey:latest'
+    image: 'csalab/csaf:infectionmonkey'
     restart: always
+    profiles:
+      - all
+      - breachlab
     volumes:
       - infectionmonkey:/opt/infectionmonkey
     networks:
@@ -335,9 +401,12 @@ services:
         ipv4_address: 10.0.1.110
 
   mongodb:
-    image: 'mongo:7.0.4-rc0'
+    image: 'mongo:7.0.8'
     hostname: mongodb.lab
     restart: always
+    profiles:
+      - all
+      - breachlab
     volumes:
       - mongodb_db:/data/db
       - mongodb_configdb:/data/configdb
@@ -350,8 +419,11 @@ services:
     build:
       context: .
       dockerfile: build/purpleops.Dockerfile
-    image: 'csalab/csaf-purpleops:latest'
+    image: 'csalab/csaf:purpleops'
     restart: always
+    profiles:
+      - all
+      - breachlab
     command: gunicorn --bind 0.0.0.0:80 purpleops:app
     environment:
       - MONGO_DB=purpleops
@@ -377,8 +449,11 @@ services:
     build:
       context: .
       dockerfile: build/caldera.Dockerfile
-    image: 'csalab/csaf-caldera:latest'
+    image: 'csalab/csaf:caldera'
     restart: always
+    profiles:
+      - all
+      - breachlab
     volumes:
       - ./config/caldera/local.yml:/usr/src/app/conf/local.yml
       - caldera:/usr/src/app
