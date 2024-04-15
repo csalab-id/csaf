@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:latest'
+    image: 'csalab/csaf:kalilinux'
     restart: always
     ports:
       - 0.0.0.0:6080:8080
@@ -20,7 +20,7 @@ services:
 
   phising:
     hostname: phising.lab
-    image: 'csalab/csaf-phising:latest'
+    image: 'csalab/csaf:phising'
     build:
       context: .
       dockerfile: build/phising.Dockerfile
@@ -75,8 +75,8 @@ services:
     hostname: defense.lab
     build:
       context: .
-      dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:slim'
+      dockerfile: build/kalilinux-slim.Dockerfile
+    image: 'csalab/csaf:kalilinux-slim'
     restart: always
     ports:
       - 0.0.0.0:7080:8080
@@ -90,7 +90,7 @@ services:
         ipv4_address: 10.0.2.101
 
   mariadb:
-    image: 'mariadb:11.0.2'
+    image: 'mariadb:11.3.2'
     hostname: mariadb.lab
     restart: always
     environment:
@@ -105,7 +105,7 @@ services:
         ipv4_address: 10.0.3.9
 
   dvwa:
-    image: 'csalab/csaf-dvwa:latest'
+    image: 'csalab/csaf:dvwa'
     hostname: dvwa.lab
     build:
       context: .
@@ -122,11 +122,11 @@ services:
         ipv4_address: 10.0.3.10
 
   dvwa_monitor:
-    image: 'csalab/csaf-dvwa:secure'
+    image: 'csalab/csaf:dvwa-secure'
     hostname: dvwa-monitor.lab
     build:
       context: .
-      dockerfile: build/dvwa.Dockerfile
+      dockerfile: build/secure-dvwa.Dockerfile
     restart: always
     tmpfs:
       - /tmp:noexec,nosuid,nodev
@@ -156,7 +156,7 @@ services:
         ipv4_address: 10.0.3.12
 
   wackopicko:
-    image: 'csalab/csaf-wackopicko:latest'
+    image: 'csalab/csaf:wackopicko'
     hostname: wackopicko.lab
     build:
       context: .
@@ -185,7 +185,7 @@ services:
         ipv4_address: 10.0.1.14
 
   gitea:
-    image: 'csalab/csaf-gitea:latest'
+    image: 'csalab/csaf:gitea'
     build:
       context: .
       dockerfile: build/gitea.Dockerfile
@@ -203,8 +203,8 @@ services:
     hostname: monitor.lab
     build:
       context: .
-      dockerfile: build/kalilinux.Dockerfile
-    image: 'csalab/csaf-kali:slim'
+      dockerfile: build/kalilinux-slim.Dockerfile
+    image: 'csalab/csaf:kalilinux-slim'
     restart: always
     ports:
       - 0.0.0.0:8080:8080
@@ -324,7 +324,7 @@ services:
     build:
       context: .
       dockerfile: build/infectionmonkey.Dockerfile
-    image: 'csalab/csaf-infectionmonkey:latest'
+    image: 'csalab/csaf:infectionmonkey'
     restart: always
     volumes:
       - infectionmonkey:/opt/infectionmonkey
@@ -335,7 +335,7 @@ services:
         ipv4_address: 10.0.1.110
 
   mongodb:
-    image: 'mongo:7.0.4-rc0'
+    image: 'mongo:7.0.8'
     hostname: mongodb.lab
     restart: always
     volumes:
@@ -350,7 +350,7 @@ services:
     build:
       context: .
       dockerfile: build/purpleops.Dockerfile
-    image: 'csalab/csaf-purpleops:latest'
+    image: 'csalab/csaf:purpleops'
     restart: always
     command: gunicorn --bind 0.0.0.0:80 purpleops:app
     environment:
@@ -377,7 +377,7 @@ services:
     build:
       context: .
       dockerfile: build/caldera.Dockerfile
-    image: 'csalab/csaf-caldera:latest'
+    image: 'csalab/csaf:caldera'
     restart: always
     volumes:
       - ./config/caldera/local.yml:/usr/src/app/conf/local.yml

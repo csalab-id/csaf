@@ -43,6 +43,9 @@ jobs:
           name: Checking kalilinux docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux.Dockerfile || true
       - run:
+          name: Checking kalilinux-slim docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux-slim.Dockerfile || true
+      - run:
           name: Checking caldera docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/caldera.Dockerfile || true
   build-dvwa:
@@ -54,8 +57,8 @@ jobs:
           name: Build dvwa image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:$IMAGE_VERSION . -f build/dvwa.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa . -f build/dvwa.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa
   build-secure-dvwa:
     executor: docker
     steps:
@@ -65,8 +68,8 @@ jobs:
           name: Build secure-dvwa image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:secure . -f build/secure-dvwa.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-dvwa:secure
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa-secure . -f build/secure-dvwa.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa-secure
   build-gitea:
     executor: docker
     steps:
@@ -76,8 +79,8 @@ jobs:
           name: Build gitea image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-gitea:$IMAGE_VERSION . -f build/gitea.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-gitea:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gitea . -f build/gitea.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gitea
   build-infectionmonkey:
     executor: docker
     steps:
@@ -87,8 +90,8 @@ jobs:
           name: Build infection monkey image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-infectionmonkey:$IMAGE_VERSION . -f build/infectionmonkey.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-infectionmonkey:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:infectionmonkey . -f build/infectionmonkey.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:infectionmonkey
   build-phising:
     executor: docker
     steps:
@@ -98,8 +101,8 @@ jobs:
           name: Build phising image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-phising:$IMAGE_VERSION . -f build/phising.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-phising:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phising . -f build/phising.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phising
   build-purpleops:
     executor: docker
     steps:
@@ -109,8 +112,8 @@ jobs:
           name: Build purpleops image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-purpleops:$IMAGE_VERSION . -f build/purpleops.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-purpleops:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:purpleops . -f build/purpleops.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:purpleops
   build-wackopicko:
     executor: docker
     steps:
@@ -120,8 +123,8 @@ jobs:
           name: Build wackopicko image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-wackopicko:$IMAGE_VERSION . -f build/wackopicko.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-wackopicko:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wackopicko . -f build/wackopicko.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wackopicko
   build-kali:
     executor: docker
     steps:
@@ -131,8 +134,8 @@ jobs:
           name: Build kali image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION . -f build/kalilinux.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux . -f build/kalilinux.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux
   build-kali-slim:
     executor: docker
     steps:
@@ -142,11 +145,8 @@ jobs:
           name: Build kali slim image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            cp build/kalilinux.Dockerfile build/kalilinux-slim.Dockerfile
-            sed -i "s/kali-linux-large/# kali-linux-large/g" build/kalilinux-slim.Dockerfile
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:slim . -f build/kalilinux-slim.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-kali:slim
-            rm -rf build/kalilinux-slim.Dockerfile
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux-slim . -f build/kalilinux-slim.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux-slim
   build-caldera:
     executor: docker
     steps:
@@ -156,8 +156,8 @@ jobs:
           name: Build caldera image
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION . -f build/caldera.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf-caldera:$IMAGE_VERSION
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera . -f build/caldera.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera
 
 workflows:
   version: 2
