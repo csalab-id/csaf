@@ -34,7 +34,7 @@ cd csaf
 ```
 Pull the Docker images
 ```
-docker-compose pull
+docker-compose --profile=all pull
 ```
 Generate wazuh ssl certificate
 ```
