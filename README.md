@@ -48,6 +48,7 @@ export MONITOR_PASS=ChangeMePlease
 export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
+export PURPLEOPS_PASS=ChangeMePlease
 ```
 Start all the containers
 ```
