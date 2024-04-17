@@ -181,6 +181,7 @@ services:
       - attackdefenselab
       - soclab
     environment:
+      - PORT=80
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
     depends_on:
