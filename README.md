@@ -124,6 +124,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://dvwa.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
+- http://dvwa-teler-proxy.lab/ (default username: admin, default passowrd: password)
 - http://wackopicko.lab/
 - http://juiceshop.lab/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
@@ -164,6 +165,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.3.10 dvwa.lab
 - 10.0.3.11 dvwa-monitor.lab
 - 10.0.3.12 dvwa-modsecurity.lab
+- 10.0.3.15 dvwa-teler-proxy.lab
 - 10.0.3.102 monitor.lab
 - 10.0.3.30 wazuh-manager.lab
 - 10.0.3.31 wazuh-indexer.lab
@@ -175,6 +177,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.2.13 wackopicko.lab
 
 ## Internet
+- 10.0.4.15 dvwa-teler-proxy.lab
 - 10.0.4.102 monitor.lab
 - 10.0.4.30 wazuh-manager.lab
 - 10.0.4.32 wazuh-dashboard.lab
@@ -184,6 +187,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.5.100 attack.lab
 - 10.0.5.12 dvwa-modsecurity.lab
 - 10.0.5.13 wackopicko.lab
+- 10.0.5.15 dvwa-teler-proxy.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.

@@ -230,6 +230,28 @@ services:
       defense:
         ipv4_address: 10.0.1.14
 
+  dvwa_teler_proxy:
+    image: 'csalab/csaf:teler-proxy'
+    hostname: dvwa-teler-proxy.lab
+    build:
+      context: .
+      dockerfile: build/teler-proxy.Dockerfile
+    restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
+    depends_on:
+      - dvwa_monitor
+    command: ["-p", "80", "-d", "dvwa-monitor.lab:80"]
+    networks:
+      internal:
+        ipv4_address: 10.0.5.15
+      monitor:
+        ipv4_address: 10.0.3.15
+      internet:
+        ipv4_address: 10.0.4.15
+
   gitea:
     image: 'csalab/csaf:gitea'
     build:

@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: The workflow to trigger.
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, purpleops, wackopicko, kali, kali-slim, caldera, teler-proxy]
 
 executors:
   docker:
@@ -48,6 +48,9 @@ jobs:
       - run:
           name: Checking caldera docker file code quality
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/caldera.Dockerfile || true
+      - run:
+          name: Checking teler-proxy docker file code quality
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/teler-proxy.Dockerfile || true
   build-dvwa:
     executor: docker
     steps:
@@ -158,6 +161,17 @@ jobs:
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera . -f build/caldera.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera
+  build-teler-proxy:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build teler-proxy image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:teler-proxy . -f build/teler-proxy.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:teler-proxy
 
 workflows:
   version: 2
@@ -197,6 +211,9 @@ workflows:
           requires:
             - hadolint
       - build-caldera:
+          requires:
+            - hadolint
+      - build-teler-proxy:
           requires:
             - hadolint
   build-dvwa:
@@ -267,5 +284,12 @@ workflows:
     jobs:
       - hadolint
       - build-caldera:
+          requires:
+            - hadolint
+  build-teler-proxy:
+    when: { equal: [ teler-proxy, << pipeline.parameters.workflow >> ] }
+    jobs:
+      - hadolint
+      - build-teler-proxy:
           requires:
             - hadolint
