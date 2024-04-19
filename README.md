@@ -1,6 +1,8 @@
-# Cyber Security Awareness Framework
-
 ![CSAF](.github/images/csaf.png)
+
+[![Platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/csalab-id/csaf/)
+[![Join the chat](https://badges.gitter.im/repo.svg)](https://app.gitter.im/#/room/#csaf:gitter.im)
+[![Docker Pulls](https://img.shields.io/docker/pulls/csalab/csaf?style=social)](https://hub.docker.com/r/csalab/csaf/)
 
 The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at enhancing cybersecurity awareness and understanding among individuals, organizations, and communities. It provides guidance for the development of effective cybersecurity awareness programs, covering key areas such as assessing awareness needs, creating educational materials, conducting training and simulations, implementing communication campaigns, and measuring awareness levels. By adopting this framework, organizations can foster a robust security culture, enhance their ability to detect and respond to cyber threats, and mitigate the risks associated with attacks and security breaches.
 
