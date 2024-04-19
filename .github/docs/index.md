@@ -6,25 +6,25 @@
 
 The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at enhancing cybersecurity awareness and understanding among individuals, organizations, and communities. It provides guidance for the development of effective cybersecurity awareness programs, covering key areas such as assessing awareness needs, creating educational materials, conducting training and simulations, implementing communication campaigns, and measuring awareness levels. By adopting this framework, organizations can foster a robust security culture, enhance their ability to detect and respond to cyber threats, and mitigate the risks associated with attacks and security breaches.
 
-## Requirements
+# Requirements
 
-### Software
+## Software
 - Docker
 - Docker-compose
 
-### Hardware
+## Hardware
 
-#### Minimum
+### Minimum
 - 4 Core CPU
 - 10GB RAM
 - 60GB Disk free
 
-#### Recommendation
+### Recommendation
 - 8 Core CPU or above
 - 16GB RAM or above
 - 100GB Disk free or above
 
-## Installation
+# Installation
 
 Clone the repository
 ```
@@ -69,7 +69,7 @@ For example
 docker-compose --profile=attackdefenselab up -d
 ```
 
-## Proof
+# Proof
 ![Caldera](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/caldera.png)
 ![Secure DVWA](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/dvwa_modsecurity.png)
 ![Gitea](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/gitea.png)
@@ -85,28 +85,30 @@ docker-compose --profile=attackdefenselab up -d
 ![Wackopicko](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wackopicko.png)
 ![Wazuh](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wazuh.png)
 
-## Exposed Ports
+# Exposed Ports
 An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP client. Choose one for the best experience.
+
 - Port 6080 (Access to attack network)
 - Port 7080 (Access to defense network)
 - Port 8080 (Access to monitor network)
 
-## Example to access internal network with proxy socks5
+# Example usage
+## Access internal network with proxy socks5
 - curl --proxy socks5://ipaddress:6080 http://10.0.0.100/vnc.html
 - curl --proxy socks5://ipaddress:7080 http://10.0.1.101/vnc.html
 - curl --proxy socks5://ipaddress:8080 http://10.0.3.102/vnc.html
 
-## Example to remote ssh with ssh client
+## Remote ssh with ssh client
 - ssh kali@ipaddress -p 6080 (default password: attackpassword)
 - ssh kali@ipaddress -p 7080 (default password: defensepassword)
 - ssh kali@ipaddress -p 8080 (default password: monitorpassword)
 
-## Example to access kali linux desktop with curl / browser
+## Access kali linux desktop with curl / browser
 - curl http://ipaddress:6080/vnc.html
 - curl http://ipaddress:7080/vnc.html
 - curl http://ipaddress:8080/vnc.html
 
-## Domain Access
+# Domain Access
 - http://attack.lab/vnc.html (default password: attackpassword)
 - http://defense.lab/vnc.html (default password: defensepassword)
 - http://monitor.lab/vnc.html (default password: monitorpassword)
@@ -131,9 +133,9 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://purpleops.lab/ (default username: admin@purpleops.com, default password: purpleopspassword)
 - http://caldera.lab/ (default username: red/blue, default password: calderapassword)
 
-## Network / IP Address
+# Network / IP Address
 
-### Attack
+## Attack
 - 10.0.0.100 attack.lab
 - 10.0.0.200 phising.lab
 - 10.0.0.201 server.lab
@@ -144,7 +146,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.0.112 purpleops.lab
 - 10.0.0.113 caldera.lab
 
-### Defense
+## Defense
 - 10.0.1.101 defense.lab
 - 10.0.1.10 dvwa.lab
 - 10.0.1.13 wackopicko.lab
@@ -154,7 +156,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.112 purpleops.lab
 - 10.0.1.113 caldera.lab
 
-### Monitor
+## Monitor
 - 10.0.3.201 server.lab
 - 10.0.3.201 mail.server.lab
 - 10.0.3.9 mariadb.lab
@@ -167,20 +169,21 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.3.32 wazuh-dashboard.lab
 - 10.0.3.40 splunk.lab
 
-### Public
+## Public
 - 10.0.2.101 defense.lab
 - 10.0.2.13 wackopicko.lab
 
-### Internet
+## Internet
 - 10.0.4.102 monitor.lab
 - 10.0.4.30 wazuh-manager.lab
 - 10.0.4.32 wazuh-dashboard.lab
 - 10.0.4.40 splunk.lab
 
-### Internal
+## Internal
 - 10.0.5.100 attack.lab
 - 10.0.5.12 dvwa-modsecurity.lab
 - 10.0.5.13 wackopicko.lab
 
-## License
+# License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.
+
