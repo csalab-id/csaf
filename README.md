@@ -11,7 +11,7 @@ The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at 
 
 ## Software
 - Docker
-- Docker-compose
+- Docker compose plugin
 
 ## Hardware
 
@@ -37,11 +37,11 @@ cd csaf
 ```
 Pull the Docker images
 ```
-docker-compose --profile=all pull
+docker compose --profile=all pull
 ```
 Generate wazuh ssl certificate
 ```
-docker-compose -f generate-indexer-certs.yml run --rm generator
+docker compose -f generate-indexer-certs.yml run --rm generator
 ```
 For security reason you should set env like this first
 ```
@@ -55,7 +55,7 @@ export PURPLEOPS_PASS=ChangeMePlease
 ```
 Start all the containers
 ```
-docker-compose --profile=all up -d
+docker compose --profile=all up -d
 ```
 
 You can run specific profiles for running specific labs with the following profiles
@@ -67,7 +67,7 @@ You can run specific profiles for running specific labs with the following profi
 
 For example
 ```
-docker-compose --profile=attackdefenselab up -d
+docker compose --profile=attackdefenselab up -d
 ```
 
 # Proof
