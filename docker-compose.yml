@@ -364,7 +364,7 @@ services:
 
   splunk:
     hostname: splunk.lab
-    image: 'splunk/splunk:9.1.2'
+    image: 'splunk/splunk:9.2.1'
     restart: always
     profiles:
       - all

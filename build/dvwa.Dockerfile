@@ -20,11 +20,11 @@ RUN apt-get update && \
         php-gd \
         php-mysql && \
     (echo "sshpassword"; echo "sshpassword") | passwd
-RUN wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.7.0-1_amd64.deb && \
-    WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent_4.7.0-1_amd64.deb && \
-    update-rc.d wazuh-agent defaults 95 10
-RUN curl -so splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb "https://download.splunk.com/products/universalforwarder/releases/9.1.2/linux/splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb" && \
-    dpkg -i splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb && \
+RUN wget "https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.8.0-1_amd64.deb" && \
+    WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent_4.8.0-1_amd64.deb && \
+    update-rc.d wazuh-agent defaults 95 10 && \
+    wget "https://download.splunk.com/products/universalforwarder/releases/9.2.1/linux/splunkforwarder-9.2.1-78803f08aabb-linux-2.6-amd64.deb" && \
+    dpkg -i splunkforwarder-9.2.1-78803f08aabb-linux-2.6-amd64.deb && \
     /opt/splunkforwarder/bin/splunk add user admin -role Admin -password splunkpassword --no-prompt --accept-license --answer-yes && \
     sed -i "s/PYTHONHTTPSVERIFY=0/PYTHONHTTPSVERIFY=1/g" /opt/splunkforwarder/etc/splunk-launch.conf && \
     sed -i "s/SPLUNK_OS_USER=rootfwd/SPLUNK_OS_USER=root/g" /opt/splunkforwarder/etc/splunk-launch.conf && \
@@ -33,10 +33,13 @@ RUN sed -i "s/allow_url_include = Off/allow_url_include = On/g" /etc/php/*/apach
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config && \
     tar -xf git.tar.gz && \
     chmod 777 config/ hackable/uploads/ && \
-    rm -rf wazuh-agent_4.7.0-1_amd64.deb splunkforwarder-9.1.2-b6b9c8185839-linux-2.6-amd64.deb /var/www/html/index.html /var/www/html/git.tar.gz && \
     apt-get -y autoremove && \
     apt-get clean all && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+        wazuh-agent_4.8.0-1_amd64.deb \
+        splunkforwarder-9.2.1-78803f08aabb-linux-2.6-amd64.deb \
+        /var/www/html/index.html \
+        /var/www/html/git.tar.gz
 COPY script/dvwa.startup.sh /startup.sh
 COPY --chown=root:wazuh --chmod=660 config/dvwa/ossec.conf /var/ossec/etc/ossec.conf
 COPY --chown=root:wazuh --chmod=750 config/dvwa/remove-threat.sh /var/ossec/active-response/bin/remove-threat.sh
