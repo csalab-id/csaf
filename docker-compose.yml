@@ -269,7 +269,7 @@ services:
         ipv4_address: 10.0.4.102
 
   wazuh_manager:
-    image: 'wazuh/wazuh-manager:4.7.0'
+    image: 'wazuh/wazuh-manager:4.8.0'
     hostname: wazuh-manager.lab
     restart: always
     profiles:
@@ -309,7 +309,7 @@ services:
         ipv4_address: 10.0.4.30
 
   wazuh_indexer:
-    image: 'wazuh/wazuh-indexer:4.7.0'
+    image: 'wazuh/wazuh-indexer:4.8.0'
     hostname: wazuh-indexer.lab
     restart: always
     profiles:
@@ -338,7 +338,7 @@ services:
         ipv4_address: 10.0.3.31
 
   wazuh_dashboard:
-    image: 'wazuh/wazuh-dashboard:4.7.0'
+    image: 'wazuh/wazuh-dashboard:4.8.0'
     hostname: wazuh-dashboard.lab
     restart: always
     profiles:
