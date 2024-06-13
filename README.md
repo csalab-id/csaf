@@ -41,7 +41,7 @@ docker compose --profile=all pull
 ```
 Generate wazuh ssl certificate
 ```
-docker compose -f generate-indexer-certs.yml run --rm generator
+docker compose -f generate-certs.yml run --rm generator
 ```
 For security reason you should set env like this first
 ```
