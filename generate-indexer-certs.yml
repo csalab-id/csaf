@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   generator:
     image: 'wazuh/wazuh-certs-generator:0.0.1'

@@ -1,4 +1,4 @@
-![CSAF](.github/images/csaf.png)
+![CSAF](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/csaf.png)
 
 [![Platform](https://img.shields.io/badge/platform-osx%2Flinux%2Fwindows-green.svg)](https://github.com/csalab-id/csaf/)
 [![Join the chat](https://badges.gitter.im/repo.svg)](https://app.gitter.im/#/room/#csaf:gitter.im)
@@ -11,7 +11,7 @@ The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at 
 
 ## Software
 - Docker
-- Docker-compose
+- Docker compose plugin
 
 ## Hardware
 
@@ -37,11 +37,11 @@ cd csaf
 ```
 Pull the Docker images
 ```
-docker-compose --profile=all pull
+docker compose --profile=all pull
 ```
 Generate wazuh ssl certificate
 ```
-docker-compose -f generate-indexer-certs.yml run --rm generator
+docker compose -f generate-indexer-certs.yml run --rm generator
 ```
 For security reason you should set env like this first
 ```
@@ -55,7 +55,7 @@ export PURPLEOPS_PASS=ChangeMePlease
 ```
 Start all the containers
 ```
-docker-compose --profile=all up -d
+docker compose --profile=all up -d
 ```
 
 You can run specific profiles for running specific labs with the following profiles
@@ -67,24 +67,24 @@ You can run specific profiles for running specific labs with the following profi
 
 For example
 ```
-docker-compose --profile=attackdefenselab up -d
+docker compose --profile=attackdefenselab up -d
 ```
 
 # Proof
-![Caldera](.github/images/caldera.png)
-![Secure DVWA](.github/images/dvwa_modsecurity.png)
-![Gitea](.github/images/gitea.png)
-![Gophish](.github/images/gophish.png)
-![Infectionmonkey](.github/images/infectionmonkey.png)
-![Iredmail](.github/images/iredmail.png)
-![Juice Shop](.github/images/juiceshop.png)
-![Mitmproxy](.github/images/mitmproxy.png)
-![Phising](.github/images/phising.png)
-![PurpleOps](.github/images/purpleops.png)
-![Roundcube](.github/images/roundcube.png)
-![Splunk](.github/images/splunk.png)
-![Wackopicko](.github/images/wackopicko.png)
-![Wazuh](.github/images/wazuh.png)
+![Caldera](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/caldera.png)
+![Secure DVWA](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/dvwa_modsecurity.png)
+![Gitea](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/gitea.png)
+![Gophish](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/gophish.png)
+![Infectionmonkey](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/infectionmonkey.png)
+![Iredmail](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/iredmail.png)
+![Juice Shop](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/juiceshop.png)
+![Mitmproxy](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/mitmproxy.png)
+![Phising](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/phising.png)
+![PurpleOps](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/purpleops.png)
+![Roundcube](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/roundcube.png)
+![Splunk](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/splunk.png)
+![Wackopicko](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wackopicko.png)
+![Wazuh](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wazuh.png)
 
 # Exposed Ports
 An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP client. Choose one for the best experience.
