@@ -121,7 +121,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://gitea.lab/ (default username: csalab, default password: giteapassword)
 - http://dvwa.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
-- http://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
+- http://dvwa-modsecurity.lab:8000/ (default username: admin, default passowrd: password)
 - http://wackopicko.lab/
 - http://juiceshop.lab/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
