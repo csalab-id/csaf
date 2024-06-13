@@ -41,7 +41,7 @@ docker compose --profile=all pull
 ```
 Generate wazuh ssl certificate
 ```
-docker compose -f generate-indexer-certs.yml run --rm generator
+docker compose -f generate-certs.yml run --rm generator
 ```
 For security reason you should set env like this first
 ```
@@ -51,7 +51,6 @@ export MONITOR_PASS=ChangeMePlease
 export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
-export PURPLEOPS_PASS=ChangeMePlease
 ```
 Start all the containers
 ```
@@ -80,7 +79,6 @@ docker compose --profile=attackdefenselab up -d
 ![Juice Shop](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/juiceshop.png)
 ![Mitmproxy](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/mitmproxy.png)
 ![Phising](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/phising.png)
-![PurpleOps](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/purpleops.png)
 ![Roundcube](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/roundcube.png)
 ![Splunk](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/splunk.png)
 ![Wackopicko](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wackopicko.png)
@@ -123,7 +121,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://gitea.lab/ (default username: csalab, default password: giteapassword)
 - http://dvwa.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
-- http://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
+- http://dvwa-modsecurity.lab:8000/ (default username: admin, default passowrd: password)
 - http://wackopicko.lab/
 - http://juiceshop.lab/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
@@ -131,7 +129,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - https://wazuh-dashboard.lab:5601/ (default username: admin, default passowrd: SecretPassword)
 - http://splunk.lab/ (default username: admin, default password: splunkpassword)
 - https://infectionmonkey.lab:5000/
-- http://purpleops.lab/ (default username: admin@purpleops.com, default password: purpleopspassword)
 - http://caldera.lab/ (default username: red/blue, default password: calderapassword)
 
 # Network / IP Address
@@ -144,7 +141,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.0.202 gophish.lab
 - 10.0.0.110 infectionmonkey.lab
 - 10.0.0.111 mongodb.lab
-- 10.0.0.112 purpleops.lab
 - 10.0.0.113 caldera.lab
 
 ## Defense
@@ -154,7 +150,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
 - 10.0.1.110 infectionmonkey.lab
-- 10.0.1.112 purpleops.lab
 - 10.0.1.113 caldera.lab
 
 ## Monitor

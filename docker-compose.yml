@@ -180,7 +180,7 @@ services:
       - attackdefenselab
       - soclab
     environment:
-      - PORT=80
+      - PORT=8000
       - BACKEND=http://10.0.3.11:80
       - BACKEND_WS=ws://10.0.3.11:80
     depends_on:
@@ -269,7 +269,7 @@ services:
         ipv4_address: 10.0.4.102
 
   wazuh_manager:
-    image: 'wazuh/wazuh-manager:4.7.0'
+    image: 'wazuh/wazuh-manager:4.8.0'
     hostname: wazuh-manager.lab
     restart: always
     profiles:
@@ -309,14 +309,14 @@ services:
         ipv4_address: 10.0.4.30
 
   wazuh_indexer:
-    image: 'wazuh/wazuh-indexer:4.7.0'
+    image: 'wazuh/wazuh-indexer:4.8.0'
     hostname: wazuh-indexer.lab
     restart: always
     profiles:
       - all
       - soclab
     environment:
-      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
         soft: -1
@@ -338,7 +338,7 @@ services:
         ipv4_address: 10.0.3.31
 
   wazuh_dashboard:
-    image: 'wazuh/wazuh-dashboard:4.7.0'
+    image: 'wazuh/wazuh-dashboard:4.8.0'
     hostname: wazuh-dashboard.lab
     restart: always
     profiles:
@@ -364,7 +364,7 @@ services:
 
   splunk:
     hostname: splunk.lab
-    image: 'splunk/splunk:9.1.2'
+    image: 'splunk/splunk:9.2.1'
     restart: always
     profiles:
       - all
@@ -413,37 +413,6 @@ services:
     networks:
       attack:
         ipv4_address: 10.0.0.111
-
-  purpleops:
-    hostname: purpleops.lab
-    build:
-      context: .
-      dockerfile: build/purpleops.Dockerfile
-    image: 'csalab/csaf:purpleops'
-    restart: always
-    profiles:
-      - all
-      - breachlab
-    command: gunicorn --bind 0.0.0.0:80 purpleops:app
-    environment:
-      - MONGO_DB=assessments3
-      - MONGO_HOST=mongodb
-      - MONGO_PORT=27017
-      - POPS_ADMIN_PWD=${PURPLEOPS_PASS:-purpleopspassword}
-      - FLASK_DEBUG=True
-      - FLASK_MFA=False
-      - HOST=0.0.0.0
-      - PORT=80
-      - NAME=csaf
-    depends_on:
-      - mongodb
-    volumes:
-      - purpleops:/usr/src/app/
-    networks:
-      attack:
-        ipv4_address: 10.0.0.112
-      defense:
-        ipv4_address: 10.0.1.112
 
   caldera:
     hostname: caldera.lab
@@ -544,7 +513,6 @@ volumes:
   wackopicko_mysql: {}
   wackopicko_etc: {}
   infectionmonkey: {}
-  purpleops: {}
   mongodb_db: {}
   mongodb_configdb: {}
   caldera: {}
