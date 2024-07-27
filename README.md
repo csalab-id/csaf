@@ -128,7 +128,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab/ (default username: admin, default passowrd: SecretPassword)
 - http://splunk.lab/ (default username: admin, default password: splunkpassword)
-- https://infectionmonkey.lab:5000/
+- https://infectionmonkey.lab/
 - http://caldera.lab/ (default username: red/blue, default password: calderapassword)
 
 # Network / IP Address
