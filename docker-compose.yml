@@ -204,7 +204,7 @@ services:
       - breachlab
       - soclab
     volumes:
-      - wackopicko_web:/var/www/html
+      - wackopicko_web:/app
       - wackopicko_mysql:/var/lib/mysql
       - wackopicko_etc:/etc/mysql
     networks:
