@@ -111,7 +111,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://attack.lab/vnc.html (default password: attackpassword)
 - http://defense.lab/vnc.html (default password: defensepassword)
 - http://monitor.lab/vnc.html (default password: monitorpassword)
-- https://gophish.lab:3333/ (default username: admin, default password: gophishpassword)
+- https://gophish.lab/ (default username: admin, default password: gophishpassword)
 - https://server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)
 - https://server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: mailpassword)
 - https://mail.server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)

@@ -81,6 +81,8 @@ services:
       - phisinglab
     environment:
       - GOPHISH_INITIAL_ADMIN_PASSWORD=${GOPHISH_PASS:-gophishpassword}
+    volumes:
+      - ./config/gophish/config.json:/app/gophish/config.json
     networks:
       attack:
         ipv4_address: 10.0.0.202
