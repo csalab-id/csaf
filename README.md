@@ -157,7 +157,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.21 dvwa-openappsec.lab
 - 10.0.1.21 wackopicko-openappsec.lab
 - 10.0.1.21 juiceshop-openappsec.lab
-- 10.0.1.22 appsec-agent
 - 10.0.1.110 infectionmonkey.lab
 - 10.0.1.113 caldera.lab
 

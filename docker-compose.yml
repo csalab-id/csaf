@@ -291,9 +291,6 @@ services:
       - appsec-logs:/var/log/nano_agent
       - appsec-localconfig:/ext/appsec
     command: /cp-nano-agent --standalone
-    networks:
-      defense:
-        ipv4_address: 10.0.1.22
 
   monitor:
     hostname: monitor.lab
