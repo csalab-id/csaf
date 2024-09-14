@@ -252,6 +252,40 @@ services:
     networks:
       defense:
         ipv4_address: 10.0.1.20
+    
+  appsec-npm:
+    hostname: openappsec.lab
+    image: 'ghcr.io/openappsec/nginx-proxy-manager-attachment:latest'
+    restart: always
+    volumes:
+      - npm-data:/data
+      - appsec-logs:/ext/appsec-logs
+      - appsec-localconfig:/ext/appsec
+    networks:
+      internal:
+        ipv4_address: 10.0.5.21
+      defense:
+        ipv4_address: 10.0.1.21
+      monitor:
+        ipv4_address: 10.0.3.12
+
+  appsec-agent:
+    image: 'ghcr.io/openappsec/agent:latest'
+    network_mode: service:appsec-npm
+    restart: always
+    environment:
+      - user_email=admin@csalab.id
+      - nginxproxymanager=true
+      - autoPolicyLoad=true
+    volumes:
+      - appsec-config:/etc/cp/conf
+      - appsec-data:/etc/cp/data
+      - appsec-logs:/var/log/nano_agent
+      - appsec-localconfig:/ext/appsec
+    command: /cp-nano-agent --standalone
+    networks:
+      defense:
+        ipv4_address: 10.0.1.22
 
   monitor:
     hostname: monitor.lab
@@ -522,3 +556,8 @@ volumes:
   mongodb_db: {}
   mongodb_configdb: {}
   caldera: {}
+  npm-data: {}
+  appsec-config: {}
+  appsec-data: {}
+  appsec-logs: {}
+  appsec-localconfig: {}

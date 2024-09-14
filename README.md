@@ -122,6 +122,10 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://dvwa.lab/ (default username: admin, default passowrd: password)
 - http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
 - https://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
+- http://openappsec.lab:81/ (default username: admin@example.com, default password: changeme)
+- http://dvwa-openappsec.lab/ (default username: admin, default passowrd: password)
+- http://wackopicko-openappsec.lab/
+- http://juiceshop-openappsec.lab/
 - http://wackopicko.lab/
 - http://juiceshop.lab/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
@@ -149,6 +153,11 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.1.13 wackopicko.lab
 - 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
+- 10.0.1.21 openappsec.lab
+- 10.0.1.21 dvwa-openappsec.lab
+- 10.0.1.21 wackopicko-openappsec.lab
+- 10.0.1.21 juiceshop-openappsec.lab
+- 10.0.1.22 appsec-agent
 - 10.0.1.110 infectionmonkey.lab
 - 10.0.1.113 caldera.lab
 
@@ -159,6 +168,10 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.3.10 dvwa.lab
 - 10.0.3.11 dvwa-monitor.lab
 - 10.0.3.12 dvwa-modsecurity.lab
+- 10.0.3.21 openappsec.lab
+- 10.0.3.21 dvwa-openappsec.lab
+- 10.0.3.21 wackopicko-openappsec.lab
+- 10.0.3.21 juiceshop-openappsec.lab
 - 10.0.3.102 monitor.lab
 - 10.0.3.30 wazuh-manager.lab
 - 10.0.3.31 wazuh-indexer.lab
@@ -179,6 +192,10 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - 10.0.5.100 attack.lab
 - 10.0.5.12 dvwa-modsecurity.lab
 - 10.0.5.13 wackopicko.lab
+- 10.0.5.21 openappsec.lab
+- 10.0.5.21 dvwa-openappsec.lab
+- 10.0.5.21 wackopicko-openappsec.lab
+- 10.0.5.21 juiceshop-openappsec.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.

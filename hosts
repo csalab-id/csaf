@@ -11,6 +11,10 @@
 10.0.1.13	wackopicko.lab
 10.0.1.14	juiceshop.lab
 10.0.1.20	gitea.lab
+10.0.1.21   openappsec.lab
+10.0.1.21   dvwa-openappsec.lab
+10.0.1.21   wackopicko-openappsec.lab
+10.0.1.21   juiceshop-openappsec.lab
 10.0.1.110	infectionmonkey.lab
 10.0.1.113	caldera.lab
 10.0.3.201	server.lab
@@ -19,6 +23,10 @@
 10.0.3.10	dvwa.lab
 10.0.3.11	dvwa-monitor.lab
 10.0.3.12	dvwa-modsecurity.lab
+10.0.3.21   openappsec.lab
+10.0.3.21   dvwa-openappsec.lab
+10.0.3.21   wackopicko-openappsec.lab
+10.0.3.21   juiceshop-openappsec.lab
 10.0.3.102	monitor.lab
 10.0.3.30	wazuh-manager.lab
 10.0.3.31	wazuh-indexer.lab
@@ -33,3 +41,7 @@
 10.0.5.100	attack.lab
 10.0.5.12	dvwa-modsecurity.lab
 10.0.5.13	wackopicko.lab
+10.0.5.21   openappsec.lab
+10.0.5.21   dvwa-openappsec.lab
+10.0.5.21   wackopicko-openappsec.lab
+10.0.5.21   juiceshop-openappsec.lab
