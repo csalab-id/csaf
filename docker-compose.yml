@@ -271,7 +271,7 @@ services:
       defense:
         ipv4_address: 10.0.1.21
       monitor:
-        ipv4_address: 10.0.3.12
+        ipv4_address: 10.0.3.21
 
   appsec-agent:
     image: 'ghcr.io/openappsec/agent:latest'
