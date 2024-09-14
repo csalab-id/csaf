@@ -1,4 +1,10 @@
-10.0.0.100	attack.lab
+::1 localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+127.0.0.1   localhost
+10.0.0.100	attack.lab attack
 10.0.0.200	phising.lab
 10.0.0.201	server.lab
 10.0.0.201	mail.server.lab
@@ -6,12 +12,12 @@
 10.0.0.110	infectionmonkey.lab
 10.0.0.111	mongodb.lab
 10.0.0.113	caldera.lab
-10.0.1.101	defense.lab
+10.0.1.101	defense.lab defense
 10.0.1.10	dvwa.lab
 10.0.1.13	wackopicko.lab
 10.0.1.14	juiceshop.lab
 10.0.1.20	gitea.lab
-10.0.1.21   openappsec.lab
+10.0.1.21   openappsec.lab openappsec
 10.0.1.21   dvwa-openappsec.lab
 10.0.1.21   wackopicko-openappsec.lab
 10.0.1.21   juiceshop-openappsec.lab
@@ -23,25 +29,25 @@
 10.0.3.10	dvwa.lab
 10.0.3.11	dvwa-monitor.lab
 10.0.3.12	dvwa-modsecurity.lab
-10.0.3.21   openappsec.lab
+10.0.3.21   openappsec.lab openappsec
 10.0.3.21   dvwa-openappsec.lab
 10.0.3.21   wackopicko-openappsec.lab
 10.0.3.21   juiceshop-openappsec.lab
-10.0.3.102	monitor.lab
+10.0.3.102	monitor.lab monitor
 10.0.3.30	wazuh-manager.lab
 10.0.3.31	wazuh-indexer.lab
 10.0.3.32	wazuh-dashboard.lab
 10.0.3.40	splunk.lab
-10.0.2.101	defense.lab
+10.0.2.101	defense.lab defense
 10.0.2.13	wackopicko.lab
-10.0.4.102	monitor.lab
+10.0.4.102	monitor.lab monitor
 10.0.4.30	wazuh-manager.lab
 10.0.4.32	wazuh-dashboard.lab
 10.0.4.40	splunk.lab
-10.0.5.100	attack.lab
+10.0.5.100	attack.lab attack
 10.0.5.12	dvwa-modsecurity.lab
 10.0.5.13	wackopicko.lab
-10.0.5.21   openappsec.lab
+10.0.5.21   openappsec.lab openappsec
 10.0.5.21   dvwa-openappsec.lab
 10.0.5.21   wackopicko-openappsec.lab
 10.0.5.21   juiceshop-openappsec.lab

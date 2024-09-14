@@ -17,6 +17,8 @@ services:
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${ATTACK_PASS:-attackpassword}
+    volumes:
+      - ./hosts:/etc/hosts
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -103,6 +105,8 @@ services:
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${DEFENSE_PASS:-defensepassword}
+    volumes:
+      - ./hosts:/etc/hosts
     networks:
       defense:
         ipv4_address: 10.0.1.101
@@ -262,6 +266,7 @@ services:
       - attackdefenselab
       - soclab
     volumes:
+      - ./hosts:/etc/hosts
       - npm-data:/data
       - appsec-logs:/ext/appsec-logs
       - appsec-localconfig:/ext/appsec
@@ -307,6 +312,8 @@ services:
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${MONITOR_PASS:-monitorpassword}
+    volumes:
+      - ./hosts:/etc/hosts
     networks:
       monitor:
         ipv4_address: 10.0.3.102
