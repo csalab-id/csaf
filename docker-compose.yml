@@ -257,6 +257,10 @@ services:
     hostname: openappsec.lab
     image: 'ghcr.io/openappsec/nginx-proxy-manager-attachment:latest'
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
     volumes:
       - npm-data:/data
       - appsec-logs:/ext/appsec-logs
@@ -273,6 +277,10 @@ services:
     image: 'ghcr.io/openappsec/agent:latest'
     network_mode: service:appsec-npm
     restart: always
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
     environment:
       - user_email=admin@csalab.id
       - nginxproxymanager=true
