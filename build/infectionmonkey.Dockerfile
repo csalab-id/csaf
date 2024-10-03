@@ -10,8 +10,7 @@ RUN useradd -m -c "Infection Monkey" -s /bin/bash -d /home/monkey monkey && \
     ./InfectionMonkey-v2.3.0.AppImage --appimage-extract && \
     rm -rf InfectionMonkey-v2.3.0.AppImage && \
     mv squashfs-root infectionmonkey && \
-    chown monkey:monkey infectionmonkey -Rh && \
-    sed -i "s/5000/443/g" /opt/infectionmonkey/usr/src/monkey_island/cc/server_utils/consts.py
+    chown monkey:monkey infectionmonkey -Rh
 RUN apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
 USER monkey

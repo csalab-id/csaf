@@ -260,6 +260,7 @@ services:
   appsec-npm:
     hostname: openappsec.lab
     image: 'ghcr.io/openappsec/nginx-proxy-manager-attachment:latest'
+    ipc: host
     restart: always
     profiles:
       - all
@@ -280,6 +281,7 @@ services:
 
   appsec-agent:
     image: 'ghcr.io/openappsec/agent:latest'
+    ipc: host
     network_mode: service:appsec-npm
     restart: always
     profiles:
@@ -291,6 +293,7 @@ services:
       - nginxproxymanager=true
       - autoPolicyLoad=true
     volumes:
+      - ./hosts:/etc/hosts
       - appsec-config:/etc/cp/conf
       - appsec-data:/etc/cp/data
       - appsec-logs:/var/log/nano_agent
