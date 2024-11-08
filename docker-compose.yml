@@ -17,8 +17,6 @@ services:
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${ATTACK_PASS:-attackpassword}
-    volumes:
-      - ./hosts:/etc/hosts
     networks:
       attack:
         ipv4_address: 10.0.0.100
@@ -105,8 +103,6 @@ services:
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${DEFENSE_PASS:-defensepassword}
-    volumes:
-      - ./hosts:/etc/hosts
     networks:
       defense:
         ipv4_address: 10.0.1.101
@@ -181,6 +177,8 @@ services:
     image: 'owasp/modsecurity-crs:apache'
     hostname: dvwa-modsecurity.lab
     restart: always
+    healthcheck:
+      disable: true
     profiles:
       - all
       - attackdefenselab
@@ -315,8 +313,6 @@ services:
     environment:
       - SHELL=/bin/bash
       - VNC_PASSWORD=${MONITOR_PASS:-monitorpassword}
-    volumes:
-      - ./hosts:/etc/hosts
     networks:
       monitor:
         ipv4_address: 10.0.3.102
@@ -357,6 +353,9 @@ services:
       - ./config/wazuh_indexer_ssl_certs/wazuh-manager.lab-key.pem:/etc/ssl/filebeat.key
       - ./config/wazuh_cluster/wazuh_manager.conf:/wazuh-config-mount/etc/ossec.conf
       - ./config/wazuh_cluster/local_rules.xml:/wazuh-config-mount/etc/rules/local_rules.xml
+    depends_on:
+      - dvwa
+      - dvwa_monitor
     networks:
       monitor:
         ipv4_address: 10.0.3.30
@@ -411,6 +410,9 @@ services:
       - ./config/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-dashboard/certs/root-ca.pem
       - ./config/wazuh_dashboard/opensearch_dashboards.yml:/usr/share/wazuh-dashboard/config/opensearch_dashboards.yml
       - ./config/wazuh_dashboard/wazuh.yml:/usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml
+    depends_on:
+      - wazuh_indexer
+      - wazuh_manager
     networks:
       monitor:
         ipv4_address: 10.0.3.32
@@ -421,6 +423,8 @@ services:
     hostname: splunk.lab
     image: 'splunk/splunk:9.2.1'
     restart: always
+    healthcheck:
+      disable: true
     profiles:
       - all
       - soclab
@@ -431,6 +435,9 @@ services:
       - ./config/splunk/web.conf:/opt/splunk/etc/system/local/web.conf
       - splunk_etc:/opt/splunk/etc
       - splunk_var:/opt/splunk/var
+    depends_on:
+      - dvwa
+      - dvwa_monitor
     networks:
       monitor:
         ipv4_address: 10.0.3.40
@@ -449,6 +456,8 @@ services:
       - breachlab
     volumes:
       - infectionmonkey:/opt/infectionmonkey
+    depends_on:
+      - mongodb
     networks:
       attack:
         ipv4_address: 10.0.0.110

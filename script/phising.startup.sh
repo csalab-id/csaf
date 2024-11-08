@@ -36,6 +36,7 @@ mitmweb --no-web-open-browser --web-host 10.0.0.200 &
 rm -rf ~/.mozilla/
 timeout 5 firefox-esr -headless
 cp /tmp/user.js ~/.mozilla/firefox/*.default-esr/
+sleep 10
 curl --proxy http://10.0.0.200:8080 http://mitm.it/cert/pem -o /usr/local/share/ca-certificates/mitmproxy.crt
 update-ca-certificates
 firefox-esr --kiosk ${WEBSITE} &
