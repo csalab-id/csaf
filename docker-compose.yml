@@ -269,6 +269,7 @@ services:
       - npm-data:/data
       - appsec-logs:/ext/appsec-logs
       - appsec-localconfig:/ext/appsec
+      - appsec-letsencrypt:/etc/letsencrypt
     networks:
       internal:
         ipv4_address: 10.0.5.21
@@ -585,3 +586,4 @@ volumes:
   appsec-data: {}
   appsec-logs: {}
   appsec-localconfig: {}
+  appsec-letsencrypt: {}
