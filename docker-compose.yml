@@ -265,10 +265,9 @@ services:
       - attackdefenselab
       - soclab
     volumes:
-      - ./hosts:/etc/hosts
       - npm-data:/data
       - appsec-logs:/ext/appsec-logs
-      - appsec-localconfig:/ext/appsec
+      - ./config/appsec-localconfig:/ext/appsec
       - appsec-letsencrypt:/etc/letsencrypt
     networks:
       internal:
@@ -585,5 +584,4 @@ volumes:
   appsec-config: {}
   appsec-data: {}
   appsec-logs: {}
-  appsec-localconfig: {}
   appsec-letsencrypt: {}
