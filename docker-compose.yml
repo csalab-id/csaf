@@ -295,7 +295,7 @@ services:
       - appsec-config:/etc/cp/conf
       - appsec-data:/etc/cp/data
       - appsec-logs:/var/log/nano_agent
-      - appsec-localconfig:/ext/appsec
+      - ./config/appsec-localconfig:/ext/appsec
     command: /cp-nano-agent --standalone
 
   monitor:
