@@ -20,7 +20,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
     dbus-x11
 RUN DEBIAN_FRONTEND=noninteractive apt-get -yq install \
     xfce4-goodies \
-    kali-linux-large \
     kali-desktop-xfce && \
     apt-get -y full-upgrade
 RUN apt-get -y autoremove && \

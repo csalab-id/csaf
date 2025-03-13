@@ -4,8 +4,8 @@ parameters:
   workflow:
     type: enum
     default: auto
-    description: The workflow to trigger.
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, wackopicko, kali, kali-slim, caldera]
+    description: "The workflow to trigger."
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, wackopicko, kali, caldera]
 
 executors:
   docker:
@@ -19,140 +19,136 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Checking dvwa docker file code quality
+          name: "Checking dvwa docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/dvwa.Dockerfile || true
       - run:
-          name: Checking secure-dvwa docker file code quality
+          name: "Checking secure-dvwa docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/secure-dvwa.Dockerfile || true
       - run:
-          name: Checking gitea docker file code quality
+          name: "Checking gitea docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gitea.Dockerfile || true
       - run:
-          name: Checking infectionmonkey docker file code quality
+          name: "Checking infectionmonkey docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile || true
       - run:
-          name: Checking phising docker file code quality
+          name: "Checking phising docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile || true
       - run:
-          name: Checking wackopicko docker file code quality
+          name: "Checking wackopicko docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile || true
       - run:
-          name: Checking kalilinux docker file code quality
+          name: "Checking kalilinux docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux.Dockerfile || true
       - run:
-          name: Checking kalilinux-slim docker file code quality
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/kalilinux-slim.Dockerfile || true
-      - run:
-          name: Checking caldera docker file code quality
+          name: "Checking caldera docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/caldera.Dockerfile || true
+
   build-dvwa:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build dvwa image
+          name: "Build dvwa image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa . -f build/dvwa.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa
+
   build-secure-dvwa:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build secure-dvwa image
+          name: "Build secure-dvwa image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa-secure . -f build/secure-dvwa.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:dvwa-secure
+
   build-gitea:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build gitea image
+          name: "Build gitea image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gitea . -f build/gitea.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gitea
+
   build-infectionmonkey:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build infection monkey image
+          name: "Build infection monkey image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:infectionmonkey . -f build/infectionmonkey.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:infectionmonkey
+
   build-phising:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build phising image
+          name: "Build phising image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phising . -f build/phising.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phising
+
   build-wackopicko:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build wackopicko image
+          name: "Build wackopicko image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wackopicko . -f build/wackopicko.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wackopicko
+
   build-kali:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build kali image
+          name: "Build kali image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux . -f build/kalilinux.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux
-  build-kali-slim:
-    executor: docker
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build kali slim image
-          command: |
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux-slim . -f build/kalilinux-slim.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:kalilinux-slim
+
   build-caldera:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build caldera image
+          name: "Build caldera image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera . -f build/caldera.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera
 
 workflows:
-  version: 2
   build-image-auto:
-    when: { equal: [ auto, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [auto, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
+
   build-image-all:
-    when: { equal: [ all, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [all, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-dvwa:
@@ -176,72 +172,92 @@ workflows:
       - build-kali:
           requires:
             - hadolint
-      - build-kali-slim:
-          requires:
-            - hadolint
       - build-caldera:
           requires:
             - hadolint
+
   build-dvwa:
-    when: { equal: [ dvwa, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [dvwa, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-dvwa:
           requires:
             - hadolint
+
   build-secure-dvwa:
-    when: { equal: [ secure-dvwa, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [secure-dvwa, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-secure-dvwa:
           requires:
             - hadolint
+
   build-gitea:
-    when: { equal: [ gitea, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [gitea, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-gitea:
           requires:
             - hadolint
+
   build-infectionmonkey:
-    when: { equal: [ infectionmonkey, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [infectionmonkey, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-infectionmonkey:
           requires:
             - hadolint
+
   build-phising:
-    when: { equal: [ phising, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [phising, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-phising:
           requires:
             - hadolint
+
   build-wackopicko:
-    when: { equal: [ wackopicko, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [wackopicko, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-wackopicko:
           requires:
             - hadolint
+
   build-kali:
-    when: { equal: [ kali, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [kali, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-kali:
           requires:
             - hadolint
-  build-kali-slim:
-    when: { equal: [ kali-slim, << pipeline.parameters.workflow >> ] }
-    jobs:
-      - hadolint
-      - build-kali-slim:
-          requires:
-            - hadolint
+
   build-caldera:
-    when: { equal: [ caldera, << pipeline.parameters.workflow >> ] }
+    when: 
+      equal: [caldera, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
       - build-caldera:
+          requires:
+            - hadolint
+
+  build-kali-weekly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * 0"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - hadolint
+      - build-kali:
           requires:
             - hadolint
