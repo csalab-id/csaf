@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phising, wackopicko, kali, caldera]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity]
 
 executors:
   docker:
@@ -31,8 +31,8 @@ jobs:
           name: "Checking infectionmonkey docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/infectionmonkey.Dockerfile || true
       - run:
-          name: "Checking phising docker file code quality"
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phising.Dockerfile || true
+          name: "Checking phishing docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/phishing.Dockerfile || true
       - run:
           name: "Checking wackopicko docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wackopicko.Dockerfile || true
@@ -42,6 +42,9 @@ jobs:
       - run:
           name: "Checking caldera docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/caldera.Dockerfile || true
+      - run:
+          name: "Checking modsecurity docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/modsecurity.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -91,17 +94,17 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:infectionmonkey . -f build/infectionmonkey.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:infectionmonkey
 
-  build-phising:
+  build-phishing:
     executor: docker
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: "Build phising image"
+          name: "Build phishing image"
           command: |
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phising . -f build/phising.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phising
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phishing . -f build/phishing.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:phishing
 
   build-wackopicko:
     executor: docker
@@ -139,6 +142,18 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera . -f build/caldera.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:caldera
 
+  build-modsecurity:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build modsecurity image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:modsecurity . -f build/modsecurity.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:modsecurity
+
 workflows:
   build-image-auto:
     when: 
@@ -163,7 +178,7 @@ workflows:
       - build-infectionmonkey:
           requires:
             - hadolint
-      - build-phising:
+      - build-phishing:
           requires:
             - hadolint
       - build-wackopicko:
@@ -173,6 +188,9 @@ workflows:
           requires:
             - hadolint
       - build-caldera:
+          requires:
+            - hadolint
+      - build-modsecurity:
           requires:
             - hadolint
 
@@ -212,12 +230,12 @@ workflows:
           requires:
             - hadolint
 
-  build-phising:
+  build-phishing:
     when: 
-      equal: [phising, << pipeline.parameters.workflow >>]
+      equal: [phishing, << pipeline.parameters.workflow >>]
     jobs:
       - hadolint
-      - build-phising:
+      - build-phishing:
           requires:
             - hadolint
 
@@ -245,6 +263,15 @@ workflows:
     jobs:
       - hadolint
       - build-caldera:
+          requires:
+            - hadolint
+
+  build-modsecurity:
+    when: 
+      equal: [modsecurity, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-modsecurity:
           requires:
             - hadolint
 

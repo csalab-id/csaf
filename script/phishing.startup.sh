@@ -44,6 +44,6 @@ exec openbox-session
 EOF
 
 chmod 755 /root/.vnc/xstartup
-vncpasswd -f <<< phising > /root/.vnc/passwd
+vncpasswd -f <<< phishing > /root/.vnc/passwd
 vncserver -PasswordFile /root/.vnc/passwd
 /usr/share/novnc/utils/launch.sh --listen 80 --vnc 127.0.0.1:5901

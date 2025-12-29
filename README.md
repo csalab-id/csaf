@@ -60,7 +60,7 @@ docker compose --profile=all up -d
 You can run specific profiles for running specific labs with the following profiles
 - all
 - attackdefenselab
-- phisinglab
+- phishinglab
 - breachlab
 - soclab
 
@@ -78,7 +78,7 @@ docker compose --profile=attackdefenselab up -d
 ![Iredmail](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/iredmail.png)
 ![Juice Shop](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/juiceshop.png)
 ![Mitmproxy](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/mitmproxy.png)
-![Phising](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/phising.png)
+![Phishing](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/phishing.png)
 ![Roundcube](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/roundcube.png)
 ![Splunk](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/splunk.png)
 ![Wackopicko](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wackopicko.png)
@@ -112,25 +112,25 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 - http://defense.lab/vnc.html (default password: defensepassword)
 - http://monitor.lab/vnc.html (default password: monitorpassword)
 - https://gophish.lab/ (default username: admin, default password: gophishpassword)
-- https://server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)
-- https://server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: mailpassword)
-- https://mail.server.lab/ (default username: postmaster@server.lab, default passowrd: mailpassword)
-- https://mail.server.lab/iredadmin/ (default username: postmaster@server.lab, default passowrd: mailpassword)
-- http://phising.lab/
+- https://server.lab/ (default username: postmaster@server.lab, default password: mailpassword)
+- https://server.lab/iredadmin/ (default username: postmaster@server.lab, default password: mailpassword)
+- https://mail.server.lab/ (default username: postmaster@server.lab, default password: mailpassword)
+- https://mail.server.lab/iredadmin/ (default username: postmaster@server.lab, default password: mailpassword)
+- http://phishing.lab/
 - http://10.0.0.200:8081/
 - http://gitea.lab/ (default username: csalab, default password: giteapassword)
-- http://dvwa.lab/ (default username: admin, default passowrd: password)
-- http://dvwa-monitor.lab/ (default username: admin, default passowrd: password)
-- https://dvwa-modsecurity.lab/ (default username: admin, default passowrd: password)
+- http://dvwa.lab/ (default username: admin, default password: password)
+- http://dvwa-monitor.lab/ (default username: admin, default password: password)
+- http://dvwa-modsecurity.lab:8080/ (default username: admin, default password: password)
 - http://openappsec.lab:81/ (default username: admin@example.com, default password: changeme)
-- http://dvwa-openappsec.lab/ (default username: admin, default passowrd: password)
+- http://dvwa-openappsec.lab/ (default username: admin, default password: password)
 - http://wackopicko-openappsec.lab/
 - http://juiceshop-openappsec.lab/
 - http://wackopicko.lab/
 - http://juiceshop.lab/
-- https://wazuh-indexer.lab:9200/ (default username: admin, default passowrd: SecretPassword)
+- https://wazuh-indexer.lab:9200/ (default username: admin, default password: SecretPassword)
 - https://wazuh-manager.lab/
-- https://wazuh-dashboard.lab/ (default username: admin, default passowrd: SecretPassword)
+- https://wazuh-dashboard.lab/ (default username: admin, default password: SecretPassword)
 - http://splunk.lab/ (default username: admin, default password: splunkpassword)
 - https://infectionmonkey.lab:5000/
 - http://caldera.lab/ (default username: red/blue, default password: calderapassword)
@@ -139,7 +139,7 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 
 ## Attack
 - 10.0.0.100 attack.lab
-- 10.0.0.200 phising.lab
+- 10.0.0.200 phishing.lab
 - 10.0.0.201 server.lab
 - 10.0.0.201 mail.server.lab
 - 10.0.0.202 gophish.lab

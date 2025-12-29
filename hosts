@@ -1,5 +1,5 @@
 10.0.0.100	attack.lab attack
-10.0.0.200	phising.lab
+10.0.0.200	phishing.lab
 10.0.0.201	server.lab
 10.0.0.201	mail.server.lab
 10.0.0.202	gophish.lab

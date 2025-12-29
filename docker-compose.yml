@@ -9,7 +9,7 @@ services:
     profiles:
       - all
       - attackdefenselab
-      - phisinglab
+      - phishinglab
       - breachlab
       - soclab
     ports:
@@ -23,18 +23,18 @@ services:
       internal:
         ipv4_address: 10.0.5.100
 
-  phising:
-    hostname: phising.lab
-    image: 'csalab/csaf:phising'
+  phishing:
+    hostname: phishing.lab
+    image: 'csalab/csaf:phishing'
     build:
       context: .
-      dockerfile: build/phising.Dockerfile
+      dockerfile: build/phishing.Dockerfile
     restart: always
     profiles:
       - all
-      - phisinglab
+      - phishinglab
     environment:
-      - WEBSITE=${PHISING_WEB:-https://gmail.com/}
+      - WEBSITE=${PHISHING_WEB:-https://gmail.com/}
     networks:
       attack:
         ipv4_address: 10.0.0.200
@@ -45,7 +45,7 @@ services:
     restart: always
     profiles:
       - all
-      - phisinglab
+      - phishinglab
     environment:
       - HOSTNAME=mail.server.lab
       - FIRST_MAIL_DOMAIN=server.lab
@@ -78,7 +78,7 @@ services:
     restart: always
     profiles:
       - all
-      - phisinglab
+      - phishinglab
     environment:
       - GOPHISH_INITIAL_ADMIN_PASSWORD=${GOPHISH_PASS:-gophishpassword}
     volumes:
@@ -174,8 +174,11 @@ services:
         ipv4_address: 10.0.3.11
 
   dvwa_modsecurity:
-    image: 'owasp/modsecurity-crs:apache'
+    image: 'csalab/csaf:modsecurity'
     hostname: dvwa-modsecurity.lab
+    build:
+      context: .
+      dockerfile: build/modsecurity.Dockerfile
     restart: always
     healthcheck:
       disable: true
@@ -183,14 +186,8 @@ services:
       - all
       - attackdefenselab
       - soclab
-    user: root
     environment:
-      - PORT=80
-      - SSL_PORT=443
       - BACKEND=http://10.0.3.11:80
-      - BACKEND_WS=ws://10.0.3.11:80
-    volumes:
-      - ./script/modsecurity.startup.sh:/docker-entrypoint.sh
     depends_on:
       - dvwa_monitor
     networks:

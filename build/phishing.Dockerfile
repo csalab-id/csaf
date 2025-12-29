@@ -17,7 +17,7 @@ RUN apt-get update && \
     apt-get -y autoremove && \
     apt-get clean all && \
     rm -rf /var/lib/apt/lists/*
-COPY script/phising.index.html /usr/share/novnc/index.html
-COPY script/phising.startup.sh /startup.sh
+COPY script/phishing.index.html /usr/share/novnc/index.html
+COPY script/phishing.startup.sh /startup.sh
 ENV WEBSITE="https://gmail.com/"
 ENTRYPOINT [ "/bin/bash", "/startup.sh" ]
