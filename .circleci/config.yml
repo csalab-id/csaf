@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish]
 
 executors:
   docker:
@@ -45,6 +45,9 @@ jobs:
       - run:
           name: "Checking modsecurity docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/modsecurity.Dockerfile || true
+      - run:
+          name: "Checking gophish docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gophish.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -166,6 +169,18 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:juiceshop . -f build/juiceshop.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:juiceshop
 
+  build-gophish:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build gophish image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gophish . -f build/gophish.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gophish
+
 workflows:
   build-image-auto:
     when: 
@@ -206,6 +221,9 @@ workflows:
           requires:
             - hadolint
       - build-juiceshop:
+          requires:
+            - hadolint
+      - build-gophish:
           requires:
             - hadolint
 
@@ -296,6 +314,15 @@ workflows:
     jobs:
       - hadolint
       - build-juiceshop:
+          requires:
+            - hadolint
+
+  build-gophish:
+    when: 
+      equal: [gophish, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-gophish:
           requires:
             - hadolint
 

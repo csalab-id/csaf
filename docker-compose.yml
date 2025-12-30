@@ -75,6 +75,9 @@ services:
   gophish:
     image: 'gophish/gophish:latest'
     hostname: gophish.lab
+    build:
+      context: .
+      dockerfile: build/gophish.Dockerfile
     restart: always
     profiles:
       - all

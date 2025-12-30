@@ -1,0 +1,2 @@
+FROM gophish/gophish:latest@sha256:8a57cd171999dcd1fa33f346d6898440913ae14be114ffc850cc678354672d29
+LABEL maintainer="admin@csalab.id"
