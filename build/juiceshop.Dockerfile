@@ -1,0 +1,2 @@
+FROM bkimminich/juice-shop:latest@sha256:ca5dfbae3868c967f7fff7f057090ef02159e38d2481f004c842156dc837cdd2
+LABEL maintainer="admin@csalab.id"

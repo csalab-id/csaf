@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop]
 
 executors:
   docker:
@@ -154,6 +154,18 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:modsecurity . -f build/modsecurity.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:modsecurity
 
+  build-juiceshop:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build juiceshop image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:juiceshop . -f build/juiceshop.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:juiceshop
+
 workflows:
   build-image-auto:
     when: 
@@ -191,6 +203,9 @@ workflows:
           requires:
             - hadolint
       - build-modsecurity:
+          requires:
+            - hadolint
+      - build-juiceshop:
           requires:
             - hadolint
 
@@ -272,6 +287,15 @@ workflows:
     jobs:
       - hadolint
       - build-modsecurity:
+          requires:
+            - hadolint
+
+  build-juiceshop:
+    when: 
+      equal: [juiceshop, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-juiceshop:
           requires:
             - hadolint
 

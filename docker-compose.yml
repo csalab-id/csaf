@@ -221,8 +221,11 @@ services:
         ipv4_address: 10.0.2.13
 
   juiceshop:
-    image: 'bkimminich/juice-shop:latest'
+    image: 'csalab/csaf:juiceshop'
     hostname: juiceshop.lab
+    build:
+      context: .
+      dockerfile: build/juiceshop.Dockerfile
     restart: always
     profiles:
       - all
