@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb, splunk]
 
 executors:
   docker:
@@ -60,6 +60,9 @@ jobs:
       - run:
           name: "Checking mongodb docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/mongodb.Dockerfile || true
+      - run:
+          name: "Checking splunk docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/splunk.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -241,6 +244,18 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:mongodb . -f build/mongodb.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:mongodb
 
+  build-splunk:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build splunk image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:splunk . -f build/splunk.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:splunk
+
 workflows:
   build-image-auto:
     when: 
@@ -296,6 +311,9 @@ workflows:
           requires:
             - hadolint
       - build-mongodb:
+          requires:
+            - hadolint
+      - build-splunk:
           requires:
             - hadolint
 
@@ -431,6 +449,15 @@ workflows:
     jobs:
       - hadolint
       - build-mongodb:
+          requires:
+            - hadolint
+
+  build-splunk:
+    when: 
+      equal: [splunk, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-splunk:
           requires:
             - hadolint
 

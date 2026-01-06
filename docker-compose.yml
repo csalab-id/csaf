@@ -433,7 +433,10 @@ services:
 
   splunk:
     hostname: splunk.lab
-    image: 'splunk/splunk:10.0.2'
+    image: 'csalab/csaf:splunk'
+    build:
+      context: .
+      dockerfile: build/splunk.Dockerfile
     restart: always
     healthcheck:
       disable: true
