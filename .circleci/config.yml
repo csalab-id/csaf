@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb]
 
 executors:
   docker:
@@ -54,6 +54,12 @@ jobs:
       - run:
           name: "Checking openappsec-agent docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/openappsec-agent.Dockerfile || true
+      - run:
+          name: "Checking mariadb docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/mariadb.Dockerfile || true
+      - run:
+          name: "Checking mongodb docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/mongodb.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -211,6 +217,30 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:openappsec-agent . -f build/openappsec-agent.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:openappsec-agent
 
+  build-mariadb:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build mariadb image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:mariadb . -f build/mariadb.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:mariadb
+
+  build-mongodb:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build mongodb image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:mongodb . -f build/mongodb.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:mongodb
+
 workflows:
   build-image-auto:
     when: 
@@ -260,6 +290,12 @@ workflows:
           requires:
             - hadolint
       - build-openappsec-agent:
+          requires:
+            - hadolint
+      - build-mariadb:
+          requires:
+            - hadolint
+      - build-mongodb:
           requires:
             - hadolint
 
@@ -377,6 +413,24 @@ workflows:
     jobs:
       - hadolint
       - build-openappsec-agent:
+          requires:
+            - hadolint
+
+  build-mariadb:
+    when: 
+      equal: [mariadb, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-mariadb:
+          requires:
+            - hadolint
+
+  build-mongodb:
+    when: 
+      equal: [mongodb, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-mongodb:
           requires:
             - hadolint
 

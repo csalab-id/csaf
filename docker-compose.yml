@@ -113,7 +113,10 @@ services:
         ipv4_address: 10.0.2.101
 
   mariadb:
-    image: 'mariadb:11.3.2'
+    image: 'csalab/csaf:mariadb'
+    build:
+      context: .
+      dockerfile: build/mariadb.Dockerfile
     hostname: mariadb.lab
     restart: always
     profiles:
@@ -284,7 +287,6 @@ services:
         ipv4_address: 10.0.3.21
 
   appsec-agent:
-    hostname: openappsec-agent.lab
     image: 'csalab/csaf:openappsec-agent'
     build:
       context: .
@@ -476,7 +478,10 @@ services:
         ipv4_address: 10.0.1.110
 
   mongodb:
-    image: 'mongo:7.0.8'
+    image: 'csalab/csaf:mongodb'
+    build:
+      context: .
+      dockerfile: build/mongodb.Dockerfile
     hostname: mongodb.lab
     restart: always
     profiles:
