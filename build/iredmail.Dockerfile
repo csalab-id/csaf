@@ -1,0 +1,2 @@
+FROM csalab/iredmail:latest@sha256:a67372ece7645c1d8eccf1f8fd8fb73413cc26d7e4674724a13b2f4c448fa9ff
+LABEL maintainer="admin@csalab.id"

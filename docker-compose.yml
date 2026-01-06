@@ -41,7 +41,10 @@ services:
 
   server.lab:
     hostname: mail.server.lab
-    image: 'csalab/iredmail:latest'
+    image: 'csalab/csaf:iredmail'
+    build:
+      context: .
+      dockerfile: build/iredmail.Dockerfile
     restart: always
     profiles:
       - all
@@ -332,7 +335,10 @@ services:
         ipv4_address: 10.0.4.102
 
   wazuh_manager:
-    image: 'wazuh/wazuh-manager:4.8.0'
+    image: 'csalab/csaf:wazuh-manager'
+    build:
+      context: .
+      dockerfile: build/wazuh-manager.Dockerfile
     hostname: wazuh-manager.lab
     restart: always
     profiles:
@@ -375,7 +381,10 @@ services:
         ipv4_address: 10.0.4.30
 
   wazuh_indexer:
-    image: 'wazuh/wazuh-indexer:4.8.0'
+    image: 'csalab/csaf:wazuh-indexer'
+    build:
+      context: .
+      dockerfile: build/wazuh-indexer.Dockerfile
     hostname: wazuh-indexer.lab
     restart: always
     profiles:
@@ -404,7 +413,10 @@ services:
         ipv4_address: 10.0.3.31
 
   wazuh_dashboard:
-    image: 'wazuh/wazuh-dashboard:4.8.0'
+    image: 'csalab/csaf:wazuh-dashboard'
+    build:
+      context: .
+      dockerfile: build/wazuh-dashboard.Dockerfile
     hostname: wazuh-dashboard.lab
     restart: always
     profiles:

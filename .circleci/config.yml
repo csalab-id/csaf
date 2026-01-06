@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb, splunk]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail]
 
 executors:
   docker:
@@ -63,6 +63,18 @@ jobs:
       - run:
           name: "Checking splunk docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/splunk.Dockerfile || true
+      - run:
+          name: "Checking wazuh-indexer docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wazuh-indexer.Dockerfile || true
+      - run:
+          name: "Checking wazuh-manager docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wazuh-manager.Dockerfile || true
+      - run:
+          name: "Checking wazuh-dashboard docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/wazuh-dashboard.Dockerfile || true
+      - run:
+          name: "Checking iredmail docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/iredmail.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -256,6 +268,54 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:splunk . -f build/splunk.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:splunk
 
+  build-wazuh-indexer:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build wazuh-indexer image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wazuh-indexer . -f build/wazuh-indexer.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wazuh-indexer
+
+  build-wazuh-manager:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build wazuh-manager image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wazuh-manager . -f build/wazuh-manager.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wazuh-manager
+
+  build-wazuh-dashboard:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build wazuh-dashboard image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wazuh-dashboard . -f build/wazuh-dashboard.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:wazuh-dashboard
+
+  build-iredmail:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build iredmail image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:iredmail . -f build/iredmail.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:iredmail
+
 workflows:
   build-image-auto:
     when: 
@@ -314,6 +374,18 @@ workflows:
           requires:
             - hadolint
       - build-splunk:
+          requires:
+            - hadolint
+      - build-wazuh-indexer:
+          requires:
+            - hadolint
+      - build-wazuh-manager:
+          requires:
+            - hadolint
+      - build-wazuh-dashboard:
+          requires:
+            - hadolint
+      - build-iredmail:
           requires:
             - hadolint
 
@@ -458,6 +530,42 @@ workflows:
     jobs:
       - hadolint
       - build-splunk:
+          requires:
+            - hadolint
+
+  build-wazuh-indexer:
+    when: 
+      equal: [wazuh-indexer, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-wazuh-indexer:
+          requires:
+            - hadolint
+
+  build-wazuh-manager:
+    when: 
+      equal: [wazuh-manager, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-wazuh-manager:
+          requires:
+            - hadolint
+
+  build-wazuh-dashboard:
+    when: 
+      equal: [wazuh-dashboard, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-wazuh-dashboard:
+          requires:
+            - hadolint
+
+  build-iredmail:
+    when: 
+      equal: [iredmail, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-iredmail:
           requires:
             - hadolint
 
