@@ -73,7 +73,7 @@ services:
         ipv4_address: 10.0.3.201
 
   gophish:
-    image: 'gophish/gophish:latest'
+    image: 'csalab/csaf:gophish'
     hostname: gophish.lab
     build:
       context: .
@@ -260,7 +260,10 @@ services:
     
   appsec-npm:
     hostname: openappsec.lab
-    image: 'ghcr.io/openappsec/nginx-proxy-manager-attachment:latest'
+    image: 'csalab/csaf:openappsec'
+    build:
+      context: .
+      dockerfile: build/openappsec.Dockerfile
     ipc: host
     restart: always
     profiles:
@@ -281,7 +284,11 @@ services:
         ipv4_address: 10.0.3.21
 
   appsec-agent:
-    image: 'ghcr.io/openappsec/agent:latest'
+    hostname: openappsec-agent.lab
+    image: 'csalab/csaf:openappsec-agent'
+    build:
+      context: .
+      dockerfile: build/openappsec-agent.Dockerfile
     ipc: host
     network_mode: service:appsec-npm
     restart: always
@@ -424,7 +431,7 @@ services:
 
   splunk:
     hostname: splunk.lab
-    image: 'splunk/splunk:9.2.1'
+    image: 'splunk/splunk:10.0.2'
     restart: always
     healthcheck:
       disable: true
@@ -432,6 +439,7 @@ services:
       - all
       - soclab
     environment:
+      - SPLUNK_GENERAL_TERMS=--accept-sgt-current-at-splunk-com
       - SPLUNK_START_ARGS=--accept-license
       - SPLUNK_PASSWORD=${SPLUNK_PASS:-splunkpassword}
     volumes:
