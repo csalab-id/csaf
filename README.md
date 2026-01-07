@@ -11,7 +11,7 @@ The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at 
 
 ## Software
 - Docker
-- Docker compose plugin
+- Docker Compose plugin
 
 ## Hardware
 
@@ -39,11 +39,30 @@ Pull the Docker images
 ```
 docker compose --profile=all pull
 ```
-Generate wazuh ssl certificate
+Generate Wazuh SSL certificate
 ```
 docker compose -f generate-certs.yml run --rm generator
 ```
-For security reason you should set env like this first
+
+# Prepare .env File
+Create a local environment file for Docker Compose:
+```
+cp .env.example .env
+```
+Update values in `.env` as needed, or use shell exports below.
+
+# Environment Variables
+Set these before running Docker Compose (defaults come from [docker-compose.yml](docker-compose.yml)):
+- ATTACK_PASS / DEFENSE_PASS / MONITOR_PASS: VNC passwords for attack, defense, and monitor hosts (defaults: attackpassword, defensepassword, monitorpassword)
+- SPLUNK_PASS: Splunk admin password (default: splunkpassword)
+- GOPHISH_PASS: Initial Gophish admin password (default: gophishpassword)
+- MAIL_PASS: First mail domain admin password for iRedMail (default: mailpassword)
+- PHISHING_URL: Target URL to clone for the phishing page (default: https://gmail.com/)
+- PHISHING_TITLE: Page title for the phishing site (default: Gmail)
+- PHISHING_FAVICON: Favicon URL for the phishing site (default: https://www.google.com/favicon.ico)
+- BIND_ADDR: Bind address for exposed attack/defense/monitor services (default: 0.0.0.0)
+
+Example:
 ```
 export ATTACK_PASS=ChangeMePlease
 export DEFENSE_PASS=ChangeMePlease
@@ -51,13 +70,18 @@ export MONITOR_PASS=ChangeMePlease
 export SPLUNK_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
+export PHISHING_URL=https://example.com/
+export PHISHING_TITLE="Example Login"
+export PHISHING_FAVICON=https://example.com/favicon.ico
+export BIND_ADDR=127.0.0.1
 ```
+
 Start all the containers
 ```
 docker compose --profile=all up -d
 ```
 
-You can run specific profiles for running specific labs with the following profiles
+You can run specific labs with these profiles
 - all
 - attackdefenselab
 - phishinglab
@@ -68,6 +92,61 @@ For example
 ```
 docker compose --profile=attackdefenselab up -d
 ```
+
+# Profiles
+- all: Starts every service in the stack.
+- attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, OpenAppSec (NPM + agent), MariaDB.
+- phishinglab: Attack desktop, Gophish, Phishing site, iRedMail server.
+- breachlab: Attack/Defense desktops, DVWA, WackoPicko, Infection Monkey, MongoDB, Caldera.
+- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk.
+
+# Services Overview
+- Desktops: `attack.lab` (VNC on 6080), `defense.lab` (7080), `monitor.lab` (8080).
+- Web apps: `dvwa.lab`, `wackopicko.lab`, `juiceshop.lab`, `gitea.lab`.
+- AppSec: `openappsec.lab` (NPM UI), agent sidecar attached to NPM service.
+- Mail/Phishing: `mail.server.lab` (iRedMail), `gophish.lab`, `phishing.lab`.
+- Breach simulation: `infectionmonkey.lab`, `mongodb.lab`, `caldera.lab`.
+- SOC tooling: `wazuh-manager.lab`, `wazuh-indexer.lab`, `wazuh-dashboard.lab`, `splunk.lab`.
+
+# Default Credentials
+- VNC: `attackpassword` / `defensepassword` / `monitorpassword` (override via env).
+- DVWA, WackoPicko, Juice Shop: default app passwords per app (see Domain Access list).
+- Gitea: `csalab` / `giteapassword`.
+- Gophish: admin password from `GOPHISH_PASS`.
+- iRedMail: `postmaster@server.lab` / `mailpassword`.
+- Splunk: `admin` / `splunkpassword`.
+- Wazuh Dashboard/Indexer: `admin` / `SecretPassword`.
+
+# Networks
+- attack: 10.0.0.0/24 (external lab attack network).
+- defense: 10.0.1.0/24 (internal true) defense network.
+- public: 10.0.2.0/24 (public-exposed subset).
+- monitor: 10.0.3.0/24 (internal true) monitoring network.
+- internet: 10.0.4.0/24 (simulated internet facing network).
+- internal: 10.0.5.0/24 (service-to-service internal).
+
+# Persistent Data
+- Volumes keep state for databases and apps (MariaDB, Wazuh, Splunk, Gitea, etc.).
+- Reset lab state: `docker compose down -v` removes containers and volumes.
+
+# Lifecycle Commands
+- Start (all): `docker compose --profile=all up -d`.
+- Start (specific): `docker compose --profile=<profile> up -d`.
+- Stop: `docker compose down`.
+- Status: `docker compose ps`.
+- Logs: `docker compose logs -f <service>`.
+
+# Troubleshooting
+- Certificates: Run `docker compose -f generate-certs.yml run --rm generator` before first SOC lab start.
+- Bind address: Set `BIND_ADDR=127.0.0.1` to bind services locally.
+- Port conflicts: Change host ports or stop conflicting processes.
+- Clean slate: Use `docker compose down -v` to wipe persistent data.
+
+# Security Notes
+- Change all default passwords via `.env` before exposing services.
+- Avoid exposing services broadly; prefer `BIND_ADDR=127.0.0.1` and access via SOCKS5 or SSH.
+- Review OpenAppSec policies in `config/appsec-localconfig` and harden before production-like use.
+- Be cautious with email and phishing services; use test domains and isolated networks only.
 
 # Proof
 ![Caldera](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/caldera.png)
@@ -85,24 +164,24 @@ docker compose --profile=attackdefenselab up -d
 ![Wazuh](https://raw.githubusercontent.com/csalab-id/csaf/main/.github/images/wazuh.png)
 
 # Exposed Ports
-An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP client. Choose one for the best experience.
+An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client. Choose one for the best experience.
 
 - Port 6080 (Access to attack network)
 - Port 7080 (Access to defense network)
 - Port 8080 (Access to monitor network)
 
-# Example usage
-## Access internal network with proxy socks5
+# Example Usage
+## Access Internal Network with SOCKS5 Proxy
 - curl --proxy socks5://ipaddress:6080 http://10.0.0.100/vnc.html
 - curl --proxy socks5://ipaddress:7080 http://10.0.1.101/vnc.html
 - curl --proxy socks5://ipaddress:8080 http://10.0.3.102/vnc.html
 
-## Remote ssh with ssh client
+## Remote SSH with SSH Client
 - ssh kali@ipaddress -p 6080 (default password: attackpassword)
 - ssh kali@ipaddress -p 7080 (default password: defensepassword)
 - ssh kali@ipaddress -p 8080 (default password: monitorpassword)
 
-## Access kali linux desktop with curl / browser
+## Access Kali Linux Desktop (cURL/Browser)
 - curl http://ipaddress:6080/vnc.html
 - curl http://ipaddress:7080/vnc.html
 - curl http://ipaddress:8080/vnc.html
@@ -198,3 +277,6 @@ An exposed port can be accessed using a proxy socks5 client, SSH client, or HTTP
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.
+
+# Disclaimer
+This project is intended for educational and lab use only. Do not expose any provided services directly to the internet or production environments without hardening and independent security validation. You are solely responsible for complying with applicable laws, regulations, and organizational policies when deploying or using this project.

