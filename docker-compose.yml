@@ -342,6 +342,8 @@ services:
       - soclab
     volumes:
       - bunkerweb:/data
+    env_file:
+      - config/bunkerweb/variables.env
     depends_on:
       - dvwa_monitor
       - juiceshop
