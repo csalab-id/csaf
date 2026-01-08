@@ -55,6 +55,7 @@ Update values in `.env` as needed, or use shell exports below.
 Set these before running Docker Compose (defaults come from [docker-compose.yml](docker-compose.yml)):
 - ATTACK_PASS / DEFENSE_PASS / MONITOR_PASS: VNC passwords for attack, defense, and monitor hosts (defaults: attackpassword, defensepassword, monitorpassword)
 - SPLUNK_PASS: Splunk admin password (default: splunkpassword)
+- VELOX_PASS: Velociraptor admin password (default: veloxpassword)
 - GOPHISH_PASS: Initial Gophish admin password (default: gophishpassword)
 - MAIL_PASS: First mail domain admin password for iRedMail (default: mailpassword)
 - PHISHING_URL: Target URL to clone for the phishing page (default: https://gmail.com/)
@@ -68,6 +69,7 @@ export ATTACK_PASS=ChangeMePlease
 export DEFENSE_PASS=ChangeMePlease
 export MONITOR_PASS=ChangeMePlease
 export SPLUNK_PASS=ChangeMePlease
+export VELOX_PASS=ChangeMePlease
 export GOPHISH_PASS=ChangeMePlease
 export MAIL_PASS=ChangeMePlease
 export PHISHING_URL=https://example.com/
@@ -99,8 +101,7 @@ docker compose --profile=attackdefenselab up -d
 - attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, OpenAppSec (NPM + agent), MariaDB, Bunkerweb (reverse proxy/WAF).
 - phishinglab: Attack desktop, Gophish, Phishing site, iRedMail server.
 - breachlab: Attack/Defense desktops, DVWA, WackoPicko, Infection Monkey, MongoDB, Caldera.
-- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk.
-- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk, Bunkerweb (reverse proxy/WAF).
+- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk, Velociraptor, Bunkerweb (reverse proxy/WAF).
 
 # Services Overview
 - Desktops: `attack.lab` (VNC on 6080), `defense.lab` (7080), `monitor.lab` (8080).
@@ -108,7 +109,7 @@ docker compose --profile=attackdefenselab up -d
 - AppSec: `openappsec.lab` (NPM UI), agent sidecar attached to NPM service.
 - Mail/Phishing: `mail.server.lab` (iRedMail), `gophish.lab`, `phishing.lab`.
 - Breach simulation: `infectionmonkey.lab`, `mongodb.lab`, `caldera.lab`.
-- SOC tooling: `wazuh-manager.lab`, `wazuh-indexer.lab`, `wazuh-dashboard.lab`, `splunk.lab`.
+- SOC tooling: `wazuh-manager.lab`, `wazuh-indexer.lab`, `wazuh-dashboard.lab`, `splunk.lab`, `velociraptor.lab`.
 - Security/Proxy: `bunkerweb.lab` reverse proxy/WAF for DVWA, Juice Shop, and WackoPicko. Setup UI: `https://bunkerweb.lab/setup`. Aliases: `dvwa-bunkerweb.lab`, `juiceshop-bunkerweb.lab`, `wackopicko-bunkerweb.lab`.
 
 # Default Credentials
@@ -118,6 +119,7 @@ docker compose --profile=attackdefenselab up -d
 - Gophish: admin password from `GOPHISH_PASS`.
 - iRedMail: `postmaster@server.lab` / `mailpassword`.
 - Splunk: `admin` / `splunkpassword`.
+- Velociraptor: `admin` / `veloxpassword`.
 - Wazuh Dashboard/Indexer: `admin` / `SecretPassword`.
 
 # Networks
@@ -218,6 +220,7 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab/ (default username: admin, default password: SecretPassword)
 - http://splunk.lab/ (default username: admin, default password: splunkpassword)
+- http://velociraptor.lab:8000/ (default username: admin, default password: veloxpassword)
 - https://infectionmonkey.lab:5000/
 - http://caldera.lab/ (default username: red/blue, default password: calderapassword)
 
@@ -270,6 +273,7 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.3.31 wazuh-indexer.lab
 - 10.0.3.32 wazuh-dashboard.lab
 - 10.0.3.40 splunk.lab
+- 10.0.3.41 velociraptor.lab
 
 ## Public
 - 10.0.2.101 defense.lab
@@ -280,6 +284,7 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.4.30 wazuh-manager.lab
 - 10.0.4.32 wazuh-dashboard.lab
 - 10.0.4.40 splunk.lab
+- 10.0.4.41 velociraptor.lab
 
 ## Internal
 - 10.0.5.100 attack.lab
