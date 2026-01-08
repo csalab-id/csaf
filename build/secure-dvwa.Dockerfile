@@ -37,6 +37,11 @@ RUN wget -q "https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-ag
     sed -i "s/PYTHONHTTPSVERIFY=0/PYTHONHTTPSVERIFY=1/g" /opt/splunkforwarder/etc/splunk-launch.conf && \
     sed -i "s/SPLUNK_OS_USER=rootfwd/SPLUNK_OS_USER=root/g" /opt/splunkforwarder/etc/splunk-launch.conf && \
     sed -i "s/SPLUNK_OS_USER=splunkfwd/SPLUNK_OS_USER=root/g" /opt/splunkforwarder/etc/splunk-launch.conf
+COPY --chown=root:root --chmod=755 config/dvwa/velociraptor-client /etc/init.d/velociraptor-client
+COPY --chown=root:root --chmod=644 config/velociraptor/client.config.yaml /etc/velociraptor-client.config.yaml
+RUN wget -q "https://github.com/Velocidex/velociraptor/releases/download/v0.75/velociraptor-v0.75.6-linux-amd64" -O /usr/local/bin/velociraptor && \
+    chmod +x /usr/local/bin/velociraptor && \
+    update-rc.d velociraptor-client defaults
 RUN useradd -f 30 -m -c "Dev User" -s /bin/bash -d /home/devel devel && \
     groupadd sugroup && \
     (echo "rootpassword"; echo "rootpassword") | passwd root && \

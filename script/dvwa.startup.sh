@@ -26,6 +26,9 @@ if [[ "$?" == "1" ]]; then
   /opt/splunkforwarder/bin/splunk add monitor /var/log/ -auth admin:splunkpassword
 fi
 
+echo '[+] Starting Velociraptor Client'
+service velociraptor-client start
+
 while true
 do
     tail -f /var/log/apache2/*.log

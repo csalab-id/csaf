@@ -541,9 +541,10 @@ services:
       - VELOX_USER=admin
       - VELOX_PASSWORD=${VELOX_PASS:-veloxpassword}
       - VELOX_ROLE=administrator
-      - VELOX_SERVER_URL=http://velociraptor.lab:8000
+      - VELOX_SERVER_URL=http://velociraptor.lab:8000/
       - VELOX_FRONTEND_HOSTNAME=velociraptor.lab
     volumes:
+      - ./config/velociraptor/server.config.yaml:/velociraptor/server.config.yaml
       - velociraptor:/velociraptor
     networks:
       monitor:
