@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail, bunkerweb]
 
 executors:
   docker:
@@ -75,6 +75,9 @@ jobs:
       - run:
           name: "Checking iredmail docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/iredmail.Dockerfile || true
+      - run:
+          name: "Checking bunkerweb docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/bunkerweb.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -316,6 +319,18 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:iredmail . -f build/iredmail.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:iredmail
 
+  build-bunkerweb:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build bunkerweb image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:bunkerweb . -f build/bunkerweb.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:bunkerweb
+
 workflows:
   build-image-auto:
     when: 
@@ -386,6 +401,9 @@ workflows:
           requires:
             - hadolint
       - build-iredmail:
+          requires:
+            - hadolint
+      - build-bunkerweb:
           requires:
             - hadolint
 
@@ -566,6 +584,15 @@ workflows:
     jobs:
       - hadolint
       - build-iredmail:
+          requires:
+            - hadolint
+
+  build-bunkerweb:
+    when: 
+      equal: [bunkerweb, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-bunkerweb:
           requires:
             - hadolint
 

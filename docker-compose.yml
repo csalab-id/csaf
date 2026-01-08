@@ -265,8 +265,8 @@ services:
     networks:
       defense:
         ipv4_address: 10.0.1.20
-    
-  appsec-npm:
+
+  openappsec:
     hostname: openappsec.lab
     image: 'csalab/csaf:openappsec'
     build:
@@ -286,18 +286,30 @@ services:
     networks:
       internal:
         ipv4_address: 10.0.5.21
+        aliases:
+          - dvwa-openappsec.lab
+          - juiceshop-openappsec.lab
+          - wackopicko-openappsec.lab
       defense:
         ipv4_address: 10.0.1.21
+        aliases:
+          - dvwa-openappsec.lab
+          - juiceshop-openappsec.lab
+          - wackopicko-openappsec.lab
       monitor:
         ipv4_address: 10.0.3.21
+        aliases:
+          - dvwa-openappsec.lab
+          - juiceshop-openappsec.lab
+          - wackopicko-openappsec.lab
 
-  appsec-agent:
+  openappsec-agent:
     image: 'csalab/csaf:openappsec-agent'
     build:
       context: .
       dockerfile: build/openappsec-agent.Dockerfile
     ipc: host
-    network_mode: service:appsec-npm
+    network_mode: service:openappsec
     restart: always
     profiles:
       - all
@@ -314,6 +326,45 @@ services:
       - appsec-logs:/var/log/nano_agent
       - ./config/appsec-localconfig:/ext/appsec
     command: /cp-nano-agent --standalone
+
+  bunkerweb:
+    image: 'csalab/csaf:bunkerweb'
+    build:
+      context: .
+      dockerfile: build/bunkerweb.Dockerfile
+    hostname: bunkerweb.lab
+    restart: always
+    healthcheck:
+      disable: true
+    profiles:
+      - all
+      - attackdefenselab
+      - soclab
+    volumes:
+      - bunkerweb:/data
+    depends_on:
+      - dvwa_monitor
+      - juiceshop
+      - wackopicko
+    networks:
+      internal:
+        ipv4_address: 10.0.5.22
+        aliases:
+          - dvwa-bunkerweb.lab
+          - juiceshop-bunkerweb.lab
+          - wackopicko-bunkerweb.lab
+      defense:
+        ipv4_address: 10.0.1.22
+        aliases:
+          - dvwa-bunkerweb.lab
+          - juiceshop-bunkerweb.lab
+          - wackopicko-bunkerweb.lab
+      monitor:
+        ipv4_address: 10.0.3.22
+        aliases:
+          - dvwa-bunkerweb.lab
+          - juiceshop-bunkerweb.lab
+          - wackopicko-bunkerweb.lab
 
   monitor:
     hostname: monitor.lab
@@ -618,3 +669,4 @@ volumes:
   appsec-data: {}
   appsec-logs: {}
   appsec-letsencrypt: {}
+  bunkerweb: {}

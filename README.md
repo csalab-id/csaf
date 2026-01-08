@@ -16,14 +16,14 @@ The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at 
 ## Hardware
 
 ### Minimum
-- 4 Core CPU
-- 10GB RAM
-- 60GB Disk free
+- 8 Core CPU
+- 16GB RAM
+- 128GB Disk free
 
 ### Recommendation
-- 8 Core CPU or above
-- 16GB RAM or above
-- 100GB Disk free or above
+- 12 Core CPU or above
+- 32GB RAM or above
+- 256GB Disk free or above
 
 # Installation
 
@@ -96,9 +96,11 @@ docker compose --profile=attackdefenselab up -d
 # Profiles
 - all: Starts every service in the stack.
 - attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, OpenAppSec (NPM + agent), MariaDB.
+- attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, OpenAppSec (NPM + agent), MariaDB, Bunkerweb (reverse proxy/WAF).
 - phishinglab: Attack desktop, Gophish, Phishing site, iRedMail server.
 - breachlab: Attack/Defense desktops, DVWA, WackoPicko, Infection Monkey, MongoDB, Caldera.
 - soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk.
+- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk, Bunkerweb (reverse proxy/WAF).
 
 # Services Overview
 - Desktops: `attack.lab` (VNC on 6080), `defense.lab` (7080), `monitor.lab` (8080).
@@ -107,6 +109,7 @@ docker compose --profile=attackdefenselab up -d
 - Mail/Phishing: `mail.server.lab` (iRedMail), `gophish.lab`, `phishing.lab`.
 - Breach simulation: `infectionmonkey.lab`, `mongodb.lab`, `caldera.lab`.
 - SOC tooling: `wazuh-manager.lab`, `wazuh-indexer.lab`, `wazuh-dashboard.lab`, `splunk.lab`.
+- Security/Proxy: `bunkerweb.lab` reverse proxy/WAF for DVWA, Juice Shop, and WackoPicko. Setup UI: `https://bunkerweb.lab/setup`. Aliases: `dvwa-bunkerweb.lab`, `juiceshop-bunkerweb.lab`, `wackopicko-bunkerweb.lab`.
 
 # Default Credentials
 - VNC: `attackpassword` / `defensepassword` / `monitorpassword` (override via env).
@@ -205,6 +208,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - http://dvwa-openappsec.lab/ (default username: admin, default password: password)
 - http://wackopicko-openappsec.lab/
 - http://juiceshop-openappsec.lab/
+- https://bunkerweb.lab/setup
+- http://dvwa-bunkerweb.lab/ (default username: admin, default password: password)
+- http://wackopicko-bunkerweb.lab/
+- http://juiceshop-bunkerweb.lab/
 - http://wackopicko.lab/
 - http://juiceshop.lab/
 - https://wazuh-indexer.lab:9200/ (default username: admin, default password: SecretPassword)
@@ -236,6 +243,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.1.21 dvwa-openappsec.lab
 - 10.0.1.21 wackopicko-openappsec.lab
 - 10.0.1.21 juiceshop-openappsec.lab
+- 10.0.1.22 bunkerweb.lab
+- 10.0.1.22 dvwa-bunkerweb.lab
+- 10.0.1.22 wackopicko-bunkerweb.lab
+- 10.0.1.22 juiceshop-bunkerweb.lab
 - 10.0.1.110 infectionmonkey.lab
 - 10.0.1.113 caldera.lab
 
@@ -250,6 +261,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.3.21 dvwa-openappsec.lab
 - 10.0.3.21 wackopicko-openappsec.lab
 - 10.0.3.21 juiceshop-openappsec.lab
+- 10.0.3.22 bunkerweb.lab
+- 10.0.3.22 dvwa-bunkerweb.lab
+- 10.0.3.22 wackopicko-bunkerweb.lab
+- 10.0.3.22 juiceshop-bunkerweb.lab
 - 10.0.3.102 monitor.lab
 - 10.0.3.30 wazuh-manager.lab
 - 10.0.3.31 wazuh-indexer.lab
@@ -274,6 +289,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.5.21 dvwa-openappsec.lab
 - 10.0.5.21 wackopicko-openappsec.lab
 - 10.0.5.21 juiceshop-openappsec.lab
+- 10.0.5.22 bunkerweb.lab
+- 10.0.5.22 dvwa-bunkerweb.lab
+- 10.0.5.22 wackopicko-bunkerweb.lab
+- 10.0.5.22 juiceshop-bunkerweb.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.
