@@ -63,7 +63,7 @@ API:
   bind_scheme: tcp
 GUI:
   bind_address: 0.0.0.0
-  bind_port: 8889
+  bind_port: 443
   gw_certificate: |
     -----BEGIN CERTIFICATE-----
     MIIDQTCCAimgAwIBAgIQQ0KXHvZKv8wiH4pg9PfV2jANBgkqhkiG9w0BAQsFADAa
@@ -113,7 +113,7 @@ GUI:
     0Xkx9c0C1kZXxLP1LHUhykrxu6Gxdqxxnm1YzP8axdAnzXjAOFWJHQAXNEmmTiGa
     q+xqv6KaXNP1CcVTePdVSCcBDfnzOuJt7eQxI3eixvoZ/Kee6sbfd94=
     -----END RSA PRIVATE KEY-----
-  public_url: https://localhost:8889/app/index.html
+  public_url: https://velociraptor.lab/app/index.html
   links:
   - text: Documentation
     url: https://docs.velociraptor.app/

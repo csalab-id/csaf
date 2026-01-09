@@ -220,7 +220,7 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - https://wazuh-manager.lab/
 - https://wazuh-dashboard.lab/ (default username: admin, default password: SecretPassword)
 - http://splunk.lab/ (default username: admin, default password: splunkpassword)
-- http://velociraptor.lab:8000/ (default username: admin, default password: veloxpassword)
+- https://velociraptor.lab/ (default username: admin, default password: veloxpassword)
 - https://infectionmonkey.lab:5000/
 - http://caldera.lab/ (default username: red/blue, default password: calderapassword)
 
