@@ -13,21 +13,27 @@ DAEMON="/usr/local/bin/velociraptor"
 DAEMON_ARGS="--config /etc/velociraptor-client.config.yaml client -v"
 PIDFILE="/var/run/velociraptor-client.pid"
 LOGFILE="/var/log/velociraptor-client.log"
-USER="root"
 
 start() {
     echo "Starting Velociraptor Client..."
-    start-stop-daemon --start --background \
-        --make-pidfile --pidfile $PIDFILE \
-        --chuid $USER \
-        --exec $DAEMON -- $DAEMON_ARGS >> $LOGFILE 2>&1
-    echo "Velociraptor Client started."
+    nohup $DAEMON $DAEMON_ARGS >> $LOGFILE 2>&1 &
+    echo $! > $PIDFILE
+    echo "Velociraptor Client started (PID: $(cat $PIDFILE))"
 }
 
 stop() {
     echo "Stopping Velociraptor Client..."
-    start-stop-daemon --stop --pidfile $PIDFILE
-    rm -f $PIDFILE
+    if [ -f "$PIDFILE" ]; then
+        PID=$(cat $PIDFILE)
+        if kill -0 "$PID" 2>/dev/null; then
+            kill "$PID"
+            sleep 2
+            if kill -0 "$PID" 2>/dev/null; then
+                kill -9 "$PID"
+            fi
+        fi
+        rm -f $PIDFILE
+    fi
     echo "Velociraptor Client stopped."
 }
 

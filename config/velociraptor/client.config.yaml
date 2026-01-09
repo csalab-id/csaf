@@ -8,7 +8,7 @@ version:
   architecture: amd64
 Client:
   server_urls:
-  - http://velociraptor.lab:8000/
+  - https://velociraptor.lab:8000/
   ca_certificate: |
     -----BEGIN CERTIFICATE-----
     MIIDSzCCAjOgAwIBAgIQb3d3jTyRHHK/iabH6HGjFzANBgkqhkiG9w0BAQsFADAa
