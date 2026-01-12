@@ -155,6 +155,11 @@ services:
       - dvwa_data:/var/www/html
     depends_on:
       - mariadb
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1.5G
     networks:
       defense:
         ipv4_address: 10.0.1.10
@@ -180,6 +185,11 @@ services:
       - dvwa_monitor_data:/var/www/html
     depends_on:
       - mariadb
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2.0G
     networks:
       monitor:
         ipv4_address: 10.0.3.11
@@ -198,6 +208,8 @@ services:
       - attackdefenselab
       - soclab
     environment:
+      - PORT=80
+      - SSL_PORT=443
       - BACKEND=http://10.0.3.11:80
     depends_on:
       - dvwa_monitor
@@ -223,6 +235,11 @@ services:
       - wackopicko_web:/app
       - wackopicko_mysql:/var/lib/mysql
       - wackopicko_etc:/etc/mysql
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2.0G
     networks:
       defense:
         ipv4_address: 10.0.1.13
@@ -244,6 +261,11 @@ services:
       - soclab
     environment:
       - PORT=80
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1.0G
     networks:
       defense:
         ipv4_address: 10.0.1.14
@@ -348,6 +370,11 @@ services:
       - dvwa_monitor
       - juiceshop
       - wackopicko
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 8.0G
     networks:
       internal:
         ipv4_address: 10.0.5.22
