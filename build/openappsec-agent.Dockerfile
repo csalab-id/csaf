@@ -1,2 +1,0 @@
-FROM ghcr.io/openappsec/agent:latest@sha256:1fd40fa085295cd3ebec637255fefa504de2d43dccc78d96a2310cb9d4877d68
-LABEL maintainer="admin@csalab.id"

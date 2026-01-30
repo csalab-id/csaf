@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, openappsec, openappsec-agent, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail, bunkerweb, velociraptor]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail, bunkerweb, velociraptor]
 
 executors:
   docker:
@@ -48,12 +48,6 @@ jobs:
       - run:
           name: "Checking gophish docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/gophish.Dockerfile || true
-      - run:
-          name: "Checking openappsec docker file code quality"
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/openappsec.Dockerfile || true
-      - run:
-          name: "Checking openappsec-agent docker file code quality"
-          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/openappsec-agent.Dockerfile || true
       - run:
           name: "Checking mariadb docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/mariadb.Dockerfile || true
@@ -214,30 +208,6 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gophish . -f build/gophish.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:gophish
 
-  build-openappsec:
-    executor: docker
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: "Build openappsec image"
-          command: |
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:openappsec . -f build/openappsec.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:openappsec
-
-  build-openappsec-agent:
-    executor: docker
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: "Build openappsec-agent image"
-          command: |
-            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
-            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:openappsec-agent . -f build/openappsec-agent.Dockerfile
-            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:openappsec-agent
-
   build-mariadb:
     executor: docker
     steps:
@@ -391,12 +361,6 @@ workflows:
       - build-gophish:
           requires:
             - hadolint
-      - build-openappsec:
-          requires:
-            - hadolint
-      - build-openappsec-agent:
-          requires:
-            - hadolint
       - build-mariadb:
           requires:
             - hadolint
@@ -521,24 +485,6 @@ workflows:
     jobs:
       - hadolint
       - build-gophish:
-          requires:
-            - hadolint
-
-  build-openappsec:
-    when: 
-      equal: [openappsec, << pipeline.parameters.workflow >>]
-    jobs:
-      - hadolint
-      - build-openappsec:
-          requires:
-            - hadolint
-
-  build-openappsec-agent:
-    when: 
-      equal: [openappsec-agent, << pipeline.parameters.workflow >>]
-    jobs:
-      - hadolint
-      - build-openappsec-agent:
           requires:
             - hadolint
 

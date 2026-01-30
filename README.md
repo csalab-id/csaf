@@ -97,16 +97,15 @@ docker compose --profile=attackdefenselab up -d
 
 # Profiles
 - all: Starts every service in the stack.
-- attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, OpenAppSec (NPM + agent), MariaDB.
-- attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, OpenAppSec (NPM + agent), MariaDB, Bunkerweb (reverse proxy/WAF).
+- attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, MariaDB.
+- attackdefenselab: Attack/Defense desktops, DVWA (+ secure + ModSecurity), WackoPicko, Juice Shop, Gitea, MariaDB, Bunkerweb (reverse proxy/WAF).
 - phishinglab: Attack desktop, Gophish, Phishing site, iRedMail server.
 - breachlab: Attack/Defense desktops, DVWA, WackoPicko, Infection Monkey, MongoDB, Caldera.
-- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, OpenAppSec (NPM + agent), MariaDB, Wazuh (manager/indexer/dashboard), Splunk, Velociraptor, Bunkerweb (reverse proxy/WAF).
+- soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, MariaDB, Wazuh (manager/indexer/dashboard), Splunk, Velociraptor, Bunkerweb (reverse proxy/WAF).
 
 # Services Overview
 - Desktops: `attack.lab` (VNC on 6080), `defense.lab` (7080), `monitor.lab` (8080).
 - Web apps: `dvwa.lab`, `wackopicko.lab`, `juiceshop.lab`, `gitea.lab`.
-- AppSec: `openappsec.lab` (NPM UI), agent sidecar attached to NPM service.
 - Mail/Phishing: `mail.server.lab` (iRedMail), `gophish.lab`, `phishing.lab`.
 - Breach simulation: `infectionmonkey.lab`, `mongodb.lab`, `caldera.lab`.
 - SOC tooling: `wazuh-manager.lab`, `wazuh-indexer.lab`, `wazuh-dashboard.lab`, `splunk.lab`, `velociraptor.lab`.
@@ -150,7 +149,6 @@ docker compose --profile=attackdefenselab up -d
 # Security Notes
 - Change all default passwords via `.env` before exposing services.
 - Avoid exposing services broadly; prefer `BIND_ADDR=127.0.0.1` and access via SOCKS5 or SSH.
-- Review OpenAppSec policies in `config/appsec-localconfig` and harden before production-like use.
 - Be cautious with email and phishing services; use test domains and isolated networks only.
 
 # Proof
@@ -206,10 +204,6 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - http://dvwa.lab/ (default username: admin, default password: password)
 - http://dvwa-monitor.lab/ (default username: admin, default password: password)
 - http://dvwa-modsecurity.lab/ (default username: admin, default password: password)
-- http://openappsec.lab:81/ (default username: admin@example.com, default password: changeme)
-- http://dvwa-openappsec.lab/ (default username: admin, default password: password)
-- http://wackopicko-openappsec.lab/
-- http://juiceshop-openappsec.lab/
 - https://bunkerweb.lab/setup
 - http://dvwa-bunkerweb.lab/ (default username: admin, default password: password)
 - http://wackopicko-bunkerweb.lab/
@@ -242,14 +236,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.1.13 wackopicko.lab
 - 10.0.1.14 juiceshop.lab
 - 10.0.1.20 gitea.lab
-- 10.0.1.21 openappsec.lab
-- 10.0.1.21 dvwa-openappsec.lab
-- 10.0.1.21 wackopicko-openappsec.lab
-- 10.0.1.21 juiceshop-openappsec.lab
-- 10.0.1.22 bunkerweb.lab
-- 10.0.1.22 dvwa-bunkerweb.lab
-- 10.0.1.22 wackopicko-bunkerweb.lab
-- 10.0.1.22 juiceshop-bunkerweb.lab
+- 10.0.1.21 bunkerweb.lab
+- 10.0.1.21 dvwa-bunkerweb.lab
+- 10.0.1.21 wackopicko-bunkerweb.lab
+- 10.0.1.21 juiceshop-bunkerweb.lab
 - 10.0.1.110 infectionmonkey.lab
 - 10.0.1.113 caldera.lab
 
@@ -260,14 +250,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.3.10 dvwa.lab
 - 10.0.3.11 dvwa-monitor.lab
 - 10.0.3.12 dvwa-modsecurity.lab
-- 10.0.3.21 openappsec.lab
-- 10.0.3.21 dvwa-openappsec.lab
-- 10.0.3.21 wackopicko-openappsec.lab
-- 10.0.3.21 juiceshop-openappsec.lab
-- 10.0.3.22 bunkerweb.lab
-- 10.0.3.22 dvwa-bunkerweb.lab
-- 10.0.3.22 wackopicko-bunkerweb.lab
-- 10.0.3.22 juiceshop-bunkerweb.lab
+- 10.0.3.21 bunkerweb.lab
+- 10.0.3.21 dvwa-bunkerweb.lab
+- 10.0.3.21 wackopicko-bunkerweb.lab
+- 10.0.3.21 juiceshop-bunkerweb.lab
 - 10.0.3.102 monitor.lab
 - 10.0.3.30 wazuh-manager.lab
 - 10.0.3.31 wazuh-indexer.lab
@@ -290,14 +276,10 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.5.100 attack.lab
 - 10.0.5.12 dvwa-modsecurity.lab
 - 10.0.5.13 wackopicko.lab
-- 10.0.5.21 openappsec.lab
-- 10.0.5.21 dvwa-openappsec.lab
-- 10.0.5.21 wackopicko-openappsec.lab
-- 10.0.5.21 juiceshop-openappsec.lab
-- 10.0.5.22 bunkerweb.lab
-- 10.0.5.22 dvwa-bunkerweb.lab
-- 10.0.5.22 wackopicko-bunkerweb.lab
-- 10.0.5.22 juiceshop-bunkerweb.lab
+- 10.0.5.21 bunkerweb.lab
+- 10.0.5.21 dvwa-bunkerweb.lab
+- 10.0.5.21 wackopicko-bunkerweb.lab
+- 10.0.5.21 juiceshop-bunkerweb.lab
 
 # License
 This Docker Compose application is released under the MIT License. See the [LICENSE](https://www.mit.edu/~amini/LICENSE.md) file for details.
