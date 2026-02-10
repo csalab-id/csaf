@@ -89,6 +89,7 @@ You can run specific labs with these profiles
 - phishinglab
 - breachlab
 - soclab
+- ransomwarelab
 
 For example
 ```
@@ -102,12 +103,14 @@ docker compose --profile=attackdefenselab up -d
 - phishinglab: Attack desktop, Gophish, Phishing site, iRedMail server.
 - breachlab: Attack/Defense desktops, DVWA, WackoPicko, Infection Monkey, MongoDB, Caldera.
 - soclab: Monitor desktop, DVWA (+ secure + ModSecurity), Juice Shop, MariaDB, Wazuh (manager/indexer/dashboard), Splunk, Velociraptor, Bunkerweb (reverse proxy/WAF).
+- ransomwarelab: Attack/Defense/Monitor desktops, Ransomware service.
 
 # Services Overview
 - Desktops: `attack.lab` (VNC on 6080), `defense.lab` (7080), `monitor.lab` (8080).
 - Web apps: `dvwa.lab`, `wackopicko.lab`, `juiceshop.lab`, `gitea.lab`.
 - Mail/Phishing: `mail.server.lab` (iRedMail), `gophish.lab`, `phishing.lab`.
 - Breach simulation: `infectionmonkey.lab`, `mongodb.lab`, `caldera.lab`.
+- Ransomware: `ransomware.lab`.
 - SOC tooling: `wazuh-manager.lab`, `wazuh-indexer.lab`, `wazuh-dashboard.lab`, `splunk.lab`, `velociraptor.lab`.
 - Security/Proxy: `bunkerweb.lab` reverse proxy/WAF for DVWA, Juice Shop, and WackoPicko. Setup UI: `https://bunkerweb.lab/setup`. Aliases: `dvwa-bunkerweb.lab`, `juiceshop-bunkerweb.lab`, `wackopicko-bunkerweb.lab`.
 
@@ -199,6 +202,7 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - https://mail.server.lab/ (default username: postmaster@server.lab, default password: mailpassword)
 - https://mail.server.lab/iredadmin/ (default username: postmaster@server.lab, default password: mailpassword)
 - http://phishing.lab/
+- http://ransomware.lab/
 - http://10.0.0.200:8081/
 - http://gitea.lab/ (default username: csalab, default password: giteapassword)
 - http://dvwa.lab/ (default username: admin, default password: password)
@@ -226,6 +230,7 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.0.201 server.lab
 - 10.0.0.201 mail.server.lab
 - 10.0.0.202 gophish.lab
+- 10.0.0.203 ransomware.lab
 - 10.0.0.110 infectionmonkey.lab
 - 10.0.0.111 mongodb.lab
 - 10.0.0.113 caldera.lab
@@ -242,10 +247,12 @@ An exposed port can be accessed using a SOCKS5 proxy, SSH client, or HTTP client
 - 10.0.1.21 juiceshop-bunkerweb.lab
 - 10.0.1.110 infectionmonkey.lab
 - 10.0.1.113 caldera.lab
+- 10.0.1.203 ransomware.lab
 
 ## Monitor
 - 10.0.3.201 server.lab
 - 10.0.3.201 mail.server.lab
+- 10.0.3.203 ransomware.lab
 - 10.0.3.9 mariadb.lab
 - 10.0.3.10 dvwa.lab
 - 10.0.3.11 dvwa-monitor.lab

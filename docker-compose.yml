@@ -12,6 +12,7 @@ services:
       - phishinglab
       - breachlab
       - soclab
+      - ransomwarelab
     ports:
       - ${BIND_ADDR:-0.0.0.0}:6080:8080
     environment:
@@ -95,6 +96,27 @@ services:
       attack:
         ipv4_address: 10.0.0.202
 
+  ransomware:
+    image: 'csalab/csaf:ransomware'
+    hostname: ransomware.lab
+    build:
+      context: .
+      dockerfile: build/ransomware.Dockerfile
+    restart: always
+    profiles:
+      - all
+      - phishinglab
+      - ransomwarelab
+    volumes:
+      - ransomware:/app/data
+    networks:
+      attack:
+        ipv4_address: 10.0.0.203
+      defense:
+        ipv4_address: 10.0.1.203
+      monitor:
+        ipv4_address: 10.0.3.203
+
   defense:
     hostname: defense.lab
     build:
@@ -106,6 +128,7 @@ services:
       - all
       - attackdefenselab
       - breachlab
+      - ransomwarelab
     ports:
       - ${BIND_ADDR:-0.0.0.0}:7080:8080
     environment:
@@ -344,6 +367,7 @@ services:
     profiles:
       - all
       - soclab
+      - ransomwarelab
     ports:
       - ${BIND_ADDR:-0.0.0.0}:8080:8080
     environment:
@@ -655,3 +679,4 @@ volumes:
   caldera: {}
   bunkerweb: {}
   velociraptor: {}
+  ransomware: {}
