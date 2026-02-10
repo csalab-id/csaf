@@ -1,0 +1,61 @@
+<?php
+
+$xxeHtml = "";
+
+if( isset( $_POST[ 'submit' ] ) ) {
+	// Get input
+	$xml = $_POST[ 'xml' ];
+
+	if( !empty( $xml ) ) {
+		// Basic blacklist approach - blocks common XXE keywords
+		// This is NOT secure and can be bypassed
+		$blacklist = array(
+			'<!ENTITY',
+			'SYSTEM',
+			'PUBLIC'
+		);
+		
+		$blocked = false;
+		foreach( $blacklist as $keyword ) {
+			if( stripos( $xml, $keyword ) !== false ) {
+				$xxeHtml .= "<pre>Blocked! Detected potentially malicious keyword: " . htmlspecialchars($keyword) . "</pre>";
+				$blocked = true;
+				break;
+			}
+		}
+		
+		if( !$blocked ) {
+			// Parse XML
+			$dom = new DOMDocument();
+			
+			// Still loading with dangerous flags
+			$dom->loadXML( $xml, LIBXML_NOENT | LIBXML_DTDLOAD );
+			
+			$user = $dom->getElementsByTagName( 'user' )->item(0);
+			
+			if( $user ) {
+				$xxeHtml .= "<div class=\"vulnerable_code_area\">";
+				$xxeHtml .= "<h2>Parsed XML Data:</h2>";
+				$xxeHtml .= "<pre>";
+				
+				foreach( $user->childNodes as $child ) {
+					if( $child->nodeType === XML_ELEMENT_NODE ) {
+						$xxeHtml .= htmlspecialchars( $child->nodeName ) . ": " . htmlspecialchars( $child->nodeValue ) . "\n";
+					}
+				}
+				
+				$xxeHtml .= "</pre>";
+				$xxeHtml .= "</div>";
+			} else {
+				$xxeHtml .= "<div class=\"vulnerable_code_area\">";
+				$xxeHtml .= "<h2>Parsed XML Data:</h2>";
+				$xxeHtml .= "<pre>" . htmlspecialchars( $dom->textContent ) . "</pre>";
+				$xxeHtml .= "</div>";
+			}
+		}
+	} else {
+		$xxeHtml .= "<pre>Please enter XML data.</pre>";
+	}
+}
+
+?>
