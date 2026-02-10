@@ -5,7 +5,7 @@ parameters:
     type: enum
     default: auto
     description: "The workflow to trigger."
-    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail, bunkerweb, velociraptor]
+    enum: [auto, all, dvwa, secure-dvwa, gitea, infectionmonkey, phishing, wackopicko, kali, caldera, modsecurity, juiceshop, gophish, mariadb, mongodb, splunk, wazuh-indexer, wazuh-manager, wazuh-dashboard, iredmail, bunkerweb, velociraptor, ransomware]
 
 executors:
   docker:
@@ -75,6 +75,9 @@ jobs:
       - run:
           name: "Checking velociraptor docker file code quality"
           command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/velociraptor.Dockerfile || true
+      - run:
+          name: "Checking ransomware docker file code quality"
+          command: docker run --rm -i ghcr.io/hadolint/hadolint:latest < build/ransomware.Dockerfile || true
 
   build-dvwa:
     executor: docker
@@ -316,6 +319,18 @@ jobs:
             docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:velociraptor . -f build/velociraptor.Dockerfile
             docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:velociraptor
 
+  build-ransomware:
+    executor: docker
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build ransomware image"
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin $DOCKER_REGISTRY
+            docker build -t $DOCKER_REGISTRY/$REGISTRY_USER/csaf:ransomware . -f build/ransomware.Dockerfile
+            docker push $DOCKER_REGISTRY/$REGISTRY_USER/csaf:ransomware
+
 workflows:
   build-image-auto:
     when: 
@@ -386,6 +401,9 @@ workflows:
           requires:
             - hadolint
       - build-velociraptor:
+          requires:
+            - hadolint
+      - build-ransomware:
           requires:
             - hadolint
 
@@ -566,6 +584,15 @@ workflows:
     jobs:
       - hadolint
       - build-velociraptor:
+          requires:
+            - hadolint
+
+  build-ransomware:
+    when: 
+      equal: [ransomware, << pipeline.parameters.workflow >>]
+    jobs:
+      - hadolint
+      - build-ransomware:
           requires:
             - hadolint
 
