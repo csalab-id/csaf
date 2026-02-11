@@ -30,8 +30,6 @@ if( isset( $_POST[ 'submit' ] ) ) {
 			$clickjackingHtml .= "<li>" . htmlspecialchars($setting) . "</li>";
 		}
 		$clickjackingHtml .= "</ul>";
-		$clickjackingHtml .= "<p style=\"color: orange;\"><em>ℹ️ Protected with X-Frame-Options: SAMEORIGIN</em></p>";
-		$clickjackingHtml .= "<p><em>Note: Only prevents framing from external sites. Can still be framed by same origin.</em></p>";
 		$clickjackingHtml .= "</div>";
 	} else {
 		$clickjackingHtml .= "<div class=\"vulnerable_code_area\">";

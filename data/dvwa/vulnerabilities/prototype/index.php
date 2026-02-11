@@ -96,27 +96,31 @@ function testAdmin() {
 	output.innerHTML += 'user.isAdmin = ' + user.isAdmin + '<br>';
 	
 	if (user.isAdmin) {
-		output.innerHTML += '<span style=\"color: red; font-weight: bold;\">⚠️ Admin access granted via prototype pollution!</span>';
+		output.innerHTML += '<span style=\"color: red; font-weight: bold;\">⚠️ Admin access granted!</span>';
 	} else {
 		output.innerHTML += '<span style=\"color: green;\">✓ No admin access</span>';
 	}
 }
 
 function testSanitize() {
-	const input = '<script>alert(\"XSS\")<\/script>';
+	const input = '<br><br><h1>Hallo World!</h1>';
 	const config = {};
 	const output = document.getElementById('testOutput');
 	
-	// If prototype is polluted with sanitized: false, this could bypass sanitization
-	const shouldSanitize = config.sanitized !== false;
-	
 	output.innerHTML = '<strong>Sanitization Test:</strong><br>';
-	output.innerHTML += 'Input: ' + escapeHtml(input) + '<br>';
+
+	if (config.sanitized === false) {
+		output.innerHTML += 'Input: ' + input + '<br>';
+	} else {
+		output.innerHTML += 'Input: ' + escapeHtml(input) + '<br>';
+	}
+
 	output.innerHTML += 'config.sanitized = ' + config.sanitized + '<br>';
-	output.innerHTML += 'Should sanitize: ' + shouldSanitize + '<br>';
 	
-	if (!shouldSanitize) {
-		output.innerHTML += '<span style=\"color: red; font-weight: bold;\">⚠️ Sanitization bypassed via prototype pollution!</span>';
+	if (config.sanitized === false) {
+		output.innerHTML += '<span style=\"color: red; font-weight: bold;\">⚠️ Sanitization bypassed!</span>';
+	} else {
+		output.innerHTML += '<span style=\"color: green;\">✓ Input sanitized properly</span>';
 	}
 }
 
