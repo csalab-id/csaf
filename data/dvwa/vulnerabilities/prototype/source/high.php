@@ -1,7 +1,7 @@
 <?php
 
 $prototypeHtml = "";
-$vulnerabilityScript = "
+$vulnerabilityScript = <<<'JAVASCRIPT'
 // Better validation - blocks multiple vectors but still bypassable
 function merge(target, source) {
 	for (let key in source) {
@@ -55,6 +55,6 @@ function applyPreferences() {
 		configOutput.style.color = 'red';
 	}
 }
-";
+JAVASCRIPT;
 
 ?>

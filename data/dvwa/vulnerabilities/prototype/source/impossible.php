@@ -4,7 +4,7 @@ $prototypeHtml = "<div class=\"info\" style=\"margin: 20px 0;\">
 <strong>✓ Secure Implementation:</strong> This level uses proper protection against prototype pollution attacks.
 </div>";
 
-$vulnerabilityScript = "
+$vulnerabilityScript = <<<'JAVASCRIPT'
 // SECURE: Multiple layers of protection
 function merge(target, source) {
 	// Use Object.create(null) to create objects without prototype
@@ -63,7 +63,7 @@ function applyPreferences() {
 		// Display configuration safely
 		let output = '{\n';
 		config.forEach((value, key) => {
-			output += '  \"' + key + '\": \"' + value + '\",\n';
+			output += '  "' + key + '": "' + value + '",\n';
 		});
 		output = output.slice(0, -2) + '\n}';
 		configOutput.textContent = output;
@@ -93,6 +93,6 @@ function applyPreferences() {
 
 // Freeze Object.prototype as additional protection
 Object.freeze(Object.prototype);
-";
+JAVASCRIPT;
 
 ?>

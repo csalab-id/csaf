@@ -51,30 +51,18 @@ $page[ 'body' ] .= "
 		</form>
 	</div>
 
-	<div id=\"result\" style=\"margin: 20px 0; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; display: none;\">
+	<div id=\"result\" style=\"display: none;\" class=\"vulnerable_code_area\">
 		<h3>Applied Configuration:</h3>
 		<pre id=\"configOutput\"></pre>
 	</div>
 
-	<div id=\"testArea\" style=\"margin: 20px 0; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;\">
+	<div id=\"testArea\" class=\"vulnerable_code_area\">
 		<h3>Test Area</h3>
 		<p>After polluting the prototype, try these tests:</p>
 		<button onclick=\"testNewObject()\">Create New Object</button>
 		<button onclick=\"testAdmin()\">Check Admin Status</button>
 		<button onclick=\"testSanitize()\">Test Sanitization</button>
 		<div id=\"testOutput\" style=\"margin-top: 10px; padding: 10px; background: white; border-radius: 3px;\"></div>
-	</div>
-
-	<div style=\"margin: 20px 0; padding: 15px; background: #e3f2fd; border: 1px solid #2196f3; border-radius: 5px;\">
-		<h4>Example Payloads</h4>
-		<p><strong>Basic Prototype Pollution:</strong></p>
-		<pre>{\"__proto__\": {\"polluted\": \"true\"}}</pre>
-		
-		<p><strong>Admin Access:</strong></p>
-		<pre>{\"theme\": \"dark\", \"__proto__\": {\"isAdmin\": true}}</pre>
-		
-		<p><strong>Constructor Pollution:</strong></p>
-		<pre>{\"constructor\": {\"prototype\": {\"isAdmin\": true}}}</pre>
 	</div>
 
 	{$prototypeHtml}
@@ -115,7 +103,7 @@ function testAdmin() {
 }
 
 function testSanitize() {
-	const input = '<script>alert(\"XSS\")</script>';
+	const input = '<script>alert(\"XSS\")<\/script>';
 	const config = {};
 	const output = document.getElementById('testOutput');
 	

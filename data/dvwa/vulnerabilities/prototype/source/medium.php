@@ -1,7 +1,7 @@
 <?php
 
 $prototypeHtml = "";
-$vulnerabilityScript = "
+$vulnerabilityScript = <<<'JAVASCRIPT'
 // Basic blacklist - blocks __proto__ but not other vectors
 function merge(target, source) {
 	for (let key in source) {
@@ -51,6 +51,6 @@ function applyPreferences() {
 		configOutput.style.color = 'red';
 	}
 }
-";
+JAVASCRIPT;
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 $prototypeHtml = "";
-$vulnerabilityScript = "
+$vulnerabilityScript = <<<'JAVASCRIPT'
 // VULNERABLE: Deep merge without prototype pollution protection
 function merge(target, source) {
 	for (let key in source) {
@@ -48,6 +48,6 @@ function applyPreferences() {
 		configOutput.style.color = 'red';
 	}
 }
-";
+JAVASCRIPT;
 
 ?>

@@ -45,9 +45,7 @@ $page[ 'body' ] .= "
 		<p><strong>Logged in:</strong> " . (isset($_SESSION['fixation_logged_in']) ? 'Yes' : 'No') . "</p>
 	</div>
 
-	<div class=\"vulnerable_code_area\">
-		{$fixationHtml}
-	</div>
+	{$fixationHtml}
 
 	<h2>More Information</h2>
 	<ul>
