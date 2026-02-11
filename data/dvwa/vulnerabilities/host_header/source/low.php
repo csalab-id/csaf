@@ -58,38 +58,11 @@ $hostHeaderHtml .= "
 		<p>
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
-		<p style=\"color: #666; font-size: 0.9em;\">
-			<em>In a real attack, send a request with: <code>Host: attacker.com</code></em>
-		</p>
 	</fieldset>
 </form>
 
 <div style=\"margin-top: 20px;\">
 	<a href=\"?show_info=1\" class=\"button\">Show Dynamic Content Example</a>
-</div>
-
-<div style=\"margin-top: 30px; padding: 15px; background: #e7f3ff; border: 1px solid #2196f3; border-radius: 5px;\">
-	<h4>How to Test</h4>
-	<p><strong>Using cURL:</strong></p>
-	<pre style=\"background: white; padding: 10px; overflow-x: auto;\">curl -X POST http://dvwa.local/vulnerabilities/host_header/ \\
-  -H \"Host: attacker.com\" \\
-  -d \"email=victim@example.com&reset_password=Submit\"</pre>
-	
-	<p style=\"margin-top: 15px;\"><strong>Using Burp Suite:</strong></p>
-	<ol>
-		<li>Intercept the password reset request</li>
-		<li>Modify the Host header to <code>attacker.com</code></li>
-		<li>Forward the request</li>
-		<li>Observe the reset link contains attacker's domain</li>
-	</ol>
-	
-	<p style=\"margin-top: 15px;\"><strong>Alternative Headers to Test:</strong></p>
-	<ul>
-		<li><code>X-Forwarded-Host: attacker.com</code></li>
-		<li><code>X-Host: attacker.com</code></li>
-		<li><code>X-Forwarded-Server: attacker.com</code></li>
-		<li><code>Forwarded: host=attacker.com</code></li>
-	</ul>
 </div>";
 
 ?>

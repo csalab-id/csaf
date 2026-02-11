@@ -2,9 +2,19 @@
 
 $hostHeaderHtml = "";
 
-// IMPOSSIBLE: Hardcoded domain + comprehensive validation
-define('TRUSTED_DOMAIN', 'dvwa.local');
-define('TRUSTED_PROTOCOL', 'http'); // 'https' in production
+// IMPOSSIBLE: Hardcoded domains + comprehensive validation
+$TRUSTED_DOMAINS = [
+	'dvwa.lab',
+	'dvwa-monitor.lab',
+	'dvwa-bunkerweb.lab',
+	'dvwa-modsecurity.lab',
+	'dvwa.csalab.app',
+	'dvwa-aawaf.csalab.app',
+	'dvwa-bunkerweb.csalab.app',
+	'dvwa-openappsec.csalab.app',
+	'dvwa-safeline.csalab.app'
+];
+$TRUSTED_PROTOCOLS = ['http', 'https'];
 
 if( isset( $_POST['reset_password'] ) ) {
 	checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
@@ -17,14 +27,30 @@ if( isset( $_POST['reset_password'] ) ) {
 	
 	// Multiple validation layers
 	$validation_errors = [];
+	$matched_domain = null;
 	
 	// 1. Host header validation
-	if(strtolower($host_without_port) !== strtolower(TRUSTED_DOMAIN)) {
-		$validation_errors[] = "Host header mismatch (expected: " . TRUSTED_DOMAIN . ", got: " . htmlspecialchars($host_without_port) . ")";
+	$host_valid = false;
+	foreach($TRUSTED_DOMAINS as $trusted_domain) {
+		if(strtolower($host_without_port) === strtolower($trusted_domain)) {
+			$host_valid = true;
+			$matched_domain = $trusted_domain;
+			break;
+		}
+	}
+	if(!$host_valid) {
+		$validation_errors[] = "Host header mismatch (expected one of: " . implode(', ', $TRUSTED_DOMAINS) . ", got: " . htmlspecialchars($host_without_port) . ")";
 	}
 	
 	// 2. SERVER_NAME validation
-	if($_SERVER['SERVER_NAME'] !== TRUSTED_DOMAIN) {
+	$servername_valid = false;
+	foreach($TRUSTED_DOMAINS as $trusted_domain) {
+		if($_SERVER['SERVER_NAME'] === $trusted_domain) {
+			$servername_valid = true;
+			break;
+		}
+	}
+	if(!$servername_valid) {
 		$validation_errors[] = "SERVER_NAME mismatch";
 	}
 	
@@ -56,7 +82,9 @@ if( isset( $_POST['reset_password'] ) ) {
 	if(empty($validation_errors)) {
 		// SECURE: Use hardcoded domain instead of Host header
 		$token = bin2hex(random_bytes(32)); // Longer token
-		$reset_url = TRUSTED_PROTOCOL . '://' . TRUSTED_DOMAIN . '/vulnerabilities/host_header/reset.php?token=' . $token;
+		// Detect protocol from request
+		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+		$reset_url = $protocol . '://' . $matched_domain . '/vulnerabilities/host_header/reset.php?token=' . $token;
 		
 		// Store token securely (would use database in production)
 		$_SESSION['reset_tokens'][$token] = [
@@ -124,70 +152,7 @@ $hostHeaderHtml .= "
 		<p>
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
-		<p style=\"color: #666; font-size: 0.9em; margin-top: 10px;\">
-			<em>Try modifying the Host header - it will have no effect on the generated URL.</em>
-		</p>
 	</fieldset>
-</form>
-
-<div style=\"margin-top: 30px; padding: 20px; background: #e7f3ff; border: 1px solid #2196f3; border-radius: 5px;\">
-	<h4>🔒 Why Host Header Injection is Impossible Here</h4>
-	
-	<h5>Code Implementation:</h5>
-	<pre style=\"background: white; padding: 15px; overflow-x: auto; border: 1px solid #ccc;\">// SECURE: Hardcoded domain
-define('TRUSTED_DOMAIN', 'dvwa.local');
-define('TRUSTED_PROTOCOL', 'https');
-
-// Build URL from constants, NOT from headers
-\$reset_url = TRUSTED_PROTOCOL . '://' . TRUSTED_DOMAIN . '/reset?token=' . \$token;
-
-// Validate that Host matches expected value
-if(\$_SERVER['HTTP_HOST'] !== TRUSTED_DOMAIN) {
-    die('Invalid host');
-}
-
-// Reject alternative headers
-if(isset(\$_SERVER['HTTP_X_FORWARDED_HOST'])) {
-    die('X-Forwarded-Host not allowed');
-}</pre>
-
-	<h5 style=\"margin-top: 20px;\">Defense in Depth Layers:</h5>
-	<ol>
-		<li><strong>Configuration Level:</strong> Use SERVER_NAME instead of HTTP_HOST</li>
-		<li><strong>Application Level:</strong> Hardcode trusted domains in configuration</li>
-		<li><strong>Validation Level:</strong> Verify Host against whitelist</li>
-		<li><strong>Rejection Level:</strong> Block alternative host headers</li>
-		<li><strong>Monitoring Level:</strong> Log suspicious header patterns</li>
-		<li><strong>Network Level:</strong> Configure web server to reject invalid hosts</li>
-	</ol>
-
-	<h5 style=\"margin-top: 20px;\">Additional Protections:</h5>
-	<ul>
-		<li><strong>CSRF Tokens:</strong> Prevent forged reset requests</li>
-		<li><strong>Rate Limiting:</strong> Mitigate brute force and abuse</li>
-		<li><strong>Token Complexity:</strong> 256-bit cryptographically secure tokens</li>
-		<li><strong>Metadata Binding:</strong> Tie tokens to IP and User-Agent</li>
-		<li><strong>Short Expiry:</strong> Tokens valid for limited time only</li>
-	</ul>
-</div>
-
-<div style=\"margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107;\">
-	<h4>⚠️ Common Mistakes to Avoid</h4>
-	<pre style=\"background: white; padding: 10px;\">// ❌ VULNERABLE
-\$reset_url = 'https://' . \$_SERVER['HTTP_HOST'] . '/reset?token=' . \$token;
-
-// ❌ STILL VULNERABLE (trusts reverse proxy headers)
-\$host = \$_SERVER['HTTP_X_FORWARDED_HOST'] ?? \$_SERVER['HTTP_HOST'];
-\$reset_url = 'https://' . \$host . '/reset?token=' . \$token;
-
-// ❌ WEAK VALIDATION
-if(strpos(\$_SERVER['HTTP_HOST'], 'dvwa') !== false) {
-    // Bypassable with: dvwa.attacker.com
-}
-
-// ✅ SECURE
-define('DOMAIN', 'dvwa.local');
-\$reset_url = 'https://' . DOMAIN . '/reset?token=' . \$token;</pre>
-</div>";
+</form>";
 
 ?>

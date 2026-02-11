@@ -51,30 +51,6 @@ $page[ 'body' ] .= "
 	</div>
 
 	{$hostHeaderHtml}
-
-	<div style=\"margin-top: 30px; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;\">
-		<h4>Attack Scenarios</h4>
-		
-		<h5>1. Password Reset Poisoning</h5>
-		<pre style=\"background: #f5f5f5; padding: 10px;\">POST /reset-password HTTP/1.1
-Host: attacker.com
-Content-Type: application/x-www-form-urlencoded
-
-email=victim@example.com</pre>
-		<p>Victim receives: <code>https://attacker.com/reset?token=abc123</code></p>
-		
-		<h5>2. Cache Poisoning</h5>
-		<pre style=\"background: #f5f5f5; padding: 10px;\">GET /resource HTTP/1.1
-Host: attacker.com
-X-Forwarded-Host: trusted-site.com</pre>
-		<p>Cache stores response with attacker's host, served to all users.</p>
-		
-		<h5>3. SSRF via Host Header</h5>
-		<pre style=\"background: #f5f5f5; padding: 10px;\">GET /api/fetch HTTP/1.1
-Host: 192.168.1.1:8080</pre>
-		<p>Application makes request to internal IP.</p>
-	</div>
-	<br />
 	
 	<h2>More Information</h2>
 	<ul>

@@ -72,18 +72,7 @@ $hostHeaderHtml .= "
 		<p>
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
-		<p style=\"color: #666; font-size: 0.9em;\">
-			<em>Try: <code>Host: dvwa.attacker.com</code> or <code>X-Forwarded-Host: attacker.com</code></em>
-		</p>
 	</fieldset>
-</form>
-
-<div style=\"margin-top: 20px; padding: 15px; background: #fff3cd; border-left: 4px solid #ffc107;\">
-	<h4>Bypass Techniques for Medium Level:</h4>
-	<pre style=\"background: white; padding: 10px;\">Host: dvwa.attacker.com
-Host: attacker.com#dvwa
-Host: attacker.com?dvwa
-X-Forwarded-Host: attacker.com</pre>
-</div>";
+</form>";
 
 ?>

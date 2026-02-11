@@ -51,18 +51,6 @@ $page[ 'body' ] .= "
 	</div>
 
 	{$fixationHtml}
-
-	<div style=\"margin-top: 30px; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;\">
-		<h4>Attack Scenario</h4>
-		<p><strong>Step 1:</strong> Attacker visits the site and gets a session ID</p>
-		<p><strong>Step 2:</strong> Attacker sends victim a link with the fixed session ID:<br>
-		<code>http://dvwa.lab/vulnerabilities/session_fixation/?PHPSESSID=attacker_session_id</code></p>
-		<p><strong>Step 3:</strong> Victim clicks the link and logs in with their credentials</p>
-		<p><strong>Step 4:</strong> Attacker uses the same session ID to access victim's account</p>
-		<br>
-		<p><em>Note: To test, open an incognito/private window and use the URL with a session ID parameter.</em></p>
-	</div>
-	<br />
 	
 	<h2>More Information</h2>
 	<ul>

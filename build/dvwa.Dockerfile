@@ -18,7 +18,8 @@ RUN apt-get update && \
         dialog \
         php \
         php-gd \
-        php-mysql && \
+        php-mysql \
+        php-xml && \
     (echo "sshpassword"; echo "sshpassword") | passwd
 RUN wget -q "https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.13.0-1_amd64.deb" && \
     WAZUH_MANAGER='wazuh-manager.lab' WAZUH_AGENT_GROUP='default' dpkg -i ./wazuh-agent_4.13.0-1_amd64.deb && \

@@ -3,7 +3,20 @@
 $hostHeaderHtml = "";
 
 // High: Uses whitelist validation
-$allowed_hosts = ['localhost', '127.0.0.1', 'dvwa.local', 'www.dvwa.local'];
+$allowed_hosts = [
+	'localhost',
+	'127.0.0.1',
+	'dvwa',
+	'dvwa.lab',
+	'dvwa-monitor.lab',
+	'dvwa-bunkerweb.lab',
+	'dvwa-modsecurity.lab',
+	'dvwa.csalab.app',
+	'dvwa-aawaf.csalab.app',
+	'dvwa-bunkerweb.csalab.app',
+	'dvwa-openappsec.csalab.app',
+	'dvwa-safeline.csalab.app',
+];
 
 if( isset( $_POST['reset_password'] ) ) {
 	$email = $_POST['email'];
@@ -61,17 +74,6 @@ $hostHeaderHtml .= "
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
 	</fieldset>
-</form>
-
-<div style=\"margin-top: 20px; padding: 15px; background: #d4edda; border-left: 4px solid #28a745;\">
-	<h4>✓ Security Improvements:</h4>
-	<ul>
-		<li>Whitelist of allowed hosts</li>
-		<li>Strict comparison (no substring matching)</li>
-		<li>Case-insensitive matching</li>
-		<li>Port removal before validation</li>
-		<li>No trust in alternative headers (X-Forwarded-Host, etc.)</li>
-	</ul>
-</div>";
+</form>";
 
 ?>
