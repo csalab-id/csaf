@@ -34,21 +34,9 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/host_header/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">Host Header Injection occurs when applications trust the HTTP Host header without validation.</div>";
-$messagesHtml .= "<div class=\"warning\">This can lead to password reset poisoning, cache poisoning, and SSRF attacks!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: Host Header Injection</h1>
-
-	{$messagesHtml}
-
-	<div style=\"margin: 20px 0; padding: 20px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;\">
-		<h3>Current Request Info</h3>
-		<p><strong>Host Header:</strong> <code>" . htmlspecialchars($_SERVER['HTTP_HOST'] ?? 'Not set') . "</code></p>
-		<p><strong>Server Name:</strong> <code>" . htmlspecialchars($_SERVER['SERVER_NAME'] ?? 'Not set') . "</code></p>
-		<p><strong>Request URI:</strong> <code>" . htmlspecialchars($_SERVER['REQUEST_URI'] ?? 'Not set') . "</code></p>
-	</div>
 
 	{$hostHeaderHtml}
 	

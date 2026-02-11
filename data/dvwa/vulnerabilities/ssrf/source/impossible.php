@@ -52,7 +52,7 @@ if( isset( $_POST[ 'Submit' ] ) ) {
 					$response = @file_get_contents( $url, false, $context );
 					
 					if( $response !== false ) {
-						$html .= "<pre>Response from {$url}:\n\n";
+						$html .= "<pre>";
 						$html .= htmlspecialchars( substr( $response, 0, 1000 ) ); // Limit output
 						if( strlen( $response ) > 1000 ) {
 							$html .= "\n\n... (truncated)";

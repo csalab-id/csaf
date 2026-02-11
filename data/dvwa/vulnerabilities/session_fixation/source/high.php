@@ -28,9 +28,6 @@ if( isset( $_POST['login'] ) ) {
 		$fixationHtml .= "<div class=\"vulnerable_code_area\">";
 		$fixationHtml .= "<h3>✓ Login Successful!</h3>";
 		$fixationHtml .= "<p>Welcome, " . htmlspecialchars($username) . "!</p>";
-		$fixationHtml .= "<p style=\"color: green;\"><strong>✓ Good:</strong> Session ID regenerated after login.</p>";
-		$fixationHtml .= "<p><small>Old session: " . htmlspecialchars($old_session_id) . "</small></p>";
-		$fixationHtml .= "<p><small>New session: " . htmlspecialchars($new_session_id) . "</small></p>";
 		$fixationHtml .= "<p><a href=\"?logout=1\">Logout</a></p>";
 		$fixationHtml .= "</div>";
 	} else {

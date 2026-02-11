@@ -1,0 +1,32 @@
+services:
+  mariadb:
+    image: 'csalab/csaf:mariadb'
+    hostname: mariadb.lab
+    restart: always
+    environment:
+      - MARIADB_DATABASE=dvwa
+      - MARIADB_USER=dvwa
+      - MARIADB_PASSWORD=dvwa
+      - MARIADB_ROOT_PASSWORD=mariadbpassword
+    volumes:
+      - mariadb:/var/lib/mysql
+
+  dvwa:
+    image: 'csalab/csaf:dvwa'
+    hostname: dvwa.lab
+    restart: always
+    ports:
+      - "0.0.0.0:8080:80"
+    volumes:
+      - ./data/dvwa:/var/www/html
+    depends_on:
+      - mariadb
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+
+volumes:
+  mariadb: {}
+  dvwa: {}

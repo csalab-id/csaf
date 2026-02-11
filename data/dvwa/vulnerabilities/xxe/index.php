@@ -34,28 +34,25 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/xxe/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">Enter XML data below. The parser will extract and display the content.</div>";
-$messagesHtml .= "<div class=\"warning\">Try injecting XML External Entity (XXE) to read server files!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: XML External Entity (XXE)</h1>
 
-	{$messagesHtml}
-
-	<form name=\"xxe\" method=\"POST\">
-		<p>
-			XML Data:<br />
-			<textarea name=\"xml\" cols=\"80\" rows=\"15\" placeholder='<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<user>
-    <name>John Doe</name>
-    <email>john@example.com</email>
-</user>'>" . (isset($_POST['xml']) ? htmlspecialchars($_POST['xml']) : '') . "</textarea>
-		</p>
-		<p>
-			<input type=\"submit\" value=\"Parse XML\" name=\"submit\" />
-		</p>
-	</form>
+	<div class=\"vulnerable_code_area\">
+		<form name=\"xxe\" method=\"POST\">
+			<p>
+				XML Data:<br />
+				<textarea name=\"xml\" cols=\"80\" rows=\"15\" placeholder='<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+	<user>
+		<name>John Doe</name>
+		<email>john@example.com</email>
+	</user>'>" . (isset($_POST['xml']) ? htmlspecialchars($_POST['xml']) : '') . "</textarea>
+			</p>
+			<p>
+				<input type=\"submit\" value=\"Parse XML\" name=\"submit\" />
+			</p>
+		</form>
+	</div>
 	{$xxeHtml}
 	<br />
 	

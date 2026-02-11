@@ -27,7 +27,6 @@ if( isset( $_POST[ 'submit' ] ) ) {
 			$clickjackingHtml .= "<li>" . htmlspecialchars($setting) . "</li>";
 		}
 		$clickjackingHtml .= "</ul>";
-		$clickjackingHtml .= "<p style=\"color: red;\"><em>⚠️ This page has no clickjacking protection!</em></p>";
 		$clickjackingHtml .= "</div>";
 	} else {
 		$clickjackingHtml .= "<div class=\"vulnerable_code_area\">";

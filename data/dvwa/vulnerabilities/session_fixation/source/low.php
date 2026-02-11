@@ -28,7 +28,6 @@ if( isset( $_POST['login'] ) ) {
 		$fixationHtml .= "<div class=\"vulnerable_code_area\">";
 		$fixationHtml .= "<h3>✓ Login Successful!</h3>";
 		$fixationHtml .= "<p>Welcome, " . htmlspecialchars($username) . "!</p>";
-		$fixationHtml .= "<p><strong>⚠️ Warning:</strong> Session ID was NOT regenerated - vulnerable to session fixation!</p>";
 		$fixationHtml .= "<p><a href=\"?logout=1\">Logout</a></p>";
 		$fixationHtml .= "</div>";
 	} else {
@@ -36,7 +35,6 @@ if( isset( $_POST['login'] ) ) {
 	}
 }
 
-// Show login form if not logged in
 if( !isset($_SESSION['fixation_logged_in']) ) {
 	$fixationHtml .= "
 	<form method=\"POST\">
@@ -53,7 +51,6 @@ if( !isset($_SESSION['fixation_logged_in']) ) {
 			<p>
 				<button type=\"submit\" name=\"login\">Login</button>
 			</p>
-			<p><em>Credentials: admin / password</em></p>
 		</fieldset>
 	</form>";
 }

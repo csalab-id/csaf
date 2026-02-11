@@ -64,8 +64,7 @@ if( isset( $_POST['test_request'] ) ) {
 $smugglingHtml .= "
 <form method=\"POST\" style=\"margin-top: 20px;\">
 	<fieldset>
-		<legend>Test HTTP Request (Medium Security)</legend>
-		<p>This level detects conflicting headers but doesn't properly block them.</p>
+		<p>Enter a raw HTTP request:</p>
 		<textarea name=\"request_data\" rows=\"15\" cols=\"80\" style=\"font-family: monospace; width: 100%; max-width: 800px;\">POST /api/process HTTP/1.1
 Host: vulnerable-site.com
 Content-Type: application/x-www-form-urlencoded

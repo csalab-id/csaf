@@ -174,8 +174,7 @@ generateSessionToken();
 $smugglingHtml .= "
 <form method=\"POST\" style=\"margin-top: 20px;\">
 	<fieldset>
-		<legend>Test HTTP Request (Impossible Level - Maximum Security)</legend>
-		<p><strong>This level implements comprehensive HTTP/1.1 validation and RFC compliance.</strong></p>
+		<p>Enter a raw HTTP request:</p>
 		<textarea name=\"request_data\" rows=\"15\" cols=\"80\" style=\"font-family: monospace; width: 100%; max-width: 800px;\">POST /api/process HTTP/1.1
 Host: secure-site.com
 Content-Type: application/x-www-form-urlencoded
@@ -188,19 +187,6 @@ param1=value1&param2=value2</textarea>
 		</p>
 		<p style=\"color: #666;\"><em>Try adding conflicting headers or obfuscation - all attacks will be detected and blocked.</em></p>
 	</fieldset>
-</form>
-
-<div style=\"margin-top: 30px; padding: 20px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px;\">
-	<h4>🔒 Enterprise Security Recommendations</h4>
-	<ul>
-		<li><strong>Use HTTP/2:</strong> Eliminates request smuggling through binary framing</li>
-		<li><strong>Normalize Headers:</strong> Frontend and backend must parse identically</li>
-		<li><strong>Reject Ambiguity:</strong> Never process requests with conflicting headers</li>
-		<li><strong>Validate Strictly:</strong> Implement RFC 7230 compliance checking</li>
-		<li><strong>Use WAF:</strong> Deploy Web Application Firewall with smuggling detection</li>
-		<li><strong>Monitor Logs:</strong> Alert on header anomalies and rejected requests</li>
-		<li><strong>Keep Updated:</strong> Patch servers and proxies regularly</li>
-	</ul>
-</div>";
+</form>";
 
 ?>

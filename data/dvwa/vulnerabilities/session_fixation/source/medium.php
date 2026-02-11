@@ -28,8 +28,6 @@ if( isset( $_POST['login'] ) ) {
 		$fixationHtml .= "<div class=\"vulnerable_code_area\">";
 		$fixationHtml .= "<h3>✓ Login Successful!</h3>";
 		$fixationHtml .= "<p>Welcome, " . htmlspecialchars($username) . "!</p>";
-		$fixationHtml .= "<p><strong>⚠️ Warning:</strong> Session ID still not regenerated.</p>";
-		$fixationHtml .= "<p>Attacker can still use cookie-based session fixation.</p>";
 		$fixationHtml .= "<p><a href=\"?logout=1\">Logout</a></p>";
 		$fixationHtml .= "</div>";
 	} else {

@@ -34,15 +34,11 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/ssti/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">Enter your name to generate a personalized greeting message.</div>";
-$messagesHtml .= "<div class=\"warning\">Try injecting template syntax to execute code on the server!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: Server-Side Template Injection (SSTI)</h1>
 
-	{$messagesHtml}
-
+	<div class=\"vulnerable_code_area\">
 	<form name=\"ssti\" method=\"GET\">
 		<p>
 			Your Name:<br />
@@ -52,6 +48,8 @@ $page[ 'body' ] .= "
 			<input type=\"submit\" value=\"Generate Greeting\" name=\"submit\" />
 		</p>
 	</form>
+	</div>
+
 	{$sstiHtml}
 	<br />
 	

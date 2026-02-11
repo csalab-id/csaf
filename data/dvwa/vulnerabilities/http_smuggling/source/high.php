@@ -67,8 +67,7 @@ if( isset( $_POST['test_request'] ) ) {
 $smugglingHtml .= "
 <form method=\"POST\" style=\"margin-top: 20px;\">
 	<fieldset>
-		<legend>Test HTTP Request (High Security)</legend>
-		<p>This level properly rejects requests with conflicting headers.</p>
+		<p>Enter a raw HTTP request:</p>
 		<textarea name=\"request_data\" rows=\"15\" cols=\"80\" style=\"font-family: monospace; width: 100%; max-width: 800px;\">POST /api/process HTTP/1.1
 Host: vulnerable-site.com
 Content-Type: application/x-www-form-urlencoded
@@ -84,7 +83,6 @@ Host: vulnerable-site.com
 		<p>
 			<button type=\"submit\" name=\"test_request\">Analyze Request</button>
 		</p>
-		<p style=\"color: #666;\"><em>Try sending a request with both headers - it should be rejected.</em></p>
 	</fieldset>
 </form>";
 

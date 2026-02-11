@@ -34,16 +34,11 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/clickjacking/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">This page demonstrates a sensitive action that could be vulnerable to clickjacking attacks.</div>";
-$messagesHtml .= "<div class=\"warning\">Try embedding this page in an iframe on a malicious site to perform UI redressing!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: Clickjacking (UI Redressing)</h1>
 
-	{$messagesHtml}
-
-	<div style=\"margin: 20px 0; padding: 20px; background: #f9f9f9; border: 2px solid #ddd; border-radius: 5px;\">
+	<div class=\"vulnerable_code_area\">
 		<h3>Account Settings</h3>
 		<p>Manage your account preferences and security settings.</p>
 		
@@ -64,7 +59,7 @@ $page[ 'body' ] .= "
 				</label>
 			</div>
 			<div style=\"margin: 20px 0;\">
-				<button type=\"submit\" name=\"submit\" style=\"padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 16px;\">
+				<button type=\"submit\" name=\"submit\">
 					Update Settings
 				</button>
 			</div>
@@ -72,53 +67,6 @@ $page[ 'body' ] .= "
 	</div>
 
 	{$clickjackingHtml}
-
-	<div style=\"margin-top: 30px; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;\">
-		<h4>Demo Attack Page</h4>
-		<p>To test clickjacking, create an HTML file with the following code and open it in your browser:</p>
-		<pre style=\"background: #f5f5f5; padding: 10px; overflow-x: auto;\">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;title&gt;Win a Free Prize!&lt;/title&gt;
-    &lt;style&gt;
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.0;  /* Make invisible - change to 0.5 to see the overlay */
-            z-index: 2;
-        }
-        .fake-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 100px 20px;
-        }
-        button {
-            padding: 20px 40px;
-            font-size: 24px;
-            background: #ff5722;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;div class=\"fake-content\"&gt;
-        &lt;h1&gt;🎉 Congratulations! 🎉&lt;/h1&gt;
-        &lt;p&gt;You've won a FREE iPhone! Click below to claim:&lt;/p&gt;
-        &lt;button&gt;Click Here to Claim Prize&lt;/button&gt;
-    &lt;/div&gt;
-    &lt;iframe src=\"http://dvwa.lab/vulnerabilities/clickjacking/\"&gt;&lt;/iframe&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-		<p><em>Note: Adjust the iframe positioning to align the hidden button with your fake button.</em></p>
-	</div>
-	<br />
 	
 	<h2>More Information</h2>
 	<ul>

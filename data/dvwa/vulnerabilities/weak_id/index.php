@@ -36,12 +36,14 @@ require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/weak_id/source/{$vulnerabi
 $page[ 'body' ] .= <<<EOF
 <div class="body_padded">
 	<h1>Vulnerability: Weak Session IDs</h1>
-	<p>
-		This page will set a new cookie called dvwaSession each time the button is clicked.<br />
-	</p>
-	<form method="post">
-		<input type="submit" value="Generate" />
-	</form>
+	<div class="vulnerable_code_area">
+		<p>
+			This page will set a new cookie called dvwaSession each time the button is clicked.<br />
+		</p>
+		<form method="post">
+			<input type="submit" value="Generate" />
+		</form>
+	</div>
 </div>
 $html
 

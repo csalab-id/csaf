@@ -34,24 +34,21 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/session_fixation/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">This page simulates a login system vulnerable to session fixation attacks.</div>";
-$messagesHtml .= "<div class=\"warning\">Try fixing a session ID before authentication to hijack the session!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: Session Fixation</h1>
 
-	{$messagesHtml}
-
-	<div style=\"margin: 20px 0; padding: 20px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;\">
+	<div class=\"vulnerable_code_area\">
 		<h3>Current Session Info</h3>
 		<p><strong>Session ID:</strong> <code>" . htmlspecialchars(session_id()) . "</code></p>
 		<p><strong>User:</strong> " . (isset($_SESSION['fixation_user']) ? htmlspecialchars($_SESSION['fixation_user']) : 'Not logged in') . "</p>
 		<p><strong>Logged in:</strong> " . (isset($_SESSION['fixation_logged_in']) ? 'Yes' : 'No') . "</p>
 	</div>
 
-	{$fixationHtml}
-	
+	<div class=\"vulnerable_code_area\">
+		{$fixationHtml}
+	</div>
+
 	<h2>More Information</h2>
 	<ul>
 		<li>" . dvwaExternalLinkUrlGet( 'https://owasp.org/www-community/attacks/Session_fixation', 'OWASP - Session Fixation' ) . "</li>

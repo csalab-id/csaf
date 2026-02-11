@@ -34,16 +34,11 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/deserialization/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">This page allows you to save and load user preferences.</div>";
-$messagesHtml .= "<div class=\"warning\">Try injecting malicious serialized objects to execute code!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: Insecure Deserialization</h1>
 
-	{$messagesHtml}
-
-	<div style=\"margin-bottom: 20px;\">
+	<div class=\"vulnerable_code_area\">
 		<h3>Save Preferences</h3>
 		<form name=\"save_prefs\" method=\"POST\">
 			<p>
@@ -68,7 +63,7 @@ $page[ 'body' ] .= "
 		</form>
 	</div>
 
-	<div style=\"margin-bottom: 20px;\">
+	<div class=\"vulnerable_code_area\">
 		<h3>Load Preferences</h3>
 		<form name=\"load_prefs\" method=\"POST\">
 			<p>

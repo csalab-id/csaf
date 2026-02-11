@@ -34,16 +34,11 @@ switch( dvwaSecurityLevelGet() ) {
 
 require_once DVWA_WEB_PAGE_TO_ROOT . "vulnerabilities/prototype/source/{$vulnerabilityFile}";
 
-$messagesHtml  = "<div class=\"info\">Configure user preferences using JSON data.</div>";
-$messagesHtml .= "<div class=\"warning\">Try polluting the prototype chain to modify object behavior!</div>";
-
 $page[ 'body' ] .= "
 <div class=\"body_padded\">
 	<h1>Vulnerability: Prototype Pollution</h1>
 
-	{$messagesHtml}
-
-	<div style=\"margin: 20px 0;\">
+	<div class=\"vulnerable_code_area\">
 		<h3>User Preferences</h3>
 		<form id=\"preferencesForm\">
 			<p>

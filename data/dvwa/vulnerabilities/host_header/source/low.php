@@ -19,14 +19,8 @@ if( isset( $_POST['reset_password'] ) ) {
 	$hostHeaderHtml .= "<div class=\"vulnerable_code_area\">";
 	$hostHeaderHtml .= "<h3>Password Reset Email Sent!</h3>";
 	$hostHeaderHtml .= "<p>Email would be sent to: <strong>" . htmlspecialchars($email) . "</strong></p>";
-	$hostHeaderHtml .= "<div style=\"background: #ffe6e6; padding: 15px; margin: 15px 0; border: 2px solid #ff0000; border-radius: 5px;\">";
-	$hostHeaderHtml .= "<h4 style=\"color: #cc0000;\">⚠️ VULNERABILITY DEMONSTRATED</h4>";
 	$hostHeaderHtml .= "<p><strong>Reset link generated:</strong></p>";
 	$hostHeaderHtml .= "<code style=\"background: white; padding: 10px; display: block; word-wrap: break-word;\">" . htmlspecialchars($reset_url) . "</code>";
-	$hostHeaderHtml .= "<p style=\"margin-top: 10px;\"><strong>Problem:</strong> The Host header is controlled by the attacker!</p>";
-	$hostHeaderHtml .= "<p>If you sent a request with <code>Host: attacker.com</code>, the reset link would point to attacker's server.</p>";
-	$hostHeaderHtml .= "<p><strong>Impact:</strong> Attacker receives the reset token when victim clicks the link.</p>";
-	$hostHeaderHtml .= "</div>";
 	$hostHeaderHtml .= "</div>";
 }
 
@@ -38,31 +32,25 @@ if( isset( $_GET['show_info'] ) ) {
 	$hostHeaderHtml .= "<div class=\"vulnerable_code_area\">";
 	$hostHeaderHtml .= "<h3>Dynamic Content Based on Host Header</h3>";
 	$hostHeaderHtml .= "<p><strong>Base URL:</strong> <code>" . htmlspecialchars($protocol . '://' . $host) . "</code></p>";
-	$hostHeaderHtml .= "<p><strong>API Endpoint:</strong> <code>" . htmlspecialchars($protocol . '://' . $host . '/api/') . "</code></p>";
-	$hostHeaderHtml .= "<p><strong>Static Assets:</strong> <code>" . htmlspecialchars($protocol . '://' . $host . '/static/') . "</code></p>";
-	$hostHeaderHtml .= "<div style=\"background: #ffe6e6; padding: 10px; margin: 10px 0; border: 1px solid #ffcccc;\">";
-	$hostHeaderHtml .= "<p style=\"color: #cc0000;\">⚠️ All these URLs are vulnerable to Host header manipulation!</p>";
-	$hostHeaderHtml .= "</div>";
 	$hostHeaderHtml .= "</div>";
 }
 
 $hostHeaderHtml .= "
-<form method=\"POST\" style=\"margin-top: 20px;\">
-	<fieldset style=\"max-width: 600px;\">
-		<legend>Password Reset Request</legend>
+<div class=\"vulnerable_code_area\">
+	<form method=\"POST\">
 		<p>Enter your email to receive a password reset link:</p>
 		<p>
-			<label>Email:</label><br>
 			<input type=\"email\" name=\"email\" value=\"victim@example.com\" style=\"width: 100%; max-width: 400px;\" required />
 		</p>
 		<p>
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
-	</fieldset>
-</form>
+	</form>
+</div>
 
 <div style=\"margin-top: 20px;\">
 	<a href=\"?show_info=1\" class=\"button\">Show Dynamic Content Example</a>
-</div>";
+</div>
+</br>";
 
 ?>

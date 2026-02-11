@@ -69,15 +69,6 @@ if( isset( $_POST['login'] ) ) {
 		$fixationHtml .= "<div class=\"vulnerable_code_area\">";
 		$fixationHtml .= "<h3 style=\"color: green;\">✓ Secure Login Successful!</h3>";
 		$fixationHtml .= "<p>Welcome, " . htmlspecialchars($username) . "!</p>";
-		$fixationHtml .= "<div class=\"info\">Security measures applied:</div>";
-		$fixationHtml .= "<ul>";
-		$fixationHtml .= "<li>✓ Session ID regenerated after authentication</li>";
-		$fixationHtml .= "<li>✓ Session bound to IP address</li>";
-		$fixationHtml .= "<li>✓ Session bound to User-Agent</li>";
-		$fixationHtml .= "<li>✓ CSRF token validation</li>";
-		$fixationHtml .= "<li>✓ Secure cookie settings (HttpOnly, SameSite)</li>";
-		$fixationHtml .= "<li>✓ Session timeout implemented</li>";
-		$fixationHtml .= "</ul>";
 		$fixationHtml .= "<p><a href=\"?logout=1&user_token=" . $_SESSION['session_token'] . "\">Logout</a></p>";
 		$fixationHtml .= "</div>";
 	} else {

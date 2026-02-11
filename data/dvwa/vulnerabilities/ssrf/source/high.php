@@ -39,7 +39,7 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 			$response = @file_get_contents( $url );
 			
 			if( $response !== false ) {
-				$html .= "<pre>Response from {$url}:\n\n";
+				$html .= "<pre>";
 				$html .= htmlspecialchars( $response );
 				$html .= "</pre>";
 			} else {
