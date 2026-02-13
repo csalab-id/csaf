@@ -65,6 +65,7 @@ if( isset( $_POST['test_request'] ) ) {
 }
 
 $smugglingHtml .= "
+<div class=\"vulnerable_code_area\">
 <form method=\"POST\" style=\"margin-top: 20px;\">
 	<fieldset>
 		<p>Enter a raw HTTP request:</p>
@@ -84,6 +85,7 @@ Host: vulnerable-site.com
 			<button type=\"submit\" name=\"test_request\">Analyze Request</button>
 		</p>
 	</fieldset>
-</form>";
+</form>
+</div>";
 
 ?>

@@ -97,6 +97,7 @@ if( !isset($_SESSION['fixation_logged_in']) ) {
 	generateSessionToken();
 	
 	$fixationHtml .= "
+<div class=\"vulnerable_code_area\">
 	<form method=\"POST\">
 		<fieldset style=\"max-width: 400px;\">
 			<legend>Secure Login</legend>
@@ -113,7 +114,8 @@ if( !isset($_SESSION['fixation_logged_in']) ) {
 				<button type=\"submit\" name=\"login\">Login</button>
 			</p>
 		</fieldset>
-	</form>";
+	</form>
+</div>";
 }
 
 ?>

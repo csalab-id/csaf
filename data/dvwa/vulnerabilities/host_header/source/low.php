@@ -24,17 +24,6 @@ if( isset( $_POST['reset_password'] ) ) {
 	$hostHeaderHtml .= "</div>";
 }
 
-// Demonstrate dynamic content generation based on Host
-if( isset( $_GET['show_info'] ) ) {
-	$host = $_SERVER['HTTP_HOST'];
-	$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-	
-	$hostHeaderHtml .= "<div class=\"vulnerable_code_area\">";
-	$hostHeaderHtml .= "<h3>Dynamic Content Based on Host Header</h3>";
-	$hostHeaderHtml .= "<p><strong>Base URL:</strong> <code>" . htmlspecialchars($protocol . '://' . $host) . "</code></p>";
-	$hostHeaderHtml .= "</div>";
-}
-
 $hostHeaderHtml .= "
 <div class=\"vulnerable_code_area\">
 	<form method=\"POST\">
@@ -46,11 +35,6 @@ $hostHeaderHtml .= "
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
 	</form>
-</div>
-
-<div style=\"margin-top: 20px;\">
-	<a href=\"?show_info=1\" class=\"button\">Show Dynamic Content Example</a>
-</div>
-</br>";
+</div>";
 
 ?>

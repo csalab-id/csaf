@@ -34,8 +34,7 @@ if( isset( $_POST['test_request'] ) ) {
 	// Basic check for conflicting headers
 	if($has_cl && $has_te) {
 		$smugglingHtml .= "<div style=\"background: #fff3cd; padding: 15px; border: 2px solid #ffc107; border-radius: 5px; margin: 10px 0;\">";
-		$smugglingHtml .= "<p><strong>Both Content-Length and Transfer-Encoding headers found.</strong></p>";
-		$smugglingHtml .= "<p style=\"color: orange;\"><strong>Protection Applied:</strong> Logging the conflict (but still processing...)</p>";
+		$smugglingHtml .= "<p><strong>Both Content-Length and Transfer-Encoding are present!</strong></p>";
 		$smugglingHtml .= "<ul>";
 		foreach($headers_info as $info) {
 			$smugglingHtml .= "<li>" . htmlspecialchars($info) . "</li>";
@@ -48,7 +47,7 @@ if( isset( $_POST['test_request'] ) ) {
 		$smugglingHtml .= "<p style=\"color: green;\">✓ Only Transfer-Encoding header found: $te_value</p>";
 	}
 	
-	$smugglingHtml .= "<h4>Your Request:</h4>";
+	$smugglingHtml .= "<h4>Your Raw Request:</h4>";
 	$smugglingHtml .= "<pre style=\"background: #f5f5f5; padding: 10px; border: 1px solid #ccc;\">" . htmlspecialchars($request_data) . "</pre>";
 	$smugglingHtml .= "</div>";
 }

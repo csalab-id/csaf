@@ -98,28 +98,10 @@ if( isset( $_POST['reset_password'] ) ) {
 		$_SESSION[$rate_limit_key] = time();
 		
 		$hostHeaderHtml .= "<div class=\"vulnerable_code_area\">";
-		$hostHeaderHtml .= "<h3 style=\"color: green;\">✓ Secure Password Reset Email Sent!</h3>";
-		$hostHeaderHtml .= "<p>Email to: <strong>" . htmlspecialchars($email) . "</strong></p>";
-		$hostHeaderHtml .= "<div style=\"background: #d4edda; padding: 20px; margin: 15px 0; border: 2px solid #28a745; border-radius: 5px;\">";
-		$hostHeaderHtml .= "<h4 style=\"color: #28a745;\">🔒 Maximum Security Applied</h4>";
+		$hostHeaderHtml .= "<h3>Password Reset Email Sent!</h3>";
+		$hostHeaderHtml .= "<p>Email would be sent to: <strong>" . htmlspecialchars($email) . "</strong></p>";
 		$hostHeaderHtml .= "<p><strong>Reset link generated:</strong></p>";
 		$hostHeaderHtml .= "<code style=\"background: white; padding: 10px; display: block; word-wrap: break-word;\">" . htmlspecialchars($reset_url) . "</code>";
-		$hostHeaderHtml .= "<div style=\"margin-top: 15px; background: white; padding: 15px; border-radius: 5px;\">";
-		$hostHeaderHtml .= "<h5>Security Measures:</h5>";
-		$hostHeaderHtml .= "<ul>";
-		$hostHeaderHtml .= "<li>✓ <strong>Hardcoded domain</strong> - Host header completely ignored</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>CSRF token validation</strong> - Prevents unauthorized requests</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>Alternative headers rejected</strong> - No X-Forwarded-Host trust</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>SERVER_NAME validation</strong> - Additional verification layer</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>Email format validation</strong> - RFC compliant</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>Rate limiting</strong> - Prevents abuse (1 request/minute)</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>256-bit token</strong> - Cryptographically secure</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>Token metadata</strong> - IP and User-Agent binding</li>";
-		$hostHeaderHtml .= "<li>✓ <strong>Audit logging</strong> - All requests logged</li>";
-		$hostHeaderHtml .= "</ul>";
-		$hostHeaderHtml .= "</div>";
-		$hostHeaderHtml .= "<p style=\"margin-top: 10px;\"><strong>Why this is secure:</strong> The reset URL is built from a hardcoded constant (<code>TRUSTED_DOMAIN</code>), not from user-controlled headers. Even if an attacker modifies the Host header, it has no effect on the generated URL.</p>";
-		$hostHeaderHtml .= "</div>";
 		$hostHeaderHtml .= "</div>";
 		
 	} else {
@@ -140,19 +122,17 @@ if( isset( $_POST['reset_password'] ) ) {
 generateSessionToken();
 
 $hostHeaderHtml .= "
-<form method=\"POST\" style=\"margin-top: 20px;\">
-	<fieldset style=\"max-width: 600px;\">
-		<legend>Secure Password Reset (Impossible Level)</legend>
-		<p><strong>Maximum security configuration with hardcoded domain.</strong></p>
+<div class=\"vulnerable_code_area\">
+	<form method=\"POST\">
+		<p>Enter your email to receive a password reset link:</p>
 		<p>
-			<label>Email Address:</label><br>
 			<input type=\"email\" name=\"email\" value=\"victim@example.com\" style=\"width: 100%; max-width: 400px;\" required />
 		</p>
 		<input type=\"hidden\" name=\"user_token\" value=\"" . $_SESSION['session_token'] . "\" />
 		<p>
 			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
 		</p>
-	</fieldset>
-</form>";
+	</form>
+</div>";
 
 ?>

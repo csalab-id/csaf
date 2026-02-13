@@ -37,22 +37,24 @@ if( isset( $_POST['login'] ) ) {
 
 if( !isset($_SESSION['fixation_logged_in']) ) {
 	$fixationHtml .= "
+<div class=\"vulnerable_code_area\">
 	<form method=\"POST\">
 		<fieldset style=\"max-width: 400px;\">
 			<legend>Login</legend>
 			<p>
 				<label>Username:</label><br>
-				<input type=\"text\" name=\"username\" value=\"admin\" />
+				<input type=\"text\" name=\"username\" value=\"\" />
 			</p>
 			<p>
 				<label>Password:</label><br>
-				<input type=\"password\" name=\"password\" value=\"password\" />
+				<input type=\"password\" name=\"password\" value=\"\" />
 			</p>
 			<p>
 				<button type=\"submit\" name=\"login\">Login</button>
 			</p>
 		</fieldset>
-	</form>";
+	</form>
+</div>";
 }
 
 ?>

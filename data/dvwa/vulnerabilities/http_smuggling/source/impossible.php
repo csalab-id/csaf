@@ -172,6 +172,7 @@ if( isset( $_POST['test_request'] ) ) {
 generateSessionToken();
 
 $smugglingHtml .= "
+<div class=\"vulnerable_code_area\">
 <form method=\"POST\" style=\"margin-top: 20px;\">
 	<fieldset>
 		<p>Enter a raw HTTP request:</p>
@@ -187,6 +188,7 @@ param1=value1&param2=value2</textarea>
 		</p>
 		<p style=\"color: #666;\"><em>Try adding conflicting headers or obfuscation - all attacks will be detected and blocked.</em></p>
 	</fieldset>
-</form>";
+</form>
+</div>";
 
 ?>
