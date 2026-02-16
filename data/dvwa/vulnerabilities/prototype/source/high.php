@@ -2,21 +2,21 @@
 
 $prototypeHtml = "";
 $vulnerabilityScript = <<<'JAVASCRIPT'
-// Better validation - blocks multiple vectors but still bypassable
-function merge(target, source) {
+function merge(target, source, isTopLevel = true) {
 	for (let key in source) {
-		// Block dangerous property names
-		const blacklist = ['__proto__', 'constructor', 'prototype'];
-		if (blacklist.includes(key)) {
-			console.warn('Blocked: ' + key + ' is not allowed');
-			continue;
+		if (isTopLevel) {
+			const blacklist = ['__proto__', 'constructor', 'prototype'];
+			if (blacklist.includes(key)) {
+				console.warn('Blocked: ' + key + ' is not allowed');
+				continue;
+			}
 		}
 		
 		if (typeof source[key] === 'object' && source[key] !== null) {
 			if (!target[key]) {
 				target[key] = {};
 			}
-			merge(target[key], source[key]);
+			merge(target[key], source[key], false);
 		} else {
 			target[key] = source[key];
 		}
@@ -33,10 +33,6 @@ function applyPreferences() {
 		const userInput = JSON.parse(jsonInput);
 		const config = {};
 		
-		// More secure but could still be vulnerable to:
-		// - Unicode escapes: \\u005f\\u005fproto\\u005f\\u005f
-		// - Bracket notation edge cases
-		// - JSON parser quirks
 		merge(config, userInput);
 		
 		result.style.display = 'block';
@@ -46,8 +42,8 @@ function applyPreferences() {
 			document.body.style.background = config.theme === 'dark' ? '#333' : '#fff';
 			document.body.style.color = config.theme === 'dark' ? '#fff' : '#000';
 		}
-		
-		console.log('Configuration applied with enhanced filtering');
+
+		console.log('Testing pollution - Check empty object:', {});
 		
 	} catch (e) {
 		result.style.display = 'block';

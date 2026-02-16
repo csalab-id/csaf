@@ -2,7 +2,6 @@
 
 $prototypeHtml = "";
 $vulnerabilityScript = <<<'JAVASCRIPT'
-// VULNERABLE: Deep merge without prototype pollution protection
 function merge(target, source) {
 	for (let key in source) {
 		if (typeof source[key] === 'object' && source[key] !== null) {
@@ -25,15 +24,12 @@ function applyPreferences() {
 	try {
 		const userInput = JSON.parse(jsonInput);
 		const config = {};
-		
-		// DANGEROUS: No validation of property names
-		// Allows __proto__ and constructor.prototype pollution
+
 		merge(config, userInput);
 		
 		result.style.display = 'block';
 		configOutput.textContent = JSON.stringify(config, null, 2);
-		
-		// Apply theme
+
 		if (config.theme) {
 			document.body.style.background = config.theme === 'dark' ? '#333' : '#fff';
 			document.body.style.color = config.theme === 'dark' ? '#fff' : '#000';

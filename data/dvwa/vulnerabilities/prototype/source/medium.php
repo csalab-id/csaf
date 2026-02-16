@@ -2,10 +2,8 @@
 
 $prototypeHtml = "";
 $vulnerabilityScript = <<<'JAVASCRIPT'
-// Basic blacklist - blocks __proto__ but not other vectors
 function merge(target, source) {
 	for (let key in source) {
-		// Block __proto__ keyword
 		if (key === '__proto__') {
 			console.warn('Blocked: __proto__ is not allowed');
 			continue;
@@ -31,8 +29,7 @@ function applyPreferences() {
 	try {
 		const userInput = JSON.parse(jsonInput);
 		const config = {};
-		
-		// Still vulnerable to: constructor.prototype
+
 		merge(config, userInput);
 		
 		result.style.display = 'block';
