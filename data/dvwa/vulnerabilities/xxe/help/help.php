@@ -93,7 +93,7 @@
 					<ul>
 						<li>Using CSRF token for form submission</li>
 						<li>Calling libxml_disable_entity_loader(true)</li>
-						<li>Using LIBXML_NONET flag (blocks network access)</li>
+						<li>Using LIBXML_NONET flag (blocks network access) and LIBXML_NOCDATA</li>
 						<li>NOT using LIBXML_NOENT or LIBXML_DTDLOAD flags</li>
 						<li>Explicitly blocking DOCTYPE declarations</li>
 						<li>Proper error handling with libxml_use_internal_errors()</li>

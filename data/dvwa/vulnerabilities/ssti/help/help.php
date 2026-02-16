@@ -89,8 +89,8 @@ $result = $twig->render($name);  // User input rendered as template!</pre>
 					<br />
 
 					<h3>High Level</h3>
-					<p>The high level blocks template syntax ({{, }}, {%, %}) and common keywords (_self, env, map, filter, reduce, sort, registerUndefinedFilterCallback, getFilter, setCache).</p>
-					<p>Uses POST method with CSRF token and still renders with <code>Twig_Loader_String()</code>.</p>
+					<p>The high level blocks template syntax ({{, }}, {%, %}) and common keywords (_self, env, app, map, filter, reduce, sort, registerUndefinedFilterCallback, registerUndefinedFunctionCallback, getFilter, setCache).</p>
+					<p>Uses POST method with CSRF token and still renders with <code>Twig_Loader_String()</code>. Note that <code>autoescape</code> is disabled, making it more vulnerable to XSS if SSTI is bypassed.</p>
 					<p><em>Spoiler:</em> <span class="spoiler">Template syntax is blocked in input validation, making direct Twig injection very difficult. This level demonstrates that even extensive blacklists may have bypasses. In real scenarios, you might try encoding, using less common Twig features, or finding parser quirks.</span></p>
 
 					<br />

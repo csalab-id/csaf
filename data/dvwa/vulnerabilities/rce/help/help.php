@@ -92,8 +92,8 @@
 					<br />
 
 					<h3>Medium Level</h3>
-					<p>The medium level implements a basic function name blacklist blocking: eval, exec, system, passthru, shell_exec, popen, proc_open. Note that phpinfo() is NOT blocked and can be used.</p>
-					<p><em>Spoiler:</em> <span class="spoiler">The blacklist only blocks specific functions. Try: '; phpinfo(); $x=' or backticks: '; echo `whoami`; $x=' or file operations: '; echo file_get_contents("/etc/passwd"); $x=' or '; print_r(scandir(".")); $x='</span></p>
+					<p>The medium level implements a basic function name blacklist blocking: eval, exec, system, passthru, shell_exec, phpinfo, popen, proc_open.</p>
+					<p><em>Spoiler:</em> <span class="spoiler">The blacklist only blocks specific functions, but backticks and many other methods remain available. Try backticks: '; echo `whoami`; $x=' or file operations: '; echo file_get_contents("/etc/passwd"); $x=' or '; print_r(scandir(".")); $x='</span></p>
 
 					<br />
 
