@@ -2,7 +2,6 @@
 
 $hostHeaderHtml = "";
 
-// High: Uses whitelist validation
 $allowed_hosts = [
 	'localhost',
 	'127.0.0.1',
@@ -21,11 +20,9 @@ $allowed_hosts = [
 if( isset( $_POST['reset_password'] ) ) {
 	$email = $_POST['email'];
 	$host = $_SERVER['HTTP_HOST'];
-	
-	// Remove port if present
+
 	$host_without_port = preg_replace('/:\d+$/', '', $host);
-	
-	// Whitelist validation
+
 	if(in_array(strtolower($host_without_port), $allowed_hosts, true)) {
 		$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
 		$token = bin2hex(random_bytes(16));

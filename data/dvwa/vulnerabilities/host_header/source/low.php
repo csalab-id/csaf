@@ -2,18 +2,12 @@
 
 $hostHeaderHtml = "";
 
-// VULNERABLE: Directly uses HTTP_HOST without validation
 if( isset( $_POST['reset_password'] ) ) {
 	$email = $_POST['email'];
-	
-	// VULNERABLE: Trusts Host header to build reset link
 	$host = $_SERVER['HTTP_HOST'];
 	$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-	
-	// Generate token (simplified for demo)
+
 	$token = bin2hex(random_bytes(16));
-	
-	// Build reset URL using untrusted Host header
 	$reset_url = $protocol . '://' . $host . '/vulnerabilities/host_header/reset.php?token=' . $token;
 	
 	$hostHeaderHtml .= "<div class=\"vulnerable_code_area\">";

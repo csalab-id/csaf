@@ -17,17 +17,14 @@ $allowed_hosts = [
 	'dvwa-safeline.csalab.app',
 ];
 
-// Medium: Basic validation but still vulnerable (doesn't check alternative headers)
 if( isset( $_POST['reset_password'] ) ) {
 	$email = $_POST['email'];
 	$host = $_SERVER['HTTP_HOST'];
-	
-	// Vulnerable: Uses X-Forwarded-Host if present without validation
+
 	if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
 		$host = $_SERVER['HTTP_X_FORWARDED_HOST'];
 	}
-	
-	// Basic validation: Check if host is in allowed list (but already bypassed above)
+
 	if(in_array($host, $allowed_hosts, true)) {
 		$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
 		$token = bin2hex(random_bytes(16));
@@ -47,7 +44,6 @@ if( isset( $_POST['reset_password'] ) ) {
 	}
 }
 
-// Check for alternative headers (still vulnerable)
 $alternative_hosts = [];
 if(isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
 	$alternative_hosts[] = "X-Forwarded-Host: " . $_SERVER['HTTP_X_FORWARDED_HOST'];
@@ -62,15 +58,13 @@ if(isset($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
 $hostHeaderHtml .= "
 <div class=\"vulnerable_code_area\">
 	<form method=\"POST\">
-		<fieldset style=\"max-width: 600px;\">
-			<p>Enter your email to receive a password reset link:</p>
-			<p>
-				<input type=\"email\" name=\"email\" value=\"victim@example.com\" style=\"width: 100%; max-width: 400px;\" required />
-			</p>
-			<p>
-				<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
-			</p>
-		</fieldset>
+		<p>Enter your email to receive a password reset link:</p>
+		<p>
+			<input type=\"email\" name=\"email\" value=\"victim@example.com\" style=\"width: 100%; max-width: 400px;\" required />
+		</p>
+		<p>
+			<button type=\"submit\" name=\"reset_password\">Request Password Reset</button>
+		</p>
 	</form>
 </div>";
 
