@@ -2,10 +2,6 @@
 
 $clickjackingHtml = "";
 
-// Basic protection using X-Frame-Options: SAMEORIGIN
-// Allows framing only from same origin
-// This is better but can still be bypassed in some scenarios
-
 header("X-Frame-Options: SAMEORIGIN");
 
 if( isset( $_POST[ 'submit' ] ) ) {

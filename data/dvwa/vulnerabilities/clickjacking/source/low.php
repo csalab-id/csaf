@@ -2,9 +2,6 @@
 
 $clickjackingHtml = "";
 
-// No X-Frame-Options header - VULNERABLE to clickjacking
-// The page can be embedded in any iframe
-
 if( isset( $_POST[ 'submit' ] ) ) {
 	$settings = array();
 	

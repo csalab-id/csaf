@@ -2,12 +2,6 @@
 
 $clickjackingHtml = "";
 
-// SECURE: Comprehensive clickjacking protection
-// 1. X-Frame-Options: DENY (for older browsers)
-// 2. CSP frame-ancestors 'none' (modern standard)
-// 3. CSRF token validation
-// 4. JavaScript frame-busting as additional layer
-
 header("X-Frame-Options: DENY");
 header("Content-Security-Policy: frame-ancestors 'none'");
 
@@ -35,14 +29,6 @@ if( isset( $_POST[ 'submit' ] ) ) {
 		foreach( $settings as $setting ) {
 			$clickjackingHtml .= "<li>" . htmlspecialchars($setting) . "</li>";
 		}
-		$clickjackingHtml .= "</ul>";
-		$clickjackingHtml .= "<p style=\"color: green;\"><strong>✓ Fully Protected Against Clickjacking!</strong></p>";
-		$clickjackingHtml .= "<div class=\"info\">Protection mechanisms:</div>";
-		$clickjackingHtml .= "<ul>";
-		$clickjackingHtml .= "<li><strong>X-Frame-Options: DENY</strong> - Legacy browser support</li>";
-		$clickjackingHtml .= "<li><strong>CSP frame-ancestors 'none'</strong> - Modern standard</li>";
-		$clickjackingHtml .= "<li><strong>CSRF Token Validation</strong> - Prevents unauthorized actions</li>";
-		$clickjackingHtml .= "<li><strong>JavaScript Frame Busting</strong> - Client-side detection</li>";
 		$clickjackingHtml .= "</ul>";
 		$clickjackingHtml .= "</div>";
 	} else {
