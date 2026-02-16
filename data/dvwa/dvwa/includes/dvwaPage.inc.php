@@ -248,6 +248,7 @@ function dvwaHtmlEcho( $pPage ) {
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'sqli_blind', 'name' => 'SQL Injection (Blind)', 'url' => 'vulnerabilities/sqli_blind/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'deserialization', 'name' => 'Insecure Deserialization', 'url' => 'vulnerabilities/deserialization/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'ssti', 'name' => 'Server-Side Template Injection (SSTI)', 'url' => 'vulnerabilities/ssti/' );
+		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'rce', 'name' => 'Remote Code Execution (RCE)', 'url' => 'vulnerabilities/rce/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'xxe', 'name' => 'XML External Entity (XXE)', 'url' => 'vulnerabilities/xxe/' );
 		
 		// Cross-Site Attacks
