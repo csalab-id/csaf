@@ -63,7 +63,7 @@
 					<ul>
 						<li><strong>Low:</strong> Read server files using external entities</li>
 						<li><strong>Medium:</strong> Bypass basic keyword filtering</li>
-						<li><strong>High:</strong> Exploit despite entity loader being disabled</li>
+						<li><strong>High:</strong> Bypass sophisticated URI scheme and path blacklist</li>
 						<li><strong>Impossible:</strong> Understand proper XXE prevention</li>
 					</ul>
 
@@ -76,14 +76,15 @@
 					<br />
 
 					<h3>Medium Level</h3>
-					<p>The medium level implements a basic blacklist that blocks keywords like "ENTITY", "SYSTEM", and "PUBLIC".</p>
-					<p><em>Spoiler:</em> <span class="spoiler">Try encoding techniques (UTF-16, case variations won't work due to stripos). This level is harder to bypass via simple keyword obfuscation, but parameter entities or nested encodings might work in real scenarios.</span></p>
+					<p>The medium level implements a basic blacklist that blocks keywords like "<!ENTITY", "SYSTEM", and "PUBLIC" using case-insensitive matching.</p>
+					<p><em>Spoiler:</em> <span class="spoiler">The blacklist uses stripos() which is case-insensitive, so simple case variations won't work. However, you might try alternative approaches like using parameter entities with external DTD files, UTF-16 encoding to bypass string detection, or exploring edge cases in XML parsing. In many real implementations, encoding-based bypasses can work.</span></p>
 
 					<br />
 
 					<h3>High Level</h3>
-					<p>The high level uses libxml_disable_entity_loader(true) but still uses LIBXML_DTDLOAD flag.</p>
-					<p><em>Spoiler:</em> <span class="spoiler">While libxml_disable_entity_loader blocks simple XXE, it's deprecated in PHP 8.0. The flag LIBXML_DTDLOAD may still allow certain attacks. Try blind XXE with parameter entities or error-based techniques.</span></p>
+					<p>The high level implements a more sophisticated blacklist that blocks common URI schemes (file://, php://, expect://, data://) and sensitive paths (/etc/passwd, /etc/shadow). It also uses libxml_use_internal_errors() to suppress error messages.</p>
+					<p>However, it still uses LIBXML_NOENT and LIBXML_DTDLOAD flags, making it vulnerable to XXE attacks if you can find files or paths not in the blacklist.</p>
+					<p><em>Spoiler:</em> <span class="spoiler">The blacklist only blocks specific URI schemes and paths. Try reading other system files like /etc/hostname, /etc/hosts, /proc/version, or use alternative wrappers. You can also try uppercase encoding or URL encoding to bypass string matching, though stripos is case-insensitive.</span></p>
 
 					<br />
 

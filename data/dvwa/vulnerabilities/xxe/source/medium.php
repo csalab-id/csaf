@@ -3,12 +3,9 @@
 $xxeHtml = "";
 
 if( isset( $_POST[ 'submit' ] ) ) {
-	// Get input
 	$xml = $_POST[ 'xml' ];
 
 	if( !empty( $xml ) ) {
-		// Basic blacklist approach - blocks common XXE keywords
-		// This is NOT secure and can be bypassed
 		$blacklist = array(
 			'<!ENTITY',
 			'SYSTEM',
@@ -18,17 +15,14 @@ if( isset( $_POST[ 'submit' ] ) ) {
 		$blocked = false;
 		foreach( $blacklist as $keyword ) {
 			if( stripos( $xml, $keyword ) !== false ) {
-				$xxeHtml .= "<pre>Blocked! Detected potentially malicious keyword: " . htmlspecialchars($keyword) . "</pre>";
+				$xxeHtml .= "<pre>Blocked! Detected dangerous keyword: " . htmlspecialchars($keyword) . "</pre>";
 				$blocked = true;
 				break;
 			}
 		}
 		
 		if( !$blocked ) {
-			// Parse XML
 			$dom = new DOMDocument();
-			
-			// Still loading with dangerous flags
 			$dom->loadXML( $xml, LIBXML_NOENT | LIBXML_DTDLOAD );
 			
 			$user = $dom->getElementsByTagName( 'user' )->item(0);
