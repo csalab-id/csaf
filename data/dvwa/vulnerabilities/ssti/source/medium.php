@@ -2,21 +2,17 @@
 
 $sstiHtml = "";
 
-if( isset( $_GET[ 'submit' ] ) ) {
-	$name = $_GET[ 'name' ];
+if( isset( $_POST[ 'submit' ] ) ) {
+	$name = $_POST[ 'name' ];
 
 	if( !empty( $name ) ) {
 		$blacklist = array(
-			'eval',
-			'exec',
-			'system',
-			'passthru',
-			'shell_exec',
-			'phpinfo',
-			'popen',
-			'proc_open',
-			'<?php',
-			'<?='
+			'_self',
+			'env',
+			'app',
+			'map',
+			'filter',
+			'reduce'
 		);
 		
 		$blocked = false;
@@ -29,19 +25,24 @@ if( isset( $_GET[ 'submit' ] ) ) {
 		}
 		
 		if( !$blocked ) {
-			$template = "Hello, {{name}}! Welcome to our site.";
-			$output = str_replace('{{name}}', $name, $template);
-
-			ob_start();
-			eval('?>' . $output);
-			$result = ob_get_clean();
+			require_once DVWA_WEB_PAGE_TO_ROOT . 'vulnerabilities/ssti/vendor/twig/twig/lib/Twig/Autoloader.php';
+			Twig_Autoloader::register();
 			
-			$sstiHtml .= "<div class=\"vulnerable_code_area\">";
-			$sstiHtml .= "<h2>Generated Greeting:</h2>";
-			$sstiHtml .= "<div style=\"padding: 10px; background: #f0f0f0; border-radius: 5px;\">";
-			$sstiHtml .= $result;
-			$sstiHtml .= "</div>";
-			$sstiHtml .= "</div>";
+			try {
+				$loader = new Twig_Loader_String();
+				$twig = new Twig_Environment($loader);
+				$result = $twig->render($name);
+				
+				$sstiHtml .= "<div class=\"vulnerable_code_area\">";
+				$sstiHtml .= "<h2>Generated Greeting:</h2>";
+				$sstiHtml .= "<div style=\"padding: 10px; background: #f0f0f0; border-radius: 5px;\">";
+				$sstiHtml .= "Hello, " . $result . "! Welcome to our site.";
+				$sstiHtml .= "</div>";
+				$sstiHtml .= "</div>";
+				
+			} catch (Exception $e) {
+				$sstiHtml .= "<pre>ERROR: " . htmlspecialchars($e->getMessage()) . "</pre>";
+			}
 		}
 	} else {
 		$sstiHtml .= "<pre>Please enter your name.</pre>";
