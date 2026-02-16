@@ -2,71 +2,97 @@
 
 $smugglingHtml = "";
 
-// High: Rejects conflicting headers
 if( isset( $_POST['test_request'] ) ) {
 	$request_data = $_POST['request_data'];
 	
 	$lines = explode("\n", $request_data);
 	$headers_info = [];
+	$validation_failed = false;
 	
 	$has_cl = false;
 	$has_te = false;
+	$cl_count = 0;
+	$te_count = 0;
 	$cl_value = 0;
 	$te_value = "";
 	
 	foreach($lines as $line) {
 		$line = trim($line);
+		
 		if(stripos($line, 'Content-Length:') === 0) {
+			$cl_count++;
 			$has_cl = true;
 			$cl_value = trim(substr($line, 15));
-			$headers_info[] = "Found Content-Length: $cl_value";
+
+			if(!ctype_digit($cl_value)) {
+				$validation_failed = true;
+				$headers_info[] = "Invalid Content-Length: $cl_value (must be numeric)";
+			} else {
+				$headers_info[] = "Found Content-Length: $cl_value";
+			}
 		}
+		
 		if(stripos($line, 'Transfer-Encoding:') === 0) {
+			$te_count++;
 			$has_te = true;
 			$te_value = trim(substr($line, 18));
-			$headers_info[] = "Found Transfer-Encoding: $te_value";
+
+			$valid_encodings = ['chunked', 'compress', 'deflate', 'gzip', 'identity'];
+			$encodings = array_map('trim', explode(',', strtolower($te_value)));
+			$invalid = false;
+			foreach($encodings as $enc) {
+				if(!in_array($enc, $valid_encodings)) {
+					$invalid = true;
+					break;
+				}
+			}
+			
+			if($invalid) {
+				$validation_failed = true;
+				$headers_info[] = "Invalid Transfer-Encoding: $te_value";
+			} else {
+				$headers_info[] = "Found Transfer-Encoding: $te_value";
+			}
 		}
+	}
+
+	if($cl_count > 1) {
+		$validation_failed = true;
+		$headers_info[] = "Multiple Content-Length headers detected";
+	}
+	
+	if($te_count > 1) {
+		$validation_failed = true;
+		$headers_info[] = "Multiple Transfer-Encoding headers detected";
 	}
 	
 	$smugglingHtml .= "<div class=\"vulnerable_code_area\">";
 	$smugglingHtml .= "<h3>Request Analysis (High Security)</h3>";
-	
-	// Reject conflicting headers
-	if($has_cl && $has_te) {
-		$smugglingHtml .= "<div style=\"background: #ffe6e6; padding: 15px; border: 2px solid #dc3545; border-radius: 5px; margin: 10px 0;\">";
-		$smugglingHtml .= "<h4 style=\"color: #dc3545;\">❌ REQUEST REJECTED!</h4>";
-		$smugglingHtml .= "<p><strong>Reason:</strong> Conflicting Content-Length and Transfer-Encoding headers detected.</p>";
+
+	if(($has_cl && $has_te) || $validation_failed) {
+		$smugglingHtml .= "<div style=\"background: #f8d7da; padding: 15px; border: 2px solid #dc3545; border-radius: 5px; margin: 10px 0;\">";
+		$smugglingHtml .= "<p style=\"color: red;\"><strong>❌ Request BLOCKED - Security violations detected</strong></p>";
 		$smugglingHtml .= "<ul>";
 		foreach($headers_info as $info) {
 			$smugglingHtml .= "<li>" . htmlspecialchars($info) . "</li>";
 		}
 		$smugglingHtml .= "</ul>";
-		$smugglingHtml .= "<p style=\"color: green;\"><strong>✓ Protection Active:</strong> Request smuggling attempt blocked.</p>";
-		$smugglingHtml .= "<p>RFC 7230 states: \"If a message is received with both a Transfer-Encoding and a Content-Length header field, the Transfer-Encoding overrides the Content-Length.\"</p>";
-		$smugglingHtml .= "<p>However, this ambiguity can be exploited. Best practice: <strong>reject</strong> such requests entirely.</p>";
+		$smugglingHtml .= "<p>✓ Request smuggling attempt blocked successfully.</p>";
 		$smugglingHtml .= "</div>";
 	} else if($has_cl) {
-		$smugglingHtml .= "<div style=\"background: #d4edda; padding: 15px; border: 1px solid #28a745; border-radius: 5px;\">";
-		$smugglingHtml .= "<p style=\"color: #28a745;\">✓ Request validated successfully</p>";
-		$smugglingHtml .= "<p>Only Content-Length header found: $cl_value bytes</p>";
-		$smugglingHtml .= "<p>No smuggling risk detected.</p>";
-		$smugglingHtml .= "</div>";
+		$smugglingHtml .= "<p style=\"color: green;\">✓ Request validated - Content-Length: $cl_value bytes</p>";
 	} else if($has_te) {
-		$smugglingHtml .= "<div style=\"background: #d4edda; padding: 15px; border: 1px solid #28a745; border-radius: 5px;\">";
-		$smugglingHtml .= "<p style=\"color: #28a745;\">✓ Request validated successfully</p>";
-		$smugglingHtml .= "<p>Only Transfer-Encoding header found: $te_value</p>";
-		$smugglingHtml .= "<p>No smuggling risk detected.</p>";
-		$smugglingHtml .= "</div>";
+		$smugglingHtml .= "<p style=\"color: green;\">✓ Request validated - Transfer-Encoding: $te_value</p>";
 	}
 	
-	$smugglingHtml .= "<h4>Your Request:</h4>";
+	$smugglingHtml .= "<h4>Your Raw Request:</h4>";
 	$smugglingHtml .= "<pre style=\"background: #f5f5f5; padding: 10px; border: 1px solid #ccc;\">" . htmlspecialchars($request_data) . "</pre>";
 	$smugglingHtml .= "</div>";
 }
 
 $smugglingHtml .= "
 <div class=\"vulnerable_code_area\">
-<form method=\"POST\" style=\"margin-top: 20px;\">
+<form method=\"POST\">
 	<fieldset>
 		<p>Enter a raw HTTP request:</p>
 		<textarea name=\"request_data\" rows=\"15\" cols=\"80\" style=\"font-family: monospace; width: 100%; max-width: 800px;\">POST /api/process HTTP/1.1

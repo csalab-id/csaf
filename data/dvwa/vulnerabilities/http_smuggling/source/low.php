@@ -2,13 +2,9 @@
 
 $smugglingHtml = "";
 
-// VULNERABLE: No validation of Content-Length and Transfer-Encoding headers
-// Simulates a vulnerable proxy/backend that trusts both headers
-
 if( isset( $_POST['test_request'] ) ) {
 	$request_data = $_POST['request_data'];
-	
-	// Parse headers from raw request
+
 	$lines = explode("\n", $request_data);
 	$headers_info = [];
 	
@@ -16,7 +12,7 @@ if( isset( $_POST['test_request'] ) ) {
 	$has_te = false;
 	$cl_value = 0;
 	$te_value = "";
-	
+
 	foreach($lines as $line) {
 		$line = trim($line);
 		if(stripos($line, 'Content-Length:') === 0) {
@@ -33,16 +29,17 @@ if( isset( $_POST['test_request'] ) ) {
 	
 	$smugglingHtml .= "<div class=\"vulnerable_code_area\">";
 	$smugglingHtml .= "<h3>Request Analysis</h3>";
-	
+
 	if($has_cl && $has_te) {
 		$smugglingHtml .= "<div style=\"background: #ffe6e6; padding: 15px; border: 2px solid #ff0000; border-radius: 5px; margin: 10px 0;\">";
-		$smugglingHtml .= "<p><strong>Both Content-Length and Transfer-Encoding are present!</strong></p>";
+		$smugglingHtml .= "<p><strong>Warning: Both Content-Length and Transfer-Encoding are present!</strong></p>";
 
 		$smugglingHtml .= "<ul>";
 		foreach($headers_info as $info) {
 			$smugglingHtml .= "<li>" . htmlspecialchars($info) . "</li>";
 		}
 		$smugglingHtml .= "</ul>";
+		$smugglingHtml .= "<p style=\"color: orange;\">⚠️ Request would be processed (vulnerable to smuggling)</p>";
 		$smugglingHtml .= "</div>";
 	} else if($has_cl) {
 		$smugglingHtml .= "<p>✓ Only Content-Length header found: $cl_value</p>";

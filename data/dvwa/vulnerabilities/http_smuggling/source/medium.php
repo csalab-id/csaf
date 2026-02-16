@@ -2,25 +2,33 @@
 
 $smugglingHtml = "";
 
-// Medium: Basic validation but incomplete
 if( isset( $_POST['test_request'] ) ) {
 	$request_data = $_POST['request_data'];
 	
 	$lines = explode("\n", $request_data);
 	$headers_info = [];
+	$has_warnings = false;
 	
 	$has_cl = false;
 	$has_te = false;
 	$cl_value = 0;
 	$te_value = "";
-	
+
 	foreach($lines as $line) {
 		$line = trim($line);
+		
 		if(stripos($line, 'Content-Length:') === 0) {
 			$has_cl = true;
 			$cl_value = trim(substr($line, 15));
-			$headers_info[] = "Found Content-Length: $cl_value";
+
+			if(!ctype_digit($cl_value)) {
+				$has_warnings = true;
+				$headers_info[] = "Warning: Content-Length value is not numeric: $cl_value";
+			} else {
+				$headers_info[] = "Found Content-Length: $cl_value";
+			}
 		}
+		
 		if(stripos($line, 'Transfer-Encoding:') === 0) {
 			$has_te = true;
 			$te_value = trim(substr($line, 18));
@@ -30,11 +38,20 @@ if( isset( $_POST['test_request'] ) ) {
 	
 	$smugglingHtml .= "<div class=\"vulnerable_code_area\">";
 	$smugglingHtml .= "<h3>Request Analysis (Medium Security)</h3>";
-	
-	// Basic check for conflicting headers
+
 	if($has_cl && $has_te) {
 		$smugglingHtml .= "<div style=\"background: #fff3cd; padding: 15px; border: 2px solid #ffc107; border-radius: 5px; margin: 10px 0;\">";
-		$smugglingHtml .= "<p><strong>Both Content-Length and Transfer-Encoding are present!</strong></p>";
+		$smugglingHtml .= "<p><strong>Warning: Both Content-Length and Transfer-Encoding are present!</strong></p>";
+		$smugglingHtml .= "<ul>";
+		foreach($headers_info as $info) {
+			$smugglingHtml .= "<li>" . htmlspecialchars($info) . "</li>";
+		}
+		$smugglingHtml .= "</ul>";
+		$smugglingHtml .= "<p style=\"color: orange;\">⚠️ Request logged but would still be processed (partially vulnerable)</p>";
+		$smugglingHtml .= "</div>";
+	} else if($has_warnings) {
+		$smugglingHtml .= "<div style=\"background: #fff3cd; padding: 15px; border: 2px solid #ffc107; border-radius: 5px; margin: 10px 0;\">";
+		$smugglingHtml .= "<p><strong>Validation warnings detected:</strong></p>";
 		$smugglingHtml .= "<ul>";
 		foreach($headers_info as $info) {
 			$smugglingHtml .= "<li>" . htmlspecialchars($info) . "</li>";
