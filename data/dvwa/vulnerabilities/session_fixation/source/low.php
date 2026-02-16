@@ -2,26 +2,21 @@
 
 $fixationHtml = "";
 
-// VULNERABLE: Accepts session ID from URL parameter
 if( isset( $_GET['PHPSESSID'] ) ) {
 	session_id( $_GET['PHPSESSID'] );
 }
 
-// Handle logout
 if( isset( $_GET['logout'] ) ) {
 	unset($_SESSION['fixation_user']);
 	unset($_SESSION['fixation_logged_in']);
 	$fixationHtml .= "<div class=\"vulnerable_code_area\"><p>Logged out successfully.</p></div>";
 }
 
-// Handle login
 if( isset( $_POST['login'] ) ) {
 	$username = $_POST['username'];
 	$password = $_POST['password'];
-	
-	// Simple authentication (demo purposes)
+
 	if( $username === 'admin' && $password === 'password' ) {
-		// VULNERABLE: Session ID is NOT regenerated after login
 		$_SESSION['fixation_user'] = $username;
 		$_SESSION['fixation_logged_in'] = true;
 		

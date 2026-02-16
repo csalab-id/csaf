@@ -2,26 +2,23 @@
 
 $fixationHtml = "";
 
-// Medium: Blocks PHPSESSID in URL but vulnerable to cookies
 if( isset( $_GET['PHPSESSID'] ) ) {
-	$fixationHtml .= "<div class=\"vulnerable_code_area\"><p style=\"color: orange;\">⚠️ Session fixation via URL parameter is blocked.</p></div>";
+	$fixationHtml .= "<div class=\"vulnerable_code_area\"><p style=\"color: orange;\">Session fixation via URL blocked.</p></div>";
 }
 
-// Handle logout
 if( isset( $_GET['logout'] ) ) {
 	unset($_SESSION['fixation_user']);
 	unset($_SESSION['fixation_logged_in']);
 	$fixationHtml .= "<div class=\"vulnerable_code_area\"><p>Logged out successfully.</p></div>";
 }
 
-// Handle login
 if( isset( $_POST['login'] ) ) {
 	$username = $_POST['username'];
 	$password = $_POST['password'];
 	
 	if( $username === 'admin' && $password === 'password' ) {
-		// Still VULNERABLE: Session ID not regenerated
-		// Attacker can still use cookies to fix session
+		session_regenerate_id(true);
+		
 		$_SESSION['fixation_user'] = $username;
 		$_SESSION['fixation_logged_in'] = true;
 		
