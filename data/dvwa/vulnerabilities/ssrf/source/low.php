@@ -4,11 +4,9 @@ $html = "";
 $url = "";
 
 if( isset( $_GET[ 'Submit' ] ) ) {
-	// Get input
 	$url = $_GET[ 'url' ];
 
 	if( !empty( $url ) ) {
-		// No validation - direct SSRF vulnerability
 		$response = @file_get_contents( $url );
 		
 		if( $response !== false ) {

@@ -4,11 +4,9 @@ $html = "";
 $url = "";
 
 if( isset( $_GET[ 'Submit' ] ) ) {
-	// Get input
 	$url = $_GET[ 'url' ];
 
 	if( !empty( $url ) ) {
-		// Basic blacklist - can be bypassed
 		$blocked = array( 'localhost', '127.0.0.1', '0.0.0.0' );
 		
 		$is_blocked = false;

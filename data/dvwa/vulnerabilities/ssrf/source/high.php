@@ -4,11 +4,9 @@ $html = "";
 $url = "";
 
 if( isset( $_GET[ 'Submit' ] ) ) {
-	// Get input
 	$url = $_GET[ 'url' ];
 
 	if( !empty( $url ) ) {
-		// More comprehensive blocking including private IP ranges
 		$blocked_keywords = array(
 			'localhost', '127.0.0.1', '0.0.0.0', '[::]',
 			'192.168.', '10.', '172.16.', '172.17.', '172.18.',
@@ -27,8 +25,7 @@ if( isset( $_GET[ 'Submit' ] ) ) {
 				break;
 			}
 		}
-		
-		// Check if URL starts with http:// or https://
+
 		if( !preg_match( '/^https?:\/\//', $url ) ) {
 			$is_blocked = true;
 		}

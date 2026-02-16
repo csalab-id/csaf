@@ -4,43 +4,53 @@ $html = "";
 $url = "";
 
 if( isset( $_POST[ 'Submit' ] ) ) {
-	// Check Anti-CSRF token
 	checkToken( $_REQUEST[ 'user_token' ], $_SESSION[ 'session_token' ], 'index.php' );
 
-	// Get input
 	$url = $_POST[ 'url' ];
 
 	if( !empty( $url ) ) {
-		// Whitelist approach - only allow specific domains
 		$allowed_domains = array(
-			'www.dvwa.co.uk',
-			'dvwa.co.uk',
 			'www.google.com',
 			'google.com'
 		);
 		
 		$parsed_url = parse_url( $url );
-		
-		// Validate URL structure
+
 		if( $parsed_url === false || !isset( $parsed_url['scheme'] ) || !isset( $parsed_url['host'] ) ) {
 			$html .= "<pre>Invalid URL format</pre>";
 		} else {
 			$scheme = $parsed_url['scheme'];
 			$host = strtolower( $parsed_url['host'] );
-			
-			// Only allow http and https
+
 			if( !in_array( $scheme, array( 'http', 'https' ) ) ) {
 				$html .= "<pre>Only HTTP and HTTPS protocols are allowed</pre>";
 			} else if( !in_array( $host, $allowed_domains ) ) {
 				$html .= "<pre>Domain not in whitelist. Allowed domains: " . implode( ', ', $allowed_domains ) . "</pre>";
 			} else {
-				// Additional check - resolve DNS and verify it's not a private IP
 				$ip = gethostbyname( $host );
-				
+				$is_safe = true;
+
 				if( filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false ) {
 					$html .= "<pre>Domain resolves to a private or reserved IP address</pre>";
-				} else {
-					// Safe to fetch
+					$is_safe = false;
+				}
+
+				if( $is_safe ) {
+					$dns_records = @dns_get_record( $host, DNS_AAAA );
+					if( $dns_records !== false && count( $dns_records ) > 0 ) {
+						foreach( $dns_records as $record ) {
+							if( isset( $record['ipv6'] ) ) {
+								if( filter_var( $record['ipv6'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) === false ) {
+									$html .= "<pre>Domain has IPv6 record pointing to private/reserved address</pre>";
+									$is_safe = false;
+									break;
+								}
+							}
+						}
+					}
+				}
+				
+				if( $is_safe ) {
 					$context = stream_context_create( array(
 						'http' => array(
 							'timeout' => 5,
@@ -53,7 +63,7 @@ if( isset( $_POST[ 'Submit' ] ) ) {
 					
 					if( $response !== false ) {
 						$html .= "<pre>";
-						$html .= htmlspecialchars( substr( $response, 0, 1000 ) ); // Limit output
+						$html .= htmlspecialchars( substr( $response, 0, 1000 ) );
 						if( strlen( $response ) > 1000 ) {
 							$html .= "\n\n... (truncated)";
 						}
@@ -69,7 +79,6 @@ if( isset( $_POST[ 'Submit' ] ) ) {
 	}
 }
 
-// Generate Anti-CSRF token
 generateSessionToken();
 
 ?>
