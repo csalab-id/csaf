@@ -41,12 +41,9 @@ if( isset( $_POST[ 'load' ] ) ) {
 	$data = $_POST[ 'data' ];
 	
 	if( !empty( $data ) ) {
-		// Basic validation - check if it looks like serialized UserPreferences
-		// This is NOT secure and can be bypassed
 		if( strpos($data, 'UserPreferences') === false ) {
 			$deserializeHtml .= "<pre>Blocked! Data must contain UserPreferences class.</pre>";
 		} else {
-			// Still vulnerable - attacker can inject malicious UserPreferences object
 			$prefs = unserialize($data);
 			
 			if ($prefs instanceof UserPreferences) {

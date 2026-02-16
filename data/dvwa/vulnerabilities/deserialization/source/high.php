@@ -41,19 +41,14 @@ if( isset( $_POST[ 'load' ] ) ) {
 	$data = $_POST[ 'data' ];
 	
 	if( !empty( $data ) ) {
-		// More strict validation
-		// Check class name and block dangerous properties
 		if( strpos($data, 'UserPreferences') === false ) {
 			$deserializeHtml .= "<pre>Blocked! Invalid class.</pre>";
 		} elseif( strpos($data, 'file') !== false ) {
 			$deserializeHtml .= "<pre>Blocked! Suspicious property detected.</pre>";
 		} else {
-			// Still vulnerable to property-oriented programming (POP) chains
-			// and other exploitation techniques
 			$prefs = @unserialize($data);
 			
 			if ($prefs instanceof UserPreferences) {
-				// Additional check after deserialization
 				if (!empty($prefs->file)) {
 					$deserializeHtml .= "<pre>Error: File property must be empty.</pre>";
 				} else {

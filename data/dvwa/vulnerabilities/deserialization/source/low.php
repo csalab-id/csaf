@@ -1,6 +1,5 @@
 <?php
 
-// Vulnerable class with magic method
 class UserPreferences {
 	public $theme;
 	public $language;
@@ -10,12 +9,9 @@ class UserPreferences {
 		$this->theme = $theme;
 		$this->language = $language;
 	}
-	
-	// Magic method called when object is destroyed
-	// VULNERABLE: Can be exploited to read/write files
+
 	public function __destruct() {
 		if (!empty($this->file)) {
-			// DANGEROUS: File operations based on user-controlled data
 			if (file_exists($this->file)) {
 				$content = file_get_contents($this->file);
 				echo "<div class=\"vulnerable_code_area\"><h3>File Content:</h3><pre>" . htmlspecialchars($content) . "</pre></div>";
@@ -27,7 +23,6 @@ class UserPreferences {
 $deserializeHtml = "";
 
 if( isset( $_POST[ 'save' ] ) ) {
-	// Save preferences
 	$theme = $_POST[ 'theme' ];
 	$language = $_POST[ 'language' ];
 	
@@ -46,8 +41,6 @@ if( isset( $_POST[ 'load' ] ) ) {
 	$data = $_POST[ 'data' ];
 	
 	if( !empty( $data ) ) {
-		// VULNERABLE: Direct unserialization without validation
-		// Attacker can inject malicious objects
 		$prefs = unserialize($data);
 		
 		if ($prefs instanceof UserPreferences) {
