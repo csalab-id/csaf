@@ -239,6 +239,7 @@ function dvwaHtmlEcho( $pPage ) {
 			$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'authbypass', 'name' => 'Authorisation Bypass', 'url' => 'vulnerabilities/authbypass/' );
 		}
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'brute', 'name' => 'Brute Force', 'url' => 'vulnerabilities/brute/' );
+		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'idor', 'name' => 'Insecure Direct Object Reference (IDOR)', 'url' => 'vulnerabilities/idor/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'session_fixation', 'name' => 'Session Fixation', 'url' => 'vulnerabilities/session_fixation/' );
 		$menuBlocks[ 'vulnerabilities' ][] = array( 'id' => 'weak_id', 'name' => 'Weak Session IDs', 'url' => 'vulnerabilities/weak_id/' );
 		
