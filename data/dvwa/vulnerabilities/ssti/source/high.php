@@ -3,32 +3,45 @@
 $sstiHtml = "";
 
 if( isset( $_GET[ 'submit' ] ) ) {
-	// Get input
 	$name = $_GET[ 'name' ];
 
 	if( !empty( $name ) ) {
-		// More strict filtering - only allow alphanumeric and basic punctuation
-		// But still vulnerable to advanced bypasses
-		
-		// Remove special characters that could be used for code injection
-		if( preg_match('/[{}()<>$`\[\]|&;]/', $name) ) {
-			$sstiHtml .= "<pre>Blocked! Input contains potentially dangerous characters.</pre>";
+		if( preg_match('/\{\{.*\}\}/', $name) ) {
+			$sstiHtml .= "<pre>Blocked! Template syntax not allowed in user input.</pre>";
 		} else {
-			// Still uses eval which is dangerous
-			// Can be bypassed with PHP wrapper functions or obfuscation
-			$template = "Hello, {$name}! Welcome to our site.";
+			$blacklist = array(
+				'eval', 'assert', 'exec', 'system', 'passthru', 
+				'shell_exec', 'popen', 'proc_open', 'pcntl_exec',
+				'file_get_contents', 'readfile', 'file_put_contents', 'fopen',
+				'<?php', '<?=', '<?', 'include', 'require',
+				'$_GET', '$_POST', '$_REQUEST', '$_COOKIE', '$_SERVER',
+				'base64_decode', 'gzinflate', 'str_rot13'
+			);
 			
-			// Even with filtering, eval is inherently dangerous
-			ob_start();
-			eval('?>' . $template);
-			$result = ob_get_clean();
+			$blocked = false;
+			foreach( $blacklist as $keyword ) {
+				if( stripos( $name, $keyword ) !== false ) {
+					$sstiHtml .= "<pre>Blocked! Detected dangerous keyword: " . htmlspecialchars($keyword) . "</pre>";
+					$blocked = true;
+					break;
+				}
+			}
 			
-			$sstiHtml .= "<div class=\"vulnerable_code_area\">";
-			$sstiHtml .= "<h2>Generated Greeting:</h2>";
-			$sstiHtml .= "<div style=\"padding: 10px; background: #f0f0f0; border-radius: 5px;\">";
-			$sstiHtml .= $result;
-			$sstiHtml .= "</div>";
-			$sstiHtml .= "</div>";
+			if( !$blocked ) {
+				$template = "<?php \$user = '{{name}}'; echo \"Hello, \$user! Welcome to our site.\"; ?>";
+				$output = str_replace('{{name}}', $name, $template);
+
+				ob_start();
+				eval('?>' . $output);
+				$result = ob_get_clean();
+				
+				$sstiHtml .= "<div class=\"vulnerable_code_area\">";
+				$sstiHtml .= "<h2>Generated Greeting:</h2>";
+				$sstiHtml .= "<div style=\"padding: 10px; background: #f0f0f0; border-radius: 5px;\">";
+				$sstiHtml .= $result;
+				$sstiHtml .= "</div>";
+				$sstiHtml .= "</div>";
+			}
 		}
 	} else {
 		$sstiHtml .= "<pre>Please enter your name.</pre>";

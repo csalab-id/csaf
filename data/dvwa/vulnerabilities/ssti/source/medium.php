@@ -3,12 +3,9 @@
 $sstiHtml = "";
 
 if( isset( $_GET[ 'submit' ] ) ) {
-	// Get input
 	$name = $_GET[ 'name' ];
 
 	if( !empty( $name ) ) {
-		// Basic blacklist approach - blocks common dangerous functions
-		// This is NOT secure and can be bypassed
 		$blacklist = array(
 			'eval',
 			'exec',
@@ -17,24 +14,26 @@ if( isset( $_GET[ 'submit' ] ) ) {
 			'shell_exec',
 			'phpinfo',
 			'popen',
-			'proc_open'
+			'proc_open',
+			'<?php',
+			'<?='
 		);
 		
 		$blocked = false;
 		foreach( $blacklist as $keyword ) {
 			if( stripos( $name, $keyword ) !== false ) {
-				$sstiHtml .= "<pre>Blocked! Detected potentially dangerous function: " . htmlspecialchars($keyword) . "</pre>";
+				$sstiHtml .= "<pre>Blocked! Detected potentially dangerous keyword: " . htmlspecialchars($keyword) . "</pre>";
 				$blocked = true;
 				break;
 			}
 		}
 		
 		if( !$blocked ) {
-			// Still vulnerable - can use backticks, file operations, etc.
-			$template = "Hello, {$name}! Welcome to our site.";
-			
+			$template = "Hello, {{name}}! Welcome to our site.";
+			$output = str_replace('{{name}}', $name, $template);
+
 			ob_start();
-			eval('?>' . $template);
+			eval('?>' . $output);
 			$result = ob_get_clean();
 			
 			$sstiHtml .= "<div class=\"vulnerable_code_area\">";

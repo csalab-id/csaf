@@ -3,24 +3,14 @@
 $sstiHtml = "";
 
 if( isset( $_GET[ 'submit' ] ) ) {
-	// Get input
 	$name = $_GET[ 'name' ];
 
 	if( !empty( $name ) ) {
-		// VULNERABLE: Direct template evaluation with user input
-		// Using eval() to demonstrate SSTI
-		
-		// Template with user input directly injected
-		$template = "Hello, {$name}! Welcome to our site.";
-		
-		// Evaluate template - EXTREMELY DANGEROUS
-		// User can inject PHP code like: ${system('whoami')} or ${phpinfo()}
-		$greeting = $template;
-		
-		// Even more dangerous: allow expression evaluation
-		// This simulates template engines that evaluate expressions
+		$template = "Hello, {{name}}! Welcome to our site.";
+		$output = str_replace('{{name}}', $name, $template);
+
 		ob_start();
-		eval('?>' . $greeting);
+		eval('?>' . $output);
 		$result = ob_get_clean();
 		
 		$sstiHtml .= "<div class=\"vulnerable_code_area\">";
