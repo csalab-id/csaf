@@ -10,6 +10,10 @@ The Cyber Security Awareness Framework (CSAF) is a structured approach aimed at 
 # Architecture
 
 ```mermaid
+---
+config:
+  layout: elk
+---
 flowchart TD
     kali_attack["Kalilinux Attack"]
     kali_defense["Kalilinux Defense"]
